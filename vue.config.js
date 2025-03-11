@@ -1,8 +1,8 @@
 module.exports = {
   lintOnSave: false,
   runtimeCompiler: true,
-  publicPath: '/academico/',
-  outputDir: 'academico',
+  publicPath: '/docente/',
+  outputDir: 'docente',
   configureWebpack: {
     resolve: {
        symlinks: false

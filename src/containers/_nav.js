@@ -30,21 +30,55 @@ jwt.verify(token, CONFIG.SECRET_KEY, (err, data) => {
         ]
       }
     ]
-    /*
-    if (tokenDecodificado.id_rol == 1 || tokenDecodificado.id_rol == 12 || tokenPermisos.perSecretaria == 1) {
-      menu[0]._children.push(
-        {
-          _name: 'CSidebarNavDropdown',
-          name: 'Secretaría',
-          icon: 'cilUserPlus',
-          items: []
-        }
-      )
-      indice++
-      menu[0]._children[indice].items.push({ name: 'Documentos por Estudiante', to: '/secretaria/buscargenerardocumentos'})
-    }
-      */
-
+    // PLANILLAS
+    menu[0]._children.push(
+      {
+        _name: 'CSidebarNavDropdown',
+        name: 'Mis Planillas',
+        icon: 'cilDescription',
+        items: []
+      }
+    )
+    indice++
+    menu[0]._children[indice].items.push({ name: 'Asignación Académica', to: '/planillas/asignacionacademica'})
+    menu[0]._children[indice].items.push({ name: 'Configurar Planillas', to: '/planillas/configurarplanillas'})
+    // ESTUDIANTES
+    menu[0]._children.push(
+      {
+        _name: 'CSidebarNavDropdown',
+        name: 'Estudiantes',
+        icon: 'cilEducation',
+        items: []
+      }
+    )
+    indice++
+    menu[0]._children[indice].items.push({ name: 'Consultar Estudiante', to: '/estudiantes/buscarestudiante'})
+    menu[0]._children[indice].items.push({ name: 'Listas Estudiantes', to: '/planillas/listadoscurso'})
+    // EVALUACIONES
+    menu[0]._children.push(
+      {
+        _name: 'CSidebarNavDropdown',
+        name: 'Evaluaciones',
+        icon: 'cilCalculator',
+        items: []
+      }
+    )
+    indice++
+    menu[0]._children[indice].items.push({ name: 'Notas Parciales por Periodo', to: '/evaluaciones/planillaparcial'})
+    //menu[0]._children[indice].items.push({ name: 'Definitivas por Periodo', to: '/evaluaciones/planillafinal'})
+    // DESCRIPTORES
+    menu[0]._children.push(
+      {
+        _name: 'CSidebarNavDropdown',
+        name: 'Descriptores',
+        icon: 'cilList',
+        items: []
+      }
+    )
+    indice++
+    menu[0]._children[indice].items.push({ name: 'Generales', to: '/descriptores/generales'})
+    menu[0]._children[indice].items.push({ name: 'Complementarios', to: '/descriptores/complementarios'})
+    //menu[0]._children[indice].items.push({ name: 'Recomendaciones', to: '/descriptores/recomendaciones'})
   }
 })
 

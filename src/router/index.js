@@ -13,38 +13,134 @@ export default new Router({
 
 function configRoutes () {
   return [
-    // 2024-10-21
+    // 2025-03-01
     {
       path: '/',
       redirect: '/inicio',
       name: 'Inicio',
       component: () => import('@/containers/TheContainer'),
       children: [
-        // 2024-10-21
+        // 2025-03-01
         {
           path: 'inicio',
           //beforeEnter: autenticar,
           component: () => import('@/views/Inicio')
         },
-        // 2024-10-26
+        // 2025-03-01
         {
-          path: 'configuracion',
-          redirect: '/configuracion/sedesie',  
-          name: 'Configuracion',
+          path: 'descriptores',
+          redirect: '/descriptores/generales',  
+          name: 'Descriptores',
           component: {
             render (c) { return c('router-view') }
           },
           children: [
-            // 2024-11-16
+            // 2025-03-01
             {
-              path: 'superadmin',
+              path: 'generales',
               beforeEnter: autenticar,
-              name: 'Super Administrador',
-              component: () => import('@/views/configuracion/SuperAdmin')
+              name: 'Generales',
+              component: () => import('@/views/descriptores/Generales')
+            },
+            // 2025-03-01
+            {
+              path: 'complementarios',
+              beforeEnter: autenticar,
+              name: 'Complementarios',
+              component: () => import('@/views/descriptores/Complementarios')
+            },
+            // 2025-03-01
+            {
+              path: 'recomendaciones',
+              beforeEnter: autenticar,
+              name: 'Recomendaciones',
+              component: () => import('@/views/descriptores/Recomendaciones')
             },
           ]
         },
-        // 2024-02-17
+        // 2025-03-01
+        {
+          path: 'planillas',
+          redirect: '/planillas/asignacionacademica',  
+          name: 'Mis Planillas',
+          component: {
+            render (c) { return c('router-view') }
+          },
+          children: [
+            // 2025-03-01
+            {
+              path: 'asignacionacademica',
+              beforeEnter: autenticar,
+              name: 'Asignación Académica',
+              component: () => import('@/views/planillas/AsignacionAcademica')
+            },
+            // 2025-03-01
+            {
+              path: 'listadoscurso',
+              beforeEnter: autenticar,
+              name: 'Listas Estudiantes',
+              component: () => import('@/views/planillas/ListadosCurso')
+            },
+            // 2025-03-04
+            {
+              path: 'configurarplanillas',
+              beforeEnter: autenticar,
+              name: 'Configuración Planillas',
+              component: () => import('@/views/planillas/ConfigurarPlanillas')
+            },
+          ]
+        },
+        // 2025-03-02
+        {
+          path: 'estudiantes',
+          redirect: '/estudiantes/buscarestudiante',  
+          name: 'Estudiantes',
+          component: {
+            render (c) { return c('router-view') }
+          },
+          children: [
+            // 2025-03-02
+            {
+              path: 'buscarestudiante',
+              beforeEnter: autenticar,
+              name: 'Buscar Estudiante',
+              component: () => import('@/views/estudiantes/BuscarEstudiante')
+            },
+            // 2025-03-02
+            {
+              path: 'consultaestudiante',
+              beforeEnter: autenticar,
+              name: 'Consulta Estudiante',
+              component: () => import('@/views/estudiantes/ConsultaEstudiante')
+            },
+          ]
+        },
+        // 2025-03-02
+        {
+          path: 'evaluaciones',
+          redirect: '/evaluaciones/planillaparcial',  
+          name: 'Evaluaciones',
+          component: {
+            render (c) { return c('router-view') }
+          },
+          children: [
+            // 2025-03-02
+            {
+              path: 'planillaparcial',
+              beforeEnter: autenticar,
+              name: 'Planilla Parcial por Periodo',
+              component: () => import('@/views/evaluaciones/PlanillaParcial')
+            },
+            // 2025-03-02
+            {
+              path: 'planillafinal',
+              beforeEnter: autenticar,
+              name: 'Planilla Final por Periodo',
+              component: () => import('@/views/evaluaciones/PlanillaFinal')
+            },
+          ]
+        },
+        // 2025-03-01
         {
           path: 'perfiles',
           redirect: '/perfiles/perfilusuario',  
@@ -53,14 +149,14 @@ function configRoutes () {
             render (c) { return c('router-view') }
           },
           children: [
-            // 2024-02-17
+            // 2025-03-01
             {
               path: 'perfilusuario',
               beforeEnter: autenticar,
               name: 'Perfil del Usuario',
               component: () => import('@/views/perfiles/PerfilUsuario')
             },
-            // 2024-02-17
+            // 2025-03-01
             {
               path: 'cambioclave',
               beforeEnter: autenticar,
@@ -69,24 +165,24 @@ function configRoutes () {
             },
           ]
         },
-        // 2024-10-21
+        // 2025-03-01
         {
           path: 'restringida',
           component: () => import('@/views/pages/Restringida')
         },    
-        // 2024-12-03
+        // 2025-03-01
         {
           path: 'manuales',
           component: () => import('@/views/pages/Manuales')
         },    
       ]
     },
-    // 2024-10-21
+    // 2025-03-01
     {
       path: "*",
       component: () => import('@/views/pages/Extraviada')
     },
-    // 2024-10-21
+    // 2025-03-01
     {
       path: '/bienvenida',
       component: () => import('@/views/pages/Bienvenida')

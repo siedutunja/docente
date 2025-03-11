@@ -5,7 +5,7 @@
         <CCard>
           <CCardBody>
             <CCard>
-              <CCardFooter style="background: rgb(220, 160, 242, 0.879); margin-top: -40; box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);">
+              <CCardFooter style="background: rgb(8, 204, 34, 0.879); margin-top: -40; box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);">
                 <CRow>
                   <CCol lg="2" md="3">
                     <div class="text-center">
@@ -14,14 +14,15 @@
                   </CCol>
                   <CCol lg="8" md="6">
                     <div class="mt-2 text-center">
-                      <h6 style="margin-top: -5" class="text-muted">{{ secretaria }}</h6>
-                      <h4 style="margin-top: -1">{{ $store.state.nombreInstitucion }}</h4>
-                      <h6 style="margin-top: -1" class="text-muted">DANE: {{ $store.state.daneInstitucion }} - NIT: {{ $store.state.nitInstitucion }}</h6>
+                      <h5 style="margin-top: -5" class="text-white">{{ secretaria }}</h5>
+                      <h3 style="margin-top: -1" class="text-white">{{ $store.state.nombreInstitucion }}</h3>
+                      <h6 style="margin-top: -1" class="text-white">DANE: {{ $store.state.daneInstitucion }} - NIT: {{ $store.state.nitInstitucion }}</h6>
                     </div>
                   </CCol>
                 </CRow>
               </CCardFooter>
             </CCard>
+            
             <!--
             <b-card-group deck class="mt-5">
               <b-card border-variant="light" class="text-center linkini" @click="irListados">
@@ -119,7 +120,7 @@
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
     background: rgba(149, 195, 247, 0.108);
     cursor: pointer;
-    color: rgba(247, 178, 60, 0.879);
+    color: rgba(8, 204, 34, 0.879);
     /*background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);*/
   }
 </style>

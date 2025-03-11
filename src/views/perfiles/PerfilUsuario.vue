@@ -103,12 +103,14 @@
                   <b-form-invalid-feedback id="feedCorreo" >Campo requerido.</b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
+              <!--
               <b-col lg="6" md="12">
                 <b-form-group label="Cargo*" label-for="cargo" class="etiqueta">
                   <b-form-input id="cargo" ref="cargo" v-model.trim="$v.datosPersona.cargo.$model" :state="validateStateP('cargo')" aria-describedby="feedCargo" autocomplete="off" maxlength="50" disabled></b-form-input>
                   <b-form-invalid-feedback id="feedCargo" >Campo requerido.</b-form-invalid-feedback>
                 </b-form-group>
               </b-col>
+              -->
             </b-row>
           </b-card-text>
           <template #footer>
@@ -151,7 +153,7 @@
           telefono1: null,
           telefono2: null,
           correo: null,
-          cargo: null
+          //cargo: null
         },
         comboTiposDoc: [],
         comboMunicipios: [],
@@ -175,7 +177,7 @@
         telefono1: { required, minLength: minLength(10) },
         telefono2: { minLength: minLength(0) },
         correo: { required, minLength: minLength(5) },
-        cargo: { required }
+        //cargo: { required }
       }
     },
     methods: {
@@ -221,7 +223,7 @@
           this.datosPersona.telefono2 == null
         }
         this.datosPersona.correo = this.datosPersona.correo.toLowerCase()
-        this.datosPersona.cargo = this.datosPersona.cargo.toUpperCase()
+        //this.datosPersona.cargo = this.datosPersona.cargo.toUpperCase()
         await axios
         .put(CONFIG.ROOT_PATH + 'academico/perfil/usuario', JSON.stringify(this.datosPersona), { headers: {"Content-Type": "application/json; charset=utf-8" }})
         .then(response => {
@@ -238,7 +240,7 @@
       },
       async consultaDatosPersona() {
         await axios
-        .get(CONFIG.ROOT_PATH + 'academico/personas/perfil', { params: { idPersona: this.$store.state.idPersona }})
+        .get(CONFIG.ROOT_PATH + 'docente/personas/perfil', { params: { idDocente: this.$store.state.idDocente }})
         .then(response => {
           if (response.data.error){
             this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Consulta Perfil Persona')

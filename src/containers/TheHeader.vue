@@ -11,17 +11,12 @@
           <CIcon name="cil-home" style="margin-right: 0.3rem;" />Inicio
         </CHeaderNavLink>
       </CHeaderNavItem>
-      <CHeaderNavItem class="px-1" v-if="$store.state.idRol == 1 || $store.state.idRol == 12">
-        <CHeaderNavLink>
-          <MenuConfiguracion/>
-        </CHeaderNavLink>
-      </CHeaderNavItem>
     </CHeaderNav>
     <CHeaderNav class="mr-4">
       <CHeaderNavItem class="d-md-down-none mx-2">
         <CHeaderNavLink>
           <CIcon name="cil-calendar"/><span class="ml-2 text-primary"><strong>AÑO LECTIVO {{ $store.state.aLectivo }}</strong></span><span class="mx-3">|</span>
-          <CIcon name="cil-user" class="mr-1"/>{{ $store.state.nombreUsuario }} {{ $store.state.apellidoUsuario }} - {{ $store.state.nemoRol }}
+          <CIcon name="cil-user" class="mr-1"/>{{ $store.state.nombre1Usuario }} {{ $store.state.apellido1Usuario }} - Docente
         </CHeaderNavLink>
       </CHeaderNavItem>
       <TheHeaderDropdownAccnt/>
@@ -34,13 +29,11 @@
 
 <script>
   import TheHeaderDropdownAccnt from './TheHeaderDropdownAccnt'
-  import MenuConfiguracion from './MenuConfiguracion'
 
   export default {
     name: 'TheHeader',
     components: {
       TheHeaderDropdownAccnt,
-      MenuConfiguracion
     },
     data () {
       return { 
