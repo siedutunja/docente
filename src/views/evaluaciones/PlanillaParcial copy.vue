@@ -8,28 +8,25 @@
           </template>
           <b-card-text>
             <b-row>
-              <b-col lg="3">
-                <b-form-group label="Seleccione el Periodo:" label-for="periodo" class="etiqueta">
-                  <b-form-select id="periodo" ref="periodo" v-model="idPeriodo" :options="comboPeriodos" @change="idPlanilla=null"></b-form-select>
-                </b-form-group>
-              </b-col>
               <b-col lg="9">
                 <b-form-group label="Seleccione la Planilla:" label-for="asignatura" class="etiqueta">
-                  <b-form-select id="asignatura" ref="asignatura" v-model="idPlanilla" :options="comboPlanillas" @change="cargarConfiguracionPlanilla()" :disabled="idPeriodo!=null ? false : true"></b-form-select>
+                  <b-form-select id="asignatura" ref="asignatura" v-model="idPlanilla" :options="comboPlanillas" @change="idPeriodo=null"></b-form-select>
+                </b-form-group>
+              </b-col>
+              <b-col lg="3">
+                <b-form-group label="Seleccione el Periodo:" label-for="periodo" class="etiqueta">
+                  <b-form-select id="periodo" ref="periodo" v-model="idPeriodo" :options="comboPeriodos" @change="cargarConfiguracionPlanilla()" :disabled="idPlanilla!=null ? false : true"></b-form-select>
                 </b-form-group>
               </b-col>
             </b-row>
             <b-row><b-col lg="12"><hr></b-col></b-row>
-            <div v-if="idPlanilla != null">
+            <div v-if="idPeriodo != null">
               <b-row v-if="planillita == 1">
                 <b-col>
                   <vue-good-table ref="notas1" :columns="encabColumnas1" :rows="notasPlanilla" styleClass="vgt-table condensed bordered striped" :line-numbers="true">
                     <template slot="table-row" slot-scope="props">
                       <span v-if="props.column.field == 'estudiante'">
                         <span :style="(colorConcepto(props.row.id_estado_actual))"><strong>{{props.row.estudiante}}</strong></span>
-                      </span>
-                      <span v-if="props.column.field == 'diversa'">
-                        <span><strong>{{props.row.diversa}}</strong></span>
                       </span>
                       <span v-if="props.column.field == 'n1C1'">
                         <b-form-input v-model="props.row.n1C1" @blur="actualizarItemC1(props.row)" autocomplete="off" maxlength="3" @keydown="soloDecimales" :disabled="props.row.id_estado_actual==1 ? false : true"></b-form-input>
@@ -65,7 +62,7 @@
                   </vue-good-table>
                   <b-row>
                     <b-col v-if="!botonGuardando">
-                      <b-button class="small mx-1 mt-4" variant="primary" @click="botonGuardando = true,guardarPlanilla()">Guardar Planilla Parcial</b-button>
+                      <b-button class="small mx-1 mt-4" variant="primary" @click="botonGuardando = true,guardarPlanillaNoPreescolar()">Guardar Planilla Parcial</b-button>
                       <!--<b-button class="small mx-1 mt-4 float-right" variant="success" @click="procesarPlanila">Procesar y Generar Planilla Final del Periodo</b-button>-->
                     </b-col>
                     <b-col v-else>
@@ -83,9 +80,6 @@
                     <template slot="table-row" slot-scope="props">
                       <span v-if="props.column.field == 'estudiante'">
                         <span :style="(colorConcepto(props.row.id_estado_actual))"><strong>{{props.row.estudiante}}</strong></span>
-                      </span>
-                      <span v-if="props.column.field == 'diversa'">
-                        <span><strong>{{props.row.diversa}}</strong></span>
                       </span>
                       <span v-if="props.column.field == 'n1C1'">
                         <b-form-input v-model="props.row.n1C1" @blur="actualizarItemC1(props.row)" autocomplete="off" maxlength="3" @keydown="soloDecimales" :disabled="props.row.id_estado_actual==1 ? false : true"></b-form-input>
@@ -142,7 +136,7 @@
                   </vue-good-table>
                   <b-row>
                     <b-col v-if="!botonGuardando">
-                      <b-button class="small mx-1 mt-4" variant="primary" @click="botonGuardando = true,guardarPlanilla()">Guardar Planilla Parcial</b-button>
+                      <b-button class="small mx-1 mt-4" variant="primary" @click="botonGuardando = true,guardarPlanillaNoPreescolar()">Guardar Planilla Parcial</b-button>
                       <!--<b-button class="small mx-1 mt-4 float-right" variant="success" @click="procesarPlanila">Procesar y Generar Planilla Final del Periodo</b-button>-->
                     </b-col>
                     <b-col v-else>
@@ -160,9 +154,6 @@
                     <template slot="table-row" slot-scope="props">
                       <span v-if="props.column.field == 'estudiante'">
                         <span :style="(colorConcepto(props.row.id_estado_actual))"><strong>{{props.row.estudiante}}</strong></span>
-                      </span>
-                      <span v-if="props.column.field == 'diversa'">
-                        <span><strong>{{props.row.diversa}}</strong></span>
                       </span>
                       <span v-if="props.column.field == 'n1C1'">
                         <b-form-input v-model="props.row.n1C1" @blur="actualizarItemC1(props.row)" autocomplete="off" maxlength="3" @keydown="soloDecimales" :disabled="props.row.id_estado_actual==1 ? false : true"></b-form-input>
@@ -237,92 +228,7 @@
                   </vue-good-table>
                   <b-row>
                     <b-col v-if="!botonGuardando">
-                      <b-button class="small mx-1 mt-4" variant="primary" @click="botonGuardando = true,guardarPlanilla()">Guardar Planilla Parcial</b-button>
-                      <!--<b-button class="small mx-1 mt-4 float-right" variant="success" @click="procesarPlanila">Procesar y Generar Planilla Final del Periodo</b-button>-->
-                    </b-col>
-                    <b-col v-else>
-                      <b-button class="mx-1 mt-4" variant="primary" disabled>
-                        <b-spinner small type="grow"></b-spinner>
-                        Guardando la planilla...
-                      </b-button>
-                    </b-col>
-                  </b-row>
-                </b-col>
-              </b-row>
-              <b-row v-else-if="planillita == 4">
-                <b-col>
-                  <vue-good-table ref="notas4" :columns="encabColumnas2" :rows="notasPlanillaPree" styleClass="vgt-table condensed bordered striped" :line-numbers="true">
-                    <template slot="table-row" slot-scope="props">
-                      <span v-if="props.column.field == 'estudiante'">
-                        <span :style="(colorConcepto(props.row.id_estado_actual))"><strong>{{props.row.estudiante}}</strong></span>
-                      </span>
-                      <span v-if="props.column.field == 'diversa'">
-                        <span><strong>{{props.row.diversa}}</strong></span>
-                      </span>
-                      <span v-if="props.column.field == 'definitivapree'">
-                        <b-form-input v-model="props.row.definitivapree" @blur="actualizarItemPree(props.row)" autocomplete="off" maxlength="1" :disabled="props.row.id_estado_actual==1 ? false : true"></b-form-input>
-                      </span>
-                      <span v-if="props.column.field == 'concepto'">
-                        <span><strong>{{props.row.concepto}}</strong></span>
-                      </span>
-                      <span v-if="props.column.field == 'ausJ'">
-                        <b-form-input v-model="props.row.ausJ" @blur="actualizarFallasPree(props.row)" autocomplete="off" maxlength="3" @keydown="soloNumeros" :disabled="props.row.id_estado_actual==1 ? false : true"></b-form-input>
-                      </span>
-                      <span v-if="props.column.field == 'ausS'">
-                        <b-form-input v-model="props.row.ausS" @blur="actualizarFallasPree(props.row)" autocomplete="off" maxlength="3" @keydown="soloNumeros" :disabled="props.row.id_estado_actual==1 ? false : true"></b-form-input>
-                      </span>
-                    </template>
-                    <div slot="emptystate">
-                      <h5 class="text-danger ml-5">No existen estudiantes en la planilla</h5>
-                    </div>
-                  </vue-good-table>
-                  <b-row>
-                    <b-col v-if="!botonGuardando">
-                      <b-button class="small mx-1 mt-4" variant="primary" @click="botonGuardando = true,guardarPlanillaPreescolar()">Guardar Planilla Parcial</b-button>
-                      <!--<b-button class="small mx-1 mt-4 float-right" variant="success" @click="procesarPlanila">Procesar y Generar Planilla Final del Periodo</b-button>-->
-                    </b-col>
-                    <b-col v-else>
-                      <b-button class="mx-1 mt-4" variant="primary" disabled>
-                        <b-spinner small type="grow"></b-spinner>
-                        Guardando la planilla...
-                      </b-button>
-                    </b-col>
-                  </b-row>
-                </b-col>
-              </b-row>
-              <b-row v-else-if="planillita == 5">
-                <b-col>
-                  <vue-good-table ref="notas4" :columns="encabColumnas3" :rows="notasPlanillaCompor" styleClass="vgt-table condensed bordered striped" :line-numbers="true">
-                    <template slot="table-row" slot-scope="props">
-                      <span v-if="props.column.field == 'estudiante'">
-                        <span :style="(colorConcepto(props.row.id_estado_actual))"><strong>{{props.row.estudiante}}</strong></span>
-                      </span>
-                      <span v-if="props.column.field == 'definitivacompor'">
-                        <b-form-input v-model="props.row.definitivacompor" @blur="actualizarItemCompor(props.row)" autocomplete="off" maxlength="1" :disabled="props.row.id_estado_actual==1 ? false : true"></b-form-input>
-                      </span>
-                      <span v-if="props.column.field == 'diversa'">
-                        <span><strong>{{props.row.diversa}}</strong></span>
-                      </span>
-                      <span v-if="props.column.field == 'concepto'">
-                        <span><strong>{{props.row.concepto}}</strong></span>
-                      </span>
-                      <span v-if="props.column.field == 'observaciones'">
-                        <b-form-input v-model="props.row.observaciones" @blur="actualizarItemCompor(props.row)" autocomplete="off" maxlength="255" :disabled="props.row.id_estado_actual==1 ? false : true"></b-form-input>
-                      </span>
-                      <span v-if="props.column.field == 'ausJ'">
-                        <b-form-input v-model="props.row.ausJ" @blur="actualizarFallasCompor(props.row)" autocomplete="off" maxlength="3" @keydown="soloNumeros" :disabled="props.row.id_estado_actual==1 ? false : true"></b-form-input>
-                      </span>
-                      <span v-if="props.column.field == 'ausS'">
-                        <b-form-input v-model="props.row.ausS" @blur="actualizarFallasCompor(props.row)" autocomplete="off" maxlength="3" @keydown="soloNumeros" :disabled="props.row.id_estado_actual==1 ? false : true"></b-form-input>
-                      </span>
-                    </template>
-                    <div slot="emptystate">
-                      <h5 class="text-danger ml-5">No existen estudiantes en la planilla</h5>
-                    </div>
-                  </vue-good-table>
-                  <b-row>
-                    <b-col v-if="!botonGuardando">
-                      <b-button class="small mx-1 mt-4" variant="primary" @click="botonGuardando = true,guardarPlanillaComportamiento()">Guardar Planilla Parcial</b-button>
+                      <b-button class="small mx-1 mt-4" variant="primary" @click="botonGuardando = true,guardarPlanillaNoPreescolar()">Guardar Planilla Parcial</b-button>
                       <!--<b-button class="small mx-1 mt-4 float-right" variant="success" @click="procesarPlanila">Procesar y Generar Planilla Final del Periodo</b-button>-->
                     </b-col>
                     <b-col v-else>
@@ -372,47 +278,14 @@
         configuracionPlanilla: {},
         encabezados: {},
         notasPlanilla: [],
-        notasPlanillaPree: [],
-        notasPlanillaCompor: [],
         encabColumnas1 : [],
         encabColumnas2 : [],
-        encabColumnas3 : [],
         botonGuardando: false,
         planillita: 1,
       }
     },
     methods: {
-      async guardarPlanillaPreescolar() {
-        await axios
-        .put(CONFIG.ROOT_PATH + 'docente/notas/planillapree', JSON.stringify(this.notasPlanillaPree), { headers: {"Content-Type": "application/json; charset=utf-8" }})
-        .then(response => {
-          if (response.data.error){
-            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Actualizar Planilla Preescolar')
-          } else{
-            this.mensajeEmergente('success',CONFIG.TITULO_MSG,'La planilla parcial de evaluaciones se ha guardado satisfactoriamente.')
-            this.botonGuardando = false
-          }
-        })
-        .catch(err => {
-          this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Actualizar Planilla Preescolar. Intente más tarde. ' + err)
-        })
-      },
-      async guardarPlanillaComportamiento() {
-        await axios
-        .put(CONFIG.ROOT_PATH + 'docente/notas/planillacompor', JSON.stringify(this.notasPlanillaCompor), { headers: {"Content-Type": "application/json; charset=utf-8" }})
-        .then(response => {
-          if (response.data.error){
-            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Actualizar Planilla Comportamiento')
-          } else{
-            this.mensajeEmergente('success',CONFIG.TITULO_MSG,'La planilla parcial de evaluaciones se ha guardado satisfactoriamente.')
-            this.botonGuardando = false
-          }
-        })
-        .catch(err => {
-          this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Actualizar Planilla Comportamiento. Intente más tarde. ' + err)
-        })
-      },
-      async guardarPlanilla() {
+      async guardarPlanillaNoPreescolar() {
         await axios
         .put(CONFIG.ROOT_PATH + 'docente/notas/planilla', JSON.stringify(this.notasPlanilla), { headers: {"Content-Type": "application/json; charset=utf-8" }})
         .then(response => {
@@ -440,90 +313,6 @@
           this.notasPlanilla[indice].ausS = null
         } else  {
           this.notasPlanilla[indice].ausS = item.ausS
-        }
-      },
-      actualizarFallasPree(item) {
-        let indice = this.notasPlanillaPree.findIndex(asigna => asigna.idMatricula === item.idMatricula)
-        if (item.ausJ == '' || item.ausJ == null) {
-          this.notasPlanillaPree[indice].ausJ = null
-        } else  {
-          this.notasPlanillaPree[indice].ausJ = item.ausJ
-        }
-        if (item.ausS == '' || item.ausS == null) {
-          this.notasPlanillaPree[indice].ausS = null
-        } else  {
-          this.notasPlanillaPree[indice].ausS = item.ausS
-        }
-      },
-      actualizarFallasCompor(item) {
-        let indice = this.notasPlanillaCompor.findIndex(asigna => asigna.idMatricula === item.idMatricula)
-        if (item.ausJ == '' || item.ausJ == null) {
-          this.notasPlanillaCompor[indice].ausJ = null
-        } else  {
-          this.notasPlanillaCompor[indice].ausJ = item.ausJ
-        }
-        if (item.ausS == '' || item.ausS == null) {
-          this.notasPlanillaCompor[indice].ausS = null
-        } else  {
-          this.notasPlanillaCompor[indice].ausS = item.ausS
-        }
-      },
-      actualizarItemPree(item) {
-        let indice = this.notasPlanillaPree.findIndex(asigna => asigna.idMatricula === item.idMatricula)
-        if (item.definitivapree == '' || item.definitivapree == null) {
-          this.notasPlanillaPree[indice].definitivapree = null
-          item.definitivapree = null
-        } else  {
-          if (item.definitivapree == this.configuracionPlanilla.preeL1 || item.definitivapree == this.configuracionPlanilla.preeL2 || item.definitivapree == this.configuracionPlanilla.preeL3 || item.definitivapree == this.configuracionPlanilla.preeL4) {
-            this.notasPlanillaPree[indice].definitivapree = item.definitivapree
-          } else {
-            this.notasPlanillaPree[indice].definitivapree = null
-            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'La evaluación: ' + item.definitivapree  + ' no es válida.')
-            item.definitivapree = null
-          }
-        }
-        if (item.definitivapree == this.configuracionPlanilla.preeL1) {
-          this.notasPlanillaPree[indice].concepto = this.configuracionPlanilla.preeC1
-        } else if (item.definitivapree == this.configuracionPlanilla.preeL2) {
-          this.notasPlanillaPree[indice].concepto = this.configuracionPlanilla.preeC2
-        } else if (item.definitivapree == this.configuracionPlanilla.preeL3) {
-          this.notasPlanillaPree[indice].concepto = this.configuracionPlanilla.preeC3
-        } else if (item.definitivapree == this.configuracionPlanilla.preeL4) {
-          this.notasPlanillaPree[indice].concepto = this.configuracionPlanilla.preeC4
-        } else {
-          this.notasPlanillaPree[indice].concepto = null
-        }
-      },
-      actualizarItemCompor(item) {
-        let indice = this.notasPlanillaCompor.findIndex(asigna => asigna.idMatricula === item.idMatricula)
-        if (item.observaciones == '' || item.observaciones == null) {
-          this.notasPlanillaCompor[indice].observaciones = null
-          item.observaciones = null
-        } else  {
-          this.notasPlanillaCompor[indice].observaciones = item.observaciones
-        }
-        if (item.definitivacompor == '' || item.definitivacompor == null) {
-          this.notasPlanillaCompor[indice].definitivacompor = null
-          item.definitivacompor = null
-        } else  {
-          if (item.definitivacompor == this.configuracionPlanilla.compL1 || item.definitivacompor == this.configuracionPlanilla.compL2 || item.definitivacompor == this.configuracionPlanilla.compL3 || item.definitivacompor == this.configuracionPlanilla.compL4) {
-            this.notasPlanillaCompor[indice].definitivacompor = item.definitivacompor
-          } else {
-            this.notasPlanillaCompor[indice].definitivacompor = null
-            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'La evaluación: ' + item.definitivacompor  + ' no es válida.')
-            item.definitivacompor = null
-          }
-        }
-        if (item.definitivacompor == this.configuracionPlanilla.compL1) {
-          this.notasPlanillaCompor[indice].concepto = this.configuracionPlanilla.compC1
-        } else if (item.definitivacompor == this.configuracionPlanilla.compL2) {
-          this.notasPlanillaCompor[indice].concepto = this.configuracionPlanilla.compC2
-        } else if (item.definitivacompor == this.configuracionPlanilla.compL3) {
-          this.notasPlanillaCompor[indice].concepto = this.configuracionPlanilla.compC3
-        } else if (item.definitivacompor == this.configuracionPlanilla.compL4) {
-          this.notasPlanillaCompor[indice].concepto = this.configuracionPlanilla.compC4
-        } else {
-          this.notasPlanillaCompor[indice].concepto = null
         }
       },
       actualizarItemC1(item) {
@@ -850,110 +639,24 @@
       },
       async cargarConfiguracionPlanilla() {
         this.configuracionPlanilla = {}
-        this.planillita = 0
         this.idCurso = null,
         this.$store.state.listaPlanillasDocente.forEach(element => {
           if (element.idPlanilla == this.idPlanilla) {
             this.configuracionPlanilla = element
             this.idCurso = element.idCurso
-            if (this.configuracionPlanilla.orden == 99) {
-              this.planillita = 5
-              this.cargarNotasPeriodoComportamiento()
+            if (this.configuracionPlanilla.estadoC1 == 1 && this.configuracionPlanilla.estadoC2 == 0 && this.configuracionPlanilla.estadoC3 == 0) {
+              this.planillita = 1
+            } else if (this.configuracionPlanilla.estadoC1 == 1 && this.configuracionPlanilla.estadoC2 == 1 && this.configuracionPlanilla.estadoC3 == 0) {
+              this.planillita = 2
+            } else if (this.configuracionPlanilla.estadoC1 == 1 && this.configuracionPlanilla.estadoC2 == 1 && this.configuracionPlanilla.estadoC3 == 1) {
+              this.planillita = 3
             } else {
-              if (this.configuracionPlanilla.id_nivel > 1 && this.configuracionPlanilla.id_nivel < 7) {
-                if (this.configuracionPlanilla.estadoC1 == 1 && this.configuracionPlanilla.estadoC2 == 0 && this.configuracionPlanilla.estadoC3 == 0) {
-                  this.planillita = 1
-                } else if (this.configuracionPlanilla.estadoC1 == 1 && this.configuracionPlanilla.estadoC2 == 1 && this.configuracionPlanilla.estadoC3 == 0) {
-                  this.planillita = 2
-                } else if (this.configuracionPlanilla.estadoC1 == 1 && this.configuracionPlanilla.estadoC2 == 1 && this.configuracionPlanilla.estadoC3 == 1) {
-                  this.planillita = 3
-                }
-                this.cargarEncabezados()
-              } else if (this.configuracionPlanilla.id_nivel == 1) {
-                this.planillita = 4
-                this.cargarNotasPeriodoPreescolar()
-              } else {
-                this.mensajeEmergente('info',CONFIG.TITULO_MSG,'Lo sentimos, algo salio mal con la planilla seleccionada.')
-              }
+              this.planillita = 0
             }
           }
         })
-      },
-      async cargarNotasPeriodoComportamiento() {
-        this.notasPlanillaCompor = []
-        await axios
-        .get(CONFIG.ROOT_PATH + 'docente/notas/planillacompor', {params: {idCurso: this.idCurso, idPeriodo: this.idPeriodo, idPlanilla: this.idPlanilla}})
-        .then(response => {
-          if (response.data.error){
-            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Notas periodo Comportamiento')
-          } else{
-            if (response.data.datos != 0) {
-              response.data.datos.forEach(element => {
-                if(element.ausJ === undefined) element.ausJ = null
-                if(element.ausS === undefined) element.ausS = null
-                if(element.definitivacompor === undefined) element.definitivacompor = null
-                if(element.concepto === undefined) element.concepto = null
-                if(element.observaciones === undefined) element.observaciones = null
-                element.id_asignatura_curso = this.idPlanilla
-                element.periodo = this.idPeriodo
-              })
-              this.notasPlanillaCompor = response.data.datos
-              //console.log(JSON.stringify(this.notasPlanilla))
-              this.construirPlanillaNotasComportamiento()
-            }
-          }
-        })
-        .catch(err => {
-          this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Notas periodo Comportamiento. Intente más tarde.' + err)
-        })
-      },
-      construirPlanillaNotasComportamiento() {
-        this.encabColumnas3 = [
-          { label: 'Apellidos y Nombres Estudiante', field: 'estudiante', sortable: false },
-          { label: '', field: 'diversa', sortable: false },
-          { label: 'Definitiva', field: 'definitivacompor', width: '120px', sortable: false },
-          { label: 'Concepto', field: 'concepto', width: '110px', sortable: false },
-          { label: 'Observaciones_del_Periodo', field: 'observaciones', sortable: false },
-          { label: 'AJ', field: 'ausJ', width: '80px', sortable: false },
-          { label: 'AS', field: 'ausS', width: '80px', sortable: false },
-        ]
-      },
-      async cargarNotasPeriodoPreescolar() {
-        this.notasPlanillaPree = []
-        await axios
-        .get(CONFIG.ROOT_PATH + 'docente/notas/planillapree', {params: {idCurso: this.idCurso, idPeriodo: this.idPeriodo, idPlanilla: this.idPlanilla}})
-        .then(response => {
-          if (response.data.error){
-            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Notas periodo Preescolar')
-          } else{
-            if (response.data.datos != 0) {
-              response.data.datos.forEach(element => {
-                if(element.ausJ === undefined) element.ausJ = null
-                if(element.ausS === undefined) element.ausS = null
-                if(element.definitivapree === undefined) element.definitivapree = null
-                if(element.concepto === undefined) element.concepto = null
-                element.id_asignatura_curso = this.idPlanilla
-                element.periodo = this.idPeriodo
-              })
-              this.notasPlanillaPree = response.data.datos
-              //console.log(JSON.stringify(this.notasPlanilla))
-              this.construirPlanillaNotasPreescolar()
-            }
-          }
-        })
-        .catch(err => {
-          this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Notas periodo. Intente más tarde.' + err)
-        })
-      },
-      construirPlanillaNotasPreescolar() {
-        this.encabColumnas2 = [
-          { label: 'Apellidos y Nombres Estudiante', field: 'estudiante', sortable: false },
-          { label: '', field: 'diversa', sortable: false },
-          { label: 'Definitiva', field: 'definitivapree', sortable: false },
-          { label: 'Concepto', field: 'concepto', width: '400px', sortable: false },
-          { label: 'Justificadas', field: 'ausJ', sortable: false },
-          { label: 'Sin justificar', field: 'ausS', sortable: false },
-        ]
+        //console.log(JSON.stringify(this.configuracionPlanilla))
+        this.cargarEncabezados()
       },
       async cargarEncabezados() {
         this.encabezados = {}
@@ -965,7 +668,11 @@
           } else{
             if (response.data.datos != 0) {
               this.encabezados = response.data.datos
-              this.cargarNotasPeriodo()
+              if (this.configuracionPlanilla.id_nivel != 1) {
+                this.cargarNotasPeriodoNoPresscolar()
+              } else {
+                this.cargarNotasPeriodoSiPresscolar()
+              }
             }
           }
         })
@@ -973,7 +680,10 @@
           this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Encabezados Planilla. Intente más tarde.' + err)
         })
       },
-      async cargarNotasPeriodo() {
+      cargarNotasPeriodoSiPresscolar() {
+        // AQUI SE CONSTRUYE LA PLANILLA DE PREESCOLAR
+      },
+      async cargarNotasPeriodoNoPresscolar() {
         this.notasPlanilla = []
         await axios
         .get(CONFIG.ROOT_PATH + 'docente/notas/planilla', {params: {idCurso: this.idCurso, idPeriodo: this.idPeriodo, idPlanilla: this.idPlanilla}})
@@ -1011,7 +721,7 @@
               })
               this.notasPlanilla = response.data.datos
               //console.log(JSON.stringify(this.notasPlanilla))
-              this.construirPlanillaNotas()
+              this.construirPlanillaNotasNoPreescolar()
             }
           }
         })
@@ -1019,7 +729,7 @@
           this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Notas periodo. Intente más tarde.' + err)
         })
       },
-      async construirPlanillaNotas() {
+      async construirPlanillaNotasNoPreescolar() {
         let enca1 = ''
         let enca2 = ''
         let enca3 = ''
@@ -1049,7 +759,7 @@
             enca5 = this.encabezados.enc05 + '\n___\nEQ'
             this.encabColumnas1 = [
               { label: 'Apellidos y Nombres Estudiante', field: 'estudiante', sortable: false },
-              { label: '', field: 'diversa', width: '50px', sortable: false },
+              { label: '', field: 'estado', width: '50px', sortable: false },
               { label: enca1, field: 'n1C1', width: '60px', sortable: false },
               { label: enca2, field: 'n2C1', width: '60px', sortable: false },
               { label: enca3, field: 'n3C1', width: '60px', sortable: false },
@@ -1090,7 +800,7 @@
             enca10 = this.encabezados.enca10 + '\n___\nEQ'
             this.encabColumnas1 = [
               { label: 'Apellidos y Nombres Estudiante', field: 'estudiante', sortable: false },
-              { label: '', field: 'diversa', width: '50px', sortable: false },
+              { label: '', field: 'estado', width: '50px', sortable: false },
               { label: enca1, field: 'n1C1', width: '60px', sortable: false },
               { label: enca2, field: 'n2C1', width: '60px', sortable: false },
               { label: enca3, field: 'n3C1', width: '60px', sortable: false },
@@ -1148,7 +858,7 @@
             enca15 = this.encabezados.enc14 + '\n___\nEQ'
             this.encabColumnas1 = [
               { label: 'Apellidos y Nombres Estudiante', field: 'estudiante', sortable: false },
-              { label: '', field: 'diversa', width: '50px', sortable: false },
+              { label: '', field: 'estado', width: '50px', sortable: false },
               { label: enca1, field: 'n1C1', width: '60px', sortable: false },
               { label: enca2, field: 'n2C1', width: '60px', sortable: false },
               { label: enca3, field: 'n3C1', width: '60px', sortable: false },
