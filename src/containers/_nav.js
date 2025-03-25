@@ -53,7 +53,8 @@ jwt.verify(token, CONFIG.SECRET_KEY, (err, data) => {
     )
     indice++
     menu[0]._children[indice].items.push({ name: 'Consultar Estudiante', to: '/estudiantes/buscarestudiante'})
-    menu[0]._children[indice].items.push({ name: 'Listas Estudiantes', to: '/planillas/listadoscurso'})
+    menu[0]._children[indice].items.push({ name: 'Listas y Planillas', to: '/planillas/listadoscurso'})
+    menu[0]._children[indice].items.push({ name: 'Observador', to: '/estudiantes/listaobservadores'})
     // EVALUACIONES
     menu[0]._children.push(
       {
@@ -64,7 +65,8 @@ jwt.verify(token, CONFIG.SECRET_KEY, (err, data) => {
       }
     )
     indice++
-    menu[0]._children[indice].items.push({ name: 'Notas Parciales por Periodo', to: '/evaluaciones/planillaparcial'})
+    menu[0]._children[indice].items.push({ name: 'Notas Parciales por Periodo', to: '/evaluaciones/planillaparcialperiodo'})
+    menu[0]._children[indice].items.push({ name: 'Resumen Final por Periodo', to: '/evaluaciones/planillafinalperiodo'})
     //menu[0]._children[indice].items.push({ name: 'Definitivas por Periodo', to: '/evaluaciones/planillafinal'})
     // DESCRIPTORES
     menu[0]._children.push(

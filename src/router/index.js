@@ -113,6 +113,20 @@ function configRoutes () {
               name: 'Consulta Estudiante',
               component: () => import('@/views/estudiantes/ConsultaEstudiante')
             },
+            // 2025-03-23
+            {
+              path: 'listaobservadores',
+              beforeEnter: autenticar,
+              name: 'Observador',
+              component: () => import('@/views/estudiantes/ListaObservadores')
+            },
+            // 2025-03-23
+            {
+              path: 'observador',
+              beforeEnter: autenticar,
+              name: 'Observador del Estudiante',
+              component: () => import('@/views/estudiantes/Observador')
+            },
           ]
         },
         // 2025-03-02
@@ -126,10 +140,17 @@ function configRoutes () {
           children: [
             // 2025-03-02
             {
-              path: 'planillaparcial',
+              path: 'planillaparcialperiodo',
               beforeEnter: autenticar,
-              name: 'Planilla Parcial por Periodo',
-              component: () => import('@/views/evaluaciones/PlanillaParcial')
+              name: 'Evaluación Parcial por Periodo',
+              component: () => import('@/views/evaluaciones/PlanillaParcialPeriodo')
+            },
+            // 2025-03-24
+            {
+              path: 'planillafinalperiodo',
+              beforeEnter: autenticar,
+              name: 'Resumen Final por Periodo',
+              component: () => import('@/views/evaluaciones/PlanillaFinalPeriodo')
             },
             // 2025-03-02
             {

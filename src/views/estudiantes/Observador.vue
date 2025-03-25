@@ -1,0 +1,523 @@
+<template>
+  <div>
+    <b-row>
+      <b-col lg="12">
+        <b-card>
+          <b-card-text>
+            <b-row>
+              <b-col lg="12">
+                <h2 class="text-center">OBSERVADOR DEL ESTUDIANTE</h2>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col lg="12">
+                <b-alert class="text-center" :variant="datosFichaE.id_estado_actual==1 ? 'success' : 'danger'" show>ESTUDIANTE<br><h4 class="mb-0"><b>{{ datosFichaE.estudiante }}</b></h4><span><b>ESTADO: {{ datosFichaE.estado }}</b></span></b-alert>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col lg="12">
+                <b-card border-variant="secondary">
+                  <b-card-text>
+                    <b-row>
+                      <b-col lg="12">
+                        <h5 class="mb-0"><b-icon icon="person" aria-hidden="true"></b-icon> Datos del Estudiante</h5>
+                        <hr>
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col lg="2" md="6">
+                        <div>Número Documento:</div>
+                        <div class="etiqueta">{{datosFichaE.tipodoc}} # {{datosFichaE.documento}}</div>
+                      </b-col>
+                      <b-col lg="2" md="6">
+                        <div>Fecha Nace:</div>
+                        <div class="etiqueta">{{ datosFichaE.fechaNace }}</div>
+                      </b-col>
+                      <b-col lg="2" md="6">
+                        <div>Municipio:</div>
+                        <div class="etiqueta">{{datosFichaE.municipioNac != null ? datosFichaE.municipioNac.toUpperCase() : '-'}}</div>
+                      </b-col>
+                      <b-col lg="2" md="6">
+                        <div>Edad:</div>
+                        <div class="etiqueta">{{ calcularEdad(datosFichaE.fechaNace)}} Años</div>
+                      </b-col>
+                      <b-col lg="2" md="6">
+                        <div>Nacionalidad:</div>
+                        <div class="etiqueta">{{datosFichaE.pais}}</div>
+                      </b-col>
+                      <b-col lg="2" md="6">
+                        <div>Género:</div>
+                        <div class="etiqueta">{{datosFichaE.genero}}</div>
+                      </b-col>
+                    </b-row>
+                    <b-row class="mt-3">
+                      <b-col lg="4" md="6">
+                        <div>Dirección:</div>
+                        <div class="etiqueta">{{datosFichaE.direccion}}</div>
+                      </b-col>
+                      <b-col lg="2" md="6">
+                        <div>Municipio:</div>
+                        <div class="etiqueta">{{datosFichaE.municipioDir}}</div>
+                      </b-col>
+                      <b-col lg="2" md="6">
+                        <div>Telefono 1:</div>
+                        <div class="etiqueta">{{ datosFichaE.telefono1 }}</div>
+                      </b-col>
+                      <b-col lg="2" md="6">
+                        <div>Telefono 2:</div>
+                        <div class="etiqueta">{{ datosFichaE.telefono2 }}</div>
+                      </b-col>
+                      <b-col lg="2" md="6">
+                        <div>Correo:</div>
+                        <div class="etiqueta">{{datosFichaE.correo}}</div>
+                      </b-col>
+                    </b-row>
+                    <b-row class="mt-5">
+                      <b-col lg="12">
+                        <h5 class="mb-0"><b-icon icon="people" aria-hidden="true"></b-icon> Datos Familiares</h5>
+                        <hr>
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col lg="3" md="6">
+                        <div>Padre:</div>
+                        <div class="etiqueta">{{datosFichaE.padre}}</div>
+                      </b-col>
+                      <b-col lg="3" md="6">
+                        <div>Dirección:</div>
+                        <div class="etiqueta">{{datosFichaE.direccionP}}</div>
+                      </b-col>
+                      <b-col lg="2" md="6">
+                        <div>Municipio:</div>
+                        <div class="etiqueta">{{ datosFichaE.municipioDirP }}</div>
+                      </b-col>
+                      <b-col lg="2" md="6">
+                        <div>Telefono:</div>
+                        <div class="etiqueta">{{ datosFichaE.telefonoP }}</div>
+                      </b-col>
+                      <b-col lg="2" md="6">
+                        <div>Correo:</div>
+                        <div class="etiqueta">{{datosFichaE.correoP}}</div>
+                      </b-col>
+                    </b-row>
+                    <b-row class="mt-3">
+                      <b-col lg="3" md="6">
+                        <div>Madre:</div>
+                        <div class="etiqueta">{{datosFichaE.madre}}</div>
+                      </b-col>
+                      <b-col lg="3" md="6">
+                        <div>Dirección:</div>
+                        <div class="etiqueta">{{datosFichaE.direccionM}}</div>
+                      </b-col>
+                      <b-col lg="2" md="6">
+                        <div>Municipio:</div>
+                        <div class="etiqueta">{{ datosFichaE.municipioDirM }}</div>
+                      </b-col>
+                      <b-col lg="2" md="6">
+                        <div>Telefono:</div>
+                        <div class="etiqueta">{{ datosFichaE.telefonoM }}</div>
+                      </b-col>
+                      <b-col lg="2" md="6">
+                        <div>Correo:</div>
+                        <div class="etiqueta">{{datosFichaE.correoM}}</div>
+                      </b-col>
+                    </b-row>
+                    <b-row class="mt-3">
+                      <b-col lg="3" md="6">
+                        <div>Acudiente - {{datosFichaE.parentesco}}:</div>
+                        <div class="etiqueta">{{datosFichaE.acudiente}}</div>
+                      </b-col>
+                      <b-col lg="3" md="6">
+                        <div>Dirección:</div>
+                        <div class="etiqueta">{{datosFichaE.direccionA}}</div>
+                      </b-col>
+                      <b-col lg="2" md="6">
+                        <div>Municipio:</div>
+                        <div class="etiqueta">{{ datosFichaE.municipioDirA }}</div>
+                      </b-col>
+                      <b-col lg="2" md="6">
+                        <div>Telefono:</div>
+                        <div class="etiqueta">{{ datosFichaE.telefonoA }}</div>
+                      </b-col>
+                      <b-col lg="2" md="6">
+                        <div>Correo:</div>
+                        <div class="etiqueta">{{datosFichaE.correoA}}</div>
+                      </b-col>
+                    </b-row>
+                    <b-row class="mt-5">
+                      <b-col lg="12">
+                        <h5 class="mb-0"><b-icon icon="card-checklist" aria-hidden="true"></b-icon> Datos de la Matrícula</h5>
+                        <hr>
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col lg="2" md="6">
+                        <div>Fecha Matrícula:</div>
+                        <div class="etiqueta">{{datosFichaE.creado}}</div>
+                      </b-col>
+                      <b-col lg="2" md="6">
+                        <div>Año Lectivo:</div>
+                        <div class="etiqueta">{{datosFichaE.vigencia}}</div>
+                      </b-col>
+                      <b-col lg="4" md="6">
+                        <div>Sede:</div>
+                        <div class="etiqueta">{{ datosFichaE.sede}}</div>
+                      </b-col>
+                      <b-col lg="2" md="6">
+                        <div>Grado-Curso:</div>
+                        <div class="etiqueta">{{datosFichaE.nomenclatura}}</div>
+                      </b-col>
+                      <b-col lg="2" md="6">
+                        <div>Jornada:</div>
+                        <div class="etiqueta">{{datosFichaE.jornada}}</div>
+                      </b-col>
+                    </b-row>
+                    <b-row class="mt-3">
+                      <b-col lg="2" md="6">
+                        <div>Nuevo:</div>
+                        <div class="etiqueta">{{datosFichaE.id_nuevo}}</div>
+                      </b-col>
+                      <b-col lg="2" md="6">
+                        <div>Repitente:</div>
+                        <div class="etiqueta">{{datosFichaE.id_repitente}}</div>
+                      </b-col>
+                      <b-col lg="4" md="6">
+                        <div>Especialidad:</div>
+                        <div class="etiqueta">{{ datosFichaE.especialidad}}</div>
+                      </b-col>
+                      <b-col lg="4" md="6">
+                        <div>Observaciones Matrícula:</div>
+                        <div class="etiqueta">{{datosFichaE.obs_matricula}}</div>
+                      </b-col>
+                    </b-row>
+                  </b-card-text>
+                </b-card>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col lg="12">
+                <b-card border-variant="secondary">
+                  <b-card-text>
+                    <b-row>
+                      <b-col lg="12">
+                        <b-button class="small float-right" variant="dark" @click="nuevaObservacion">Nueva Observación</b-button>
+                        <h5 class="mb-0"><b-icon icon="stickies" aria-hidden="true"></b-icon> Registro General de Observaciones</h5>
+                        <hr>
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col>
+                        <vue-good-table :columns="encabColumnas" :rows="listaAnotaciones" styleClass="vgt-table condensed bordered striped">
+                          <template slot="table-row" slot-scope="props">
+                            <span v-if="props.column.field == 'id'">
+                              <span style="font-weight: bold; color: blue; cursor: pointer" @click="consultarObservacion(props.row)" title="Consultar Observación"><CIcon name="cilPencil"/></span>
+                            </span>
+                          </template>
+                          <div slot="emptystate">
+                            <h5 class="text-danger ml-5">No existen observaciones registradas.</h5>
+                          </div>
+                        </vue-good-table>
+                      </b-col>
+                    </b-row>
+                  </b-card-text>
+                </b-card>
+              </b-col>
+            </b-row>
+          </b-card-text>
+          <template #footer>
+            <em>Actualice los datos de una observación haciendo clic en el lapiz.</em>
+          </template>
+        </b-card>
+      </b-col>
+    </b-row>
+    <b-modal ref="modalRegistroObservador" size="xl" scrollable hide-footer :title="'Registro Observación de: ' + datosFichaE.estudiante" ok-only>
+      <div class="mx-3">
+        <b-row>
+          <b-col lg="4">
+            <b-form-group label="Tipo Observación*" label-for="tipoObservacion" class="etiqueta">
+              <b-form-select  id="tipoObservacion" ref="tipoObservacion" v-model="$v.registroObservador.id_tipo_observacion.$model" :options="comboTiposObservacion" :state="validateStateO('id_tipo_observacion')" aria-describedby="feedTipoObservacion"></b-form-select>
+              <b-form-invalid-feedback id="feedTipoObservacion">Campo requerido.</b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+          <b-col lg="6">
+            <b-form-group label="Responsable:" label-for="responsable" class="etiqueta">
+              <b-form-input  id="responsable" ref="responsable" v-model="registroObservador.responsable" disabled></b-form-input>
+            </b-form-group>
+          </b-col>
+          <b-col lg="2">
+            <b-form-group label="Fecha Registro:" label-for="creado" class="etiqueta">
+              <b-form-input id="creado" ref="creado" v-model="registroObservador.creado" disabled></b-form-input>
+            </b-form-group>
+          </b-col>
+          <b-col lg="12" md="12">
+            <b-form-group label="Describa la Situación a Registrar*" label-for="situacion" class="etiqueta">
+              <b-form-textarea id="situacion" ref="situacion" v-model.trim="$v.registroObservador.situacion.$model" :state="validateStateO('situacion')" aria-describedby="feedSituacion" autocomplete="off" rows="2"></b-form-textarea>
+              <b-form-invalid-feedback id="feedSituacion">Campo requerido.</b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+          <b-col lg="12" md="12">
+            <b-form-group label="Versión del Estudiante" label-for="descargos" class="etiqueta">
+              <b-form-textarea id="descargos" ref="descargos" v-model.trim="registroObservador.descargos" autocomplete="off" rows="2"></b-form-textarea>
+            </b-form-group>
+          </b-col>
+          <b-col lg="12" md="12">
+            <b-form-group label="Compromisos" label-for="compromisos" class="etiqueta">
+              <b-form-textarea id="compromisos" ref="compromisos" v-model.trim="registroObservador.compromisos" autocomplete="off" rows="2"></b-form-textarea>
+            </b-form-group>
+          </b-col>
+          <b-col lg="6">
+            <b-form-group label="Estado del Seguimiento*" label-for="estadoSegui" class="etiqueta">
+              <b-form-select  id="estadoSegui" ref="estadoSegui" v-model="$v.registroObservador.id_estado_seguimiento.$model" :options="comboEstadosSeguimiento" :state="validateStateO('id_estado_seguimiento')" aria-describedby="feedSegui"></b-form-select>
+              <b-form-invalid-feedback id="feedSegui">Campo requerido.</b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+          <b-col lg="12" md="12">
+            <b-form-group label="Nota de Seguimiento" label-for="seguimiento" class="etiqueta">
+              <b-form-textarea id="seguimiento" ref="seguimiento" v-model.trim="registroObservador.seguimiento" autocomplete="off" rows="2"></b-form-textarea>
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row><b-col lg="12"><hr></b-col></b-row>
+        <b-row>
+          <b-col lg="12" v-if="!botonGuardando">
+            <b-button class="small ml-3" variant="primary" @click="validarDatosFormulario()">Guardar Registro</b-button>
+            <b-button class="small ml-3" variant="secondary" @click="cancelarFormulario">Cerrar</b-button>
+          </b-col>
+          <b-col v-else>
+            <b-button class="small ml-3" variant="primary" disabled>
+              <b-spinner small type="grow"></b-spinner>
+              Guardando el registro...
+            </b-button>
+          </b-col>
+        </b-row>
+      </div>
+    </b-modal>
+  </div>
+</template>
+
+<script>
+  import axios from "axios"
+  import * as CONFIG from '@/assets/config.js'
+  import 'vue-good-table/dist/vue-good-table.css'
+  import { VueGoodTable } from 'vue-good-table'
+  import { validationMixin } from "vuelidate";
+  import { required, minLength } from "vuelidate/lib/validators";
+
+  export default {
+    name: 'observador',
+    mixins: [validationMixin],
+    components: {
+      VueGoodTable
+    },
+    data () {
+      return {
+        idEstudiante: null,
+        idMatricula: null,
+        datosFichaE: {},
+        listaAnotaciones: [],
+        encabColumnas: [
+          { label: 'Fecha', field: 'creado', sortable: false },
+          { label: 'Tipo', field: 'tipoobservacion', sortable: false },
+          { label: 'Descripción de la Situación', field: 'situacion', sortable: false },
+          { label: 'Versión del Estudiante', field: 'descargos', sortable: false },
+          //{ label: 'Compromisos', field: 'compromisos', sortable: false },
+          //{ label: 'Actualizado', field: 'actualizado', sortable: false },
+          { label: 'Seguimiento', field: 'estadoseguimiento', sortable: false },
+          { label: '', field: 'id', sortable: false },
+        ],
+        registroObservador: {
+          id: null,
+          id_estudiante: null,
+          situacion: null,
+          id_tipo_observacion: null,
+          descargos: null,
+          compromisos: null,
+          id_estado_seguimiento: null,
+          seguimiento: null,
+          id_responsable: null,
+          responsable	: null,
+          id_institucion: null,
+          creado: null,
+          actualizado: null,
+          editar: null
+        },
+        comboTiposObservacion: [],
+        comboEstadosSeguimiento: [],
+        botonGuardando: false
+      }
+    },
+    validations: {
+      registroObservador: {
+        situacion: { required, minLength: minLength(10) },
+        id_tipo_observacion: { required },
+        id_estado_seguimiento: { required }
+      }
+    },
+    methods: {
+      validarDatosFormulario() {
+        this.$v.registroObservador.$touch()
+        if (this.$v.registroObservador.$anyError) {
+          this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algunos campos están incompletos.')
+          return false
+        } else {
+          let titulo = this.registroObservador.editar ? 'Actualizar Datos del Registro' : 'Crear Registro'
+          let pregunta = this.registroObservador.editar ? '¿Esta seguro de actualizar los datos del Registro?' : '¿Esta seguro de crear el Registro?'
+          this.$bvModal.msgBoxConfirm(pregunta, {
+            headerBgVariant: 'primary',
+            headerTextVariant: 'light',
+            bodyBgVariant: 'light',
+            bodyBgClass: 'text-center',
+            title: titulo,
+            size: '',
+            buttonSize: 'sm',
+            okVariant: 'primary',
+            okTitle: 'Si, ' + titulo,
+            cancelVariant: '',
+            cancelTitle: 'Cancelar',
+            footerClass: 'p-2',
+            bodyClass: 'p-5',
+            hideHeaderClose: false,
+            centered: true
+          })
+          .then(value => {
+            if (value) {
+              this.botonGuardando = true
+              this.guardarRegistro()
+            }
+          })
+        }
+        return true
+      },
+      async guardarRegistro() {
+        if (this.registroObservador.editar) {
+          await axios
+          .put(CONFIG.ROOT_PATH + 'observador/registroanotacion', JSON.stringify(this.registroObservador), { headers: {"Content-Type": "application/json; charset=utf-8" }})
+          .then(response => {
+            if (response.data.error){
+              this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Actualizar Registro')
+            } else{
+              this.mensajeEmergente('success',CONFIG.TITULO_MSG,'El registro del Observador del Estudiante se ha actualizado satisfactoriamente.')
+              this.botonGuardando = false
+            }
+          })
+          .catch(err => {
+            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Actualizar Registro. Intente más tarde. ' + err)
+          })
+        } else {
+          await axios
+          .post(CONFIG.ROOT_PATH + 'observador/registroanotacion', JSON.stringify(this.registroObservador), { headers: {"Content-Type": "application/json; charset=utf-8" }})
+          .then(response => {
+            if (response.data.error){
+              this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Crear Registro')
+            } else{
+              this.mensajeEmergente('success',CONFIG.TITULO_MSG,'El registro del Observador del Estudiante se ha creado satisfactoriamente.')
+              this.botonGuardando = false
+            }
+          })
+          .catch(err => {
+            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Crear Registro. Intente más tarde. ' + err)
+          })
+        }
+        this.cancelarFormulario()
+        this.consultaObservador()
+      },
+      consultarObservacion(item) {
+        this.registroObservador.id = item.id
+        this.registroObservador.id_estudiante = item.id_estudiante
+        this.registroObservador.situacion = item.situacion
+        this.registroObservador.id_tipo_observacion = item.id_tipo_observacion
+        this.registroObservador.descargos = item.descargos
+        this.registroObservador.compromisos = item.compromisos
+        this.registroObservador.id_estado_seguimiento = item.id_estado_seguimiento
+        this.registroObservador.seguimiento = item.seguimiento
+        this.registroObservador.id_responsable = item.id_responsable
+        this.registroObservador.responsable = item.responsable
+        this.registroObservador.id_institucion = item.id_institucion
+        this.registroObservador.creado = item.creado
+        this.registroObservador.actualizado = item.actualizado
+        this.registroObservador.editar = true
+        this.$refs['modalRegistroObservador'].show()
+      },
+      nuevaObservacion(item) {
+        this.registroObservador.id = null
+        this.registroObservador.id_estudiante = this.datosFichaE.id_estudiante
+        this.registroObservador.situacion = null
+        this.registroObservador.id_tipo_observacion = null
+        this.registroObservador.descargos = null
+        this.registroObservador.compromisos = null
+        this.registroObservador.id_estado_seguimiento = null
+        this.registroObservador.seguimiento = null
+        this.registroObservador.id_responsable = this.$store.state.idDocente
+        this.registroObservador.responsable = this.$store.state.Docente
+        this.registroObservador.id_institucion = this.$store.state.idInstitucion
+        this.registroObservador.creado = null
+        this.registroObservador.actualizado = null
+        this.registroObservador.editar = false
+        this.$refs['modalRegistroObservador'].show()
+      },
+      cancelarFormulario() {
+        this.$refs['modalRegistroObservador'].hide()
+      },
+      async consultaObservador() {
+        this.datosFichaE = {}
+        this.listaAnotaciones = []
+        await axios
+        .get(CONFIG.ROOT_PATH + 'observador/consultaobservador', { params: { idEstudiante: this.idEstudiante, idMatricula: this.idMatricula }})
+        .then(response => {
+          if (response.data.error){
+            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Consulta Observador')
+          } else{
+            if (response.data.datos != 0) {
+              this.datosFichaE = response.data.datos
+              this.listaAnotaciones = this.datosFichaE.observador
+              /*
+              if (this.datosFichaE.foto == null || this.datosFichaE.foto == '') {
+                this.datosFichaE.foto = CONFIG.FOTO
+              }
+              */  
+            } else {
+              this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'No se encontró el Observador del Estudiante')
+            }
+          }
+        })
+        .catch(err => {
+          this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Consulta Observador. Intente más tarde.' + err)
+        })
+      },
+      calcularEdad(fecha) {
+        var hoy = new Date()
+        var cumpleanos = new Date(fecha)
+        var edad = hoy.getFullYear() - cumpleanos.getFullYear()
+        var m = hoy.getMonth() - cumpleanos.getMonth()
+    
+        if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+            edad--
+        }
+        return edad
+      },
+      ocuparCombos() {
+        this.comboTiposObservacion = []
+        this.$store.state.datosTablas.tiposobservacion.forEach(element => {
+          this.comboTiposObservacion.push({ 'value': element.id, 'text': element.tipoobservacion.toUpperCase() })
+        })
+        this.comboEstadosSeguimiento = []
+        this.$store.state.datosTablas.estadosseguimiento.forEach(element => {
+          this.comboEstadosSeguimiento.push({ 'value': element.id, 'text': element.estadoseguimiento.toUpperCase() })
+        })
+      },
+      validateStateO(name) {
+        const { $dirty, $error } = this.$v.registroObservador[name]
+        return $dirty ? !$error : null
+      },
+      mensajeEmergente(variante, titulo, contenido) {
+        this.$bvToast.toast(contenido, { title: titulo, variant: variante, toaster: "b-toaster-top-center", solid: true, autoHideDelay: 4000, appendToast: false })
+      }
+    },
+    beforeMount() {
+      this.idEstudiante = this.$store.state.idEstudiante
+      this.idMatricula = this.$store.state.idMatricula
+      this.consultaObservador()
+      this.ocuparCombos()
+    }
+  }
+</script>

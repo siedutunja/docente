@@ -109,7 +109,7 @@
       verCarpetaMatricula(fila) {
         //alert(JSON.stringify(fila))
         this.$store.commit('set', ['idMatricula', fila.idMatricula])
-        this.$router.push('/estudiantes/ConsultaEstudiante')
+        this.$router.push('/estudiantes/consultaestudiante')
       },
       async buscarEstudiante() {
         this.listaEstudiantes = []
