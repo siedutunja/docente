@@ -187,14 +187,22 @@
           this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algunos campos están incompletos.')
           return false
         } else {
-          this.$bvModal.msgBoxConfirm('¿Esta seguro de actualizar los datos del usuario?', {
-            title: 'Actualizar Datos del Usuario',
+          let titulo = 'Actualizar Datos del Usuario'
+          let pregunta = '¿Esta seguro de actualizar los datos del usuario?'
+          this.$bvModal.msgBoxConfirm(pregunta, {
+            headerBgVariant: 'primary',
+            headerTextVariant: 'light',
+            bodyBgVariant: 'light',
+            bodyBgClass: 'text-center',
+            title: titulo,
             size: '',
-            buttonSize: '',
+            buttonSize: 'sm',
             okVariant: 'primary',
-            okTitle: 'Si, Actualizar Datos del Usuario',
+            okTitle: 'Si, ' + titulo,
+            cancelVariant: '',
             cancelTitle: 'Cancelar',
             footerClass: 'p-2',
+            bodyClass: 'p-5',
             hideHeaderClose: false,
             centered: true
           })
@@ -225,7 +233,7 @@
         this.datosPersona.correo = this.datosPersona.correo.toLowerCase()
         //this.datosPersona.cargo = this.datosPersona.cargo.toUpperCase()
         await axios
-        .put(CONFIG.ROOT_PATH + 'academico/perfil/usuario', JSON.stringify(this.datosPersona), { headers: {"Content-Type": "application/json; charset=utf-8" }})
+        .put(CONFIG.ROOT_PATH + 'docente/personas/perfil', JSON.stringify(this.datosPersona), { headers: {"Content-Type": "application/json; charset=utf-8" }})
         .then(response => {
           if (response.data.error){
             this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Actualizar Perfil Usuario')
@@ -272,80 +280,22 @@
       cancelarFormulario() {
         this.$router.push('/inicio')
       },
-      async ocuparComboTiposDoc() {
-        this.comboTiposDoc = []
-        await axios
-        .get(CONFIG.ROOT_PATH + 'combos/listatiposdocumentos')
-        .then(response => {
-          if (response.data.error){
-            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Lista Tipos Documento')
-          } else{
-            if (response.data.datos != 0) {
-              response.data.datos.forEach(element => {
-                this.comboTiposDoc.push({ 'value': element.id, 'text': element.documento.toUpperCase() })
-              })
-            }
-          }
-        })
-        .catch(err => {
-          this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Lista Tipos Documento. Intente más tarde. ' + err)
-        })
-      },
-      async ocuparComboMunicipios() {
-        this.comboMunicipios = []
-        await axios
-        .get(CONFIG.ROOT_PATH + 'combos/listamunicipios')
-        .then(response => {
-          if (response.data.error){
-            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Lista Municipios')
-          } else{
-            if (response.data.datos != 0) {
-              response.data.datos.forEach(element => {
-                this.comboMunicipios.push({ 'value': element.id, 'text': element.municipio.toUpperCase() + ' - ' + element.departamento.toUpperCase() })
-              })
-            }
-          }
-        })
-        .catch(err => {
-          this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Lista Municipios. Intente más tarde. ' + err)
-        })
-      },
-      async ocuparComboGeneros() {
+      ocuparCombos() {
         this.comboGeneros = []
-        await axios
-        .get(CONFIG.ROOT_PATH + 'combos/listageneros')
-        .then(response => {
-          if (response.data.error){
-            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Lista Generos')
-          } else{
-            if (response.data.datos != 0) {
-              response.data.datos.forEach(element => {
-                this.comboGeneros.push({ 'value': element.id, 'text': element.genero.toUpperCase() })
-              })
-            }
-          }
+        this.$store.state.datosTablas.generos.forEach(element => {
+          this.comboGeneros.push({ 'value': element.id, 'text': element.genero.toUpperCase() })
         })
-        .catch(err => {
-          this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Lista Generos. Intente más tarde. ' + err)
+        this.comboTiposDoc = []
+        this.$store.state.datosTablas.tiposdocumentos.forEach(element => {
+          this.comboTiposDoc.push({ 'value': element.id, 'text': element.tipodocumento.toUpperCase() })
         })
-      },
-      async ocuparComboRhs() {
+        this.comboMunicipios = []
+        this.$store.state.datosTablas.municipios.forEach(element => {
+          this.comboMunicipios.push({ 'value': element.id, 'text': element.municipio.toUpperCase() + ' - ' + element.departamento.toUpperCase() })
+        })
         this.comboRhs = []
-        await axios
-        .get(CONFIG.ROOT_PATH + 'combos/listarhs')
-        .then(response => {
-          if (response.data.error){
-            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Lista Rhs')
-          } else{
-            if (response.data.datos != 0) {
-              response.data.datos.forEach(element => {
-                this.comboRhs.push({ 'value': element.id, 'text': element.rh.toUpperCase() })
-              })
-            }
-          }
-        })
-        .catch(err => {
-          this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Lista Rhs. Intente más tarde. ' + err)
+        this.$store.state.datosTablas.rhs.forEach(element => {
+          this.comboRhs.push({ 'value': element.id, 'text': element.rh.toUpperCase() })
         })
       },
       validateStateP(name) {
@@ -358,10 +308,7 @@
     },
     beforeMount() {
       this.consultaDatosPersona()
-      this.ocuparComboTiposDoc()
-      this.ocuparComboMunicipios()
-      this.ocuparComboGeneros()
-      this.ocuparComboRhs()
+      this.ocuparCombos()
     }
   }
 </script>

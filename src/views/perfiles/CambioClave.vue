@@ -65,22 +65,38 @@
           this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algunos campos están incompletos.')
           return false
         } else {
-          this.$bvModal.msgBoxConfirm('¿Esta seguro de actualizar la contraseña del usuario?', {
-            title: 'Actualizar Contraseña del Usuario',
-            size: '',
-            buttonSize: '',
-            okVariant: 'primary',
-            okTitle: 'Si, Actualizar Contraseña',
-            cancelTitle: 'Cancelar',
-            footerClass: 'p-2',
-            hideHeaderClose: false,
-            centered: true
-          })
-          .then(value => {
-            if (value) {
-              this.actualizarClave()
+          if (this.datosClave.claveActual == this.$store.state.clave) {
+            if (this.$store.state.clave != this.datosClave.claveNueva) {
+              let titulo = 'Cambiar Contraseña'
+              let pregunta = '¿Esta seguro de cambiar la contraseña?'
+              this.$bvModal.msgBoxConfirm(pregunta, {
+                headerBgVariant: 'primary',
+                headerTextVariant: 'light',
+                bodyBgVariant: 'light',
+                bodyBgClass: 'text-center',
+                title: titulo,
+                size: '',
+                buttonSize: 'sm',
+                okVariant: 'primary',
+                okTitle: 'Si, ' + titulo,
+                cancelVariant: '',
+                cancelTitle: 'Cancelar',
+                footerClass: 'p-2',
+                bodyClass: 'p-5',
+                hideHeaderClose: false,
+                centered: true
+              })
+              .then(value => {
+                if (value) {
+                  this.actualizarClave()
+                }
+              })
+            } else {
+              this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Lo sentimos.! La nueva contraseña debe ser diferente a la contraseña actual.')
             }
-          })
+          } else {
+            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Lo sentimos.! La contraseña actual no coincide con su contraseña.')
+          }
         }
         return true
       },
@@ -92,6 +108,7 @@
           if (response.data.error){
             this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Actualizar Clave Usuario')
           } else{
+            this.$store.commit('set', ['clave', this.datosClave.claveNueva])
             this.mensajeEmergente('success',CONFIG.TITULO_MSG,'La contraseña del usuario de ha actualizado correctamente.')
           }
         })

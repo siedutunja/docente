@@ -1284,6 +1284,9 @@
         }
         //return 'text-secondary text-center bg-light'
       },
+      thClassFuncEncabezado(fila) {
+        return 'text-center'
+      },
       colorConcepto(c) {
         let colores = ['','','#ee0609']
         return 'color: ' + colores[c]
