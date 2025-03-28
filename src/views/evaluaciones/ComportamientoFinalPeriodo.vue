@@ -7,9 +7,16 @@
             <span v-if="props.column.field == 'estudiante'">
               <span><strong>{{props.row.estudiante}}</strong></span>
             </span>
-            <span v-if="props.column.field == 'definitivacompor'">
-              <span><strong>{{props.row.definitivacompor}}</strong></span>
-            </span>
+            <div v-if="configuracionPlanilla.tipoValComp == 0">
+              <span v-if="props.column.field == 'definitivacompor'">
+                <span><strong>{{props.row.definitivacompor}}</strong></span>
+              </span>
+            </div>
+            <div v-else>
+              <span v-if="props.column.field == 'definitiva'">
+                <span><strong>{{props.row.definitiva}}</strong></span>
+              </span>
+            </div>
             <span v-if="props.column.field == 'diversa'">
               <span><strong>{{props.row.diversa}}</strong></span>
             </span>
@@ -66,19 +73,34 @@
       return {
         notasPlanillaCompor: [],
         botonGuardando: false,
-        encabColumnas: [
-          { label: 'Apellidos y Nombres Estudiante', field: 'estudiante', sortable: false },
-          { label: '', field: 'diversa', sortable: false, tdClass: this.tdClassFuncDiversa },
-          { label: 'Definitiva', field: 'definitivacompor', width: '120px', sortable: false, tdClass: this.tdClassFuncDefinitiva, thClass: 'text-center' },
-          { label: 'Concepto', field: 'concepto', width: '110px', sortable: false, tdClass: this.tdClassFuncConcepto },
-          { label: 'Observaciones del Periodo', field: 'observaciones', sortable: false },
-          { label: 'AJ', field: 'ausJ', width: '60px', sortable: false },
-          { label: 'AS', field: 'ausS', width: '60px', sortable: false },
-        ],
+        encabColumnas: [],
       }
     },
     methods: {
-      tdClassFuncDefinitiva(fila) {
+      construirPlanillaNotasComportamiento() {
+        if (this.configuracionPlanilla.tipoValComp == 0) {
+          this.encabColumnas = [
+            { label: 'Apellidos y Nombres Estudiante', field: 'estudiante', sortable: false },
+            { label: '', field: 'diversa', sortable: false, tdClass: this.tdClassFuncDiversa },
+            { label: 'Definitiva', field: 'definitivacompor', width: '120px', sortable: false, tdClass: this.tdClassFuncDefinitivaLetra, thClass: 'text-center' },
+            { label: 'Concepto', field: 'concepto', width: '110px', sortable: false, tdClass: this.tdClassFuncConceptoComporLetra },
+            { label: 'Observaciones del Periodo', field: 'observaciones', sortable: false },
+            { label: 'AJ', field: 'ausJ', width: '60px', sortable: false },
+            { label: 'AS', field: 'ausS', width: '60px', sortable: false },
+          ]
+        } else {
+          this.encabColumnas = [
+            { label: 'Apellidos y Nombres Estudiante', field: 'estudiante', sortable: false },
+            { label: '', field: 'diversa', sortable: false, tdClass: this.tdClassFuncDiversa },
+            { label: 'Definitiva', field: 'definitiva', width: '120px', sortable: false, tdClass: this.tdClassFuncDefinitivaNota, thClass: 'text-center' },
+            { label: 'Concepto', field: 'concepto', width: '110px', sortable: false, tdClass: this.tdClassFuncConceptoComporNota },
+            { label: 'Observaciones del Periodo', field: 'observaciones', sortable: false },
+            { label: 'AJ', field: 'ausJ', width: '60px', sortable: false },
+            { label: 'AS', field: 'ausS', width: '60px', sortable: false },
+          ]
+        }
+      },
+      tdClassFuncDefinitivaLetra(fila) {
         if (fila.definitivacompor == this.configuracionPlanilla.compL1) {
           return 'text-danger text-center bg-light'
         } else if (fila.definitivacompor == this.configuracionPlanilla.compL2) {
@@ -90,7 +112,19 @@
         }
         return 'text-secondary text-center bg-light'
       },
-      tdClassFuncConcepto(fila) {
+      tdClassFuncDefinitivaNota(fila) {
+        if (fila.definitiva >= this.configuracionPlanilla.minBaj && fila.definitiva <= this.configuracionPlanilla.maxBaj) {
+          return 'text-danger text-center bg-light'
+        } else if (fila.definitiva >= this.configuracionPlanilla.minBas && fila.definitiva <= this.configuracionPlanilla.maxBas) {
+          return 'text-primary text-center bg-light'
+        } else if (fila.definitiva >= this.configuracionPlanilla.minAlt && fila.definitiva <= this.configuracionPlanilla.maxAlt) {
+          return 'text-warning text-center bg-light'
+        } else if (fila.definitiva >= this.configuracionPlanilla.minSup && fila.definitiva <= this.configuracionPlanilla.maxSup) {
+          return 'text-success text-center bg-light'
+        }
+        return 'text-secondary text-center bg-light'
+      },
+      tdClassFuncConceptoComporLetra(fila) {
         if (fila.definitivacompor == this.configuracionPlanilla.compL1) {
           return 'text-danger text-center bg-light'
         } else if (fila.definitivacompor == this.configuracionPlanilla.compL2) {
@@ -98,6 +132,18 @@
         } else if (fila.definitivacompor == this.configuracionPlanilla.compL3) {
           return 'text-warning text-center bg-light'
         } else if (fila.definitivacompor == this.configuracionPlanilla.compL4) {
+          return 'text-success text-center bg-light'
+        }
+        return 'text-secondary text-center bg-light'
+      },
+      tdClassFuncConceptoComporNota(fila) {
+        if (fila.definitiva >= this.configuracionPlanilla.minBaj && fila.definitiva <= this.configuracionPlanilla.maxBaj) {
+          return 'text-danger text-center bg-light'
+        } else if (fila.definitiva >= this.configuracionPlanilla.minBas && fila.definitiva <= this.configuracionPlanilla.maxBas) {
+          return 'text-primary text-center bg-light'
+        } else if (fila.definitiva >= this.configuracionPlanilla.minAlt && fila.definitiva <= this.configuracionPlanilla.maxAlt) {
+          return 'text-warning text-center bg-light'
+        } else if (fila.definitiva >= this.configuracionPlanilla.minSup && fila.definitiva <= this.configuracionPlanilla.maxSup) {
           return 'text-success text-center bg-light'
         }
         return 'text-secondary text-center bg-light'
@@ -121,6 +167,7 @@
                 if(element.ausJ === undefined) element.ausJ = null
                 if(element.ausS === undefined) element.ausS = null
                 if(element.definitivacompor === undefined) element.definitivacompor = null
+                if(element.definitiva === undefined) element.definitiva = null
                 if(element.concepto === undefined) element.concepto = null
                 if(element.observaciones === undefined) element.observaciones = null
                 element.id_asignatura_curso = this.configuracionPlanilla.idPlanilla
@@ -144,6 +191,8 @@
     },
     beforeMount() {
       this.cargarNotasPeriodoComportamiento()
+      this.construirPlanillaNotasComportamiento()
+      console.log(JSON.stringify(this.configuracionPlanilla))
     }
   }
 </script>

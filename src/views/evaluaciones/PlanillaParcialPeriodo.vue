@@ -297,9 +297,16 @@
                       <span v-if="props.column.field == 'estudiante'">
                         <span :style="(colorConcepto(props.row.id_estado_actual))"><strong>{{props.row.estudiante}}</strong></span>
                       </span>
-                      <span v-if="props.column.field == 'definitivacompor'">
-                        <b-form-input v-model="props.row.definitivacompor" @blur="actualizarItemCompor(props.row)" autocomplete="off" maxlength="1" :disabled="props.row.id_estado_actual==1 ? false : true"></b-form-input>
-                      </span>
+                      <div v-if="configuracionPlanilla.tipoValComp == 0">
+                        <span v-if="props.column.field == 'definitivacompor'">
+                          <b-form-input v-model="props.row.definitivacompor" @blur="actualizarItemComporLetra(props.row)" autocomplete="off" maxlength="1" :disabled="props.row.id_estado_actual==1 ? false : true"></b-form-input>
+                        </span>
+                      </div>
+                      <div v-else>
+                        <span v-if="props.column.field == 'definitiva'">
+                          <b-form-input v-model="props.row.definitiva" @blur="actualizarItemComporNota(props.row)" autocomplete="off" maxlength="3" @keydown="soloDecimales" :disabled="props.row.id_estado_actual==1 ? false : true"></b-form-input>
+                        </span>
+                      </div>
                       <span v-if="props.column.field == 'diversa'">
                         <span><strong>{{props.row.diversa}}</strong></span>
                       </span>
@@ -307,7 +314,7 @@
                         <span><strong>{{props.row.concepto}}</strong></span>
                       </span>
                       <span v-if="props.column.field == 'observaciones'">
-                        <b-form-input v-model="props.row.observaciones" @blur="actualizarItemCompor(props.row)" autocomplete="off" maxlength="255" :disabled="props.row.id_estado_actual==1 ? false : true"></b-form-input>
+                        <b-form-input v-model="props.row.observaciones" @blur="actualizarItemComporObserv(props.row)" autocomplete="off" maxlength="255" :disabled="props.row.id_estado_actual==1 ? false : true"></b-form-input>
                       </span>
                       <span v-if="props.column.field == 'ausJ'">
                         <b-form-input v-model="props.row.ausJ" @blur="actualizarFallasCompor(props.row)" autocomplete="off" maxlength="3" @keydown="soloNumeros" :disabled="props.row.id_estado_actual==1 ? false : true"></b-form-input>
@@ -494,14 +501,8 @@
           this.notasPlanillaPree[indice].concepto = null
         }
       },
-      actualizarItemCompor(item) {
+      actualizarItemComporLetra(item) {
         let indice = this.notasPlanillaCompor.findIndex(asigna => asigna.idMatricula === item.idMatricula)
-        if (item.observaciones == '' || item.observaciones == null) {
-          this.notasPlanillaCompor[indice].observaciones = null
-          item.observaciones = null
-        } else  {
-          this.notasPlanillaCompor[indice].observaciones = item.observaciones
-        }
         if (item.definitivacompor == '' || item.definitivacompor == null) {
           this.notasPlanillaCompor[indice].definitivacompor = null
           item.definitivacompor = null
@@ -524,6 +525,41 @@
           this.notasPlanillaCompor[indice].concepto = this.configuracionPlanilla.compC4
         } else {
           this.notasPlanillaCompor[indice].concepto = null
+        }
+      },
+      actualizarItemComporNota(item) {
+        let indice = this.notasPlanillaCompor.findIndex(asigna => asigna.idMatricula === item.idMatricula)
+        if (item.definitiva == '' || item.definitiva == null || item.definitiva == 0) {
+          this.notasPlanillaCompor[indice].definitiva = null
+          item.definitiva = null
+        } else  {
+          if (item.definitiva >= this.configuracionPlanilla.minBaj && item.definitiva <= this.configuracionPlanilla.maxSup) {
+            this.notasPlanillaCompor[indice].definitiva = item.definitiva
+          } else {
+            this.notasPlanillaCompor[indice].definitiva = null
+            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'La evaluación (nota): ' + item.definitiva  + ' no es válida.')
+            item.definitiva = null
+          }
+        }
+        if (this.notasPlanillaCompor[indice].definitiva >= this.configuracionPlanilla.minBaj && this.notasPlanillaCompor[indice].definitiva < this.configuracionPlanilla.minBas) {
+          this.notasPlanillaCompor[indice].concepto = this.configuracionPlanilla.compC1
+        } else if (this.notasPlanillaCompor[indice].definitiva >= this.configuracionPlanilla.minBas && this.notasPlanillaCompor[indice].definitiva < this.configuracionPlanilla.minAlt) {
+          this.notasPlanillaCompor[indice].concepto = this.configuracionPlanilla.compC2
+        } else if (this.notasPlanillaCompor[indice].definitiva >= this.configuracionPlanilla.minAlt && this.notasPlanillaCompor[indice].definitiva < this.configuracionPlanilla.minSup) {
+          this.notasPlanillaCompor[indice].concepto = this.configuracionPlanilla.compC3
+        } else if (this.notasPlanillaCompor[indice].definitiva >= this.configuracionPlanilla.minSup && this.notasPlanillaCompor[indice].definitiva <= this.configuracionPlanilla.maxSup) {
+          this.notasPlanillaCompor[indice].concepto = this.configuracionPlanilla.compC4
+        } else {
+          this.notasPlanillaCompor[indice].concepto = null
+        }
+      },
+      actualizarItemComporObserv(item) {
+        let indice = this.notasPlanillaCompor.findIndex(asigna => asigna.idMatricula === item.idMatricula)
+        if (item.observaciones == '' || item.observaciones == null) {
+          this.notasPlanillaCompor[indice].observaciones = null
+          item.observaciones = null
+        } else  {
+          this.notasPlanillaCompor[indice].observaciones = item.observaciones
         }
       },
       actualizarItemC1(item) {
@@ -856,6 +892,7 @@
           if (element.idPlanilla == this.idPlanilla) {
             this.configuracionPlanilla = element
             this.idCurso = element.idCurso
+            //console.log(JSON.stringify(this.configuracionPlanilla))
             if (this.configuracionPlanilla.orden == 99) {
               this.planillita = 5
               this.cargarNotasPeriodoComportamiento()
@@ -891,6 +928,7 @@
               response.data.datos.forEach(element => {
                 if(element.ausJ === undefined) element.ausJ = null
                 if(element.ausS === undefined) element.ausS = null
+                if(element.definitiva === undefined) element.definitiva = null
                 if(element.definitivacompor === undefined) element.definitivacompor = null
                 if(element.concepto === undefined) element.concepto = null
                 if(element.observaciones === undefined) element.observaciones = null
@@ -898,7 +936,7 @@
                 element.periodo = this.idPeriodo
               })
               this.notasPlanillaCompor = response.data.datos
-              //console.log(JSON.stringify(this.notasPlanilla))
+              //console.log(JSON.stringify(this.notasPlanillaCompor))
               this.construirPlanillaNotasComportamiento()
             }
           }
@@ -908,15 +946,27 @@
         })
       },
       construirPlanillaNotasComportamiento() {
-        this.encabColumnas3 = [
-          { label: 'Apellidos y Nombres Estudiante', field: 'estudiante', sortable: false },
-          { label: '', field: 'diversa', sortable: false, tdClass: this.tdClassFuncDiversa },
-          { label: 'Definitiva', field: 'definitivacompor', width: '120px', sortable: false },
-          { label: 'Concepto', field: 'concepto', width: '110px', sortable: false, tdClass: this.tdClassFuncConceptoCompor },
-          { label: 'Observaciones_del_Periodo', field: 'observaciones', sortable: false },
-          { label: 'AJ', field: 'ausJ', width: '80px', sortable: false },
-          { label: 'AS', field: 'ausS', width: '80px', sortable: false },
-        ]
+        if (this.configuracionPlanilla.tipoValComp == 0) {
+          this.encabColumnas3 = [
+            { label: 'Apellidos y Nombres Estudiante', field: 'estudiante', sortable: false },
+            { label: '', field: 'diversa', sortable: false, tdClass: this.tdClassFuncDiversa },
+            { label: 'Definitiva', field: 'definitivacompor', width: '120px', sortable: false },
+            { label: 'Concepto', field: 'concepto', width: '110px', sortable: false, tdClass: this.tdClassFuncConceptoComporLetra },
+            { label: 'Observaciones_del_Periodo', field: 'observaciones', sortable: false },
+            { label: 'AJ', field: 'ausJ', width: '80px', sortable: false },
+            { label: 'AS', field: 'ausS', width: '80px', sortable: false },
+          ]
+        } else {
+          this.encabColumnas3 = [
+            { label: 'Apellidos y Nombres Estudiante', field: 'estudiante', sortable: false },
+            { label: '', field: 'diversa', sortable: false, tdClass: this.tdClassFuncDiversa },
+            { label: 'Definitiva', field: 'definitiva', width: '120px', sortable: false },
+            { label: 'Concepto', field: 'concepto', width: '110px', sortable: false, tdClass: this.tdClassFuncConceptoComporNota },
+            { label: 'Observaciones_del_Periodo', field: 'observaciones', sortable: false },
+            { label: 'AJ', field: 'ausJ', width: '80px', sortable: false },
+            { label: 'AS', field: 'ausS', width: '80px', sortable: false },
+          ]
+        }
       },
       async cargarNotasPeriodoPreescolar() {
         this.notasPlanillaPree = []
@@ -1266,7 +1316,7 @@
         }
         return 'text-secondary bg-light'
       },
-      tdClassFuncConceptoCompor(fila) {
+      tdClassFuncConceptoComporLetra(fila) {
         if (fila.definitivacompor == this.configuracionPlanilla.compL1) {
           return 'text-danger text-center bg-light'
         } else if (fila.definitivacompor == this.configuracionPlanilla.compL2) {
@@ -1277,6 +1327,18 @@
           return 'text-success text-center bg-light'
         }
         return 'text-secondary text-center bg-light'
+      },
+      tdClassFuncConceptoComporNota(fila) {
+        if (fila.definitiva >= this.configuracionPlanilla.minBaj && fila.definitiva <= this.configuracionPlanilla.maxBaj) {
+          return 'text-danger bg-secondary'
+        } else if (fila.definitiva >= this.configuracionPlanilla.minBas && fila.definitiva <= this.configuracionPlanilla.maxBas) {
+          return 'text-primary bg-secondary'
+        } else if (fila.definitiva >= this.configuracionPlanilla.minAlt && fila.definitiva <= this.configuracionPlanilla.maxAlt) {
+          return 'text-warning bg-secondary'
+        } else if (fila.definitiva >= this.configuracionPlanilla.minSup && fila.definitiva <= this.configuracionPlanilla.maxSup) {
+          return 'text-success bg-secondary'
+        }
+        return 'text-secondary bg-secondary'
       },
       tdClassFuncDiversa(fila) {
         if (fila.id_diversa == 'S') {
