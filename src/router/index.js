@@ -152,13 +152,6 @@ function configRoutes () {
               name: 'Resumen Final por Periodo',
               component: () => import('@/views/evaluaciones/PlanillaFinalPeriodo')
             },
-            // 2025-03-02
-            {
-              path: 'planillafinal',
-              beforeEnter: autenticar,
-              name: 'Planilla Final por Periodo',
-              component: () => import('@/views/evaluaciones/PlanillaFinal')
-            },
           ]
         },
         // 2025-03-01

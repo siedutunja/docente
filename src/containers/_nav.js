@@ -67,7 +67,6 @@ jwt.verify(token, CONFIG.SECRET_KEY, (err, data) => {
     indice++
     menu[0]._children[indice].items.push({ name: 'Notas Parciales por Periodo', to: '/evaluaciones/planillaparcialperiodo'})
     menu[0]._children[indice].items.push({ name: 'Resumen Final por Periodo', to: '/evaluaciones/planillafinalperiodo'})
-    //menu[0]._children[indice].items.push({ name: 'Definitivas por Periodo', to: '/evaluaciones/planillafinal'})
     // DESCRIPTORES
     menu[0]._children.push(
       {
