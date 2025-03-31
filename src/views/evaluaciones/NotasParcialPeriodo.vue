@@ -825,10 +825,9 @@
               //console.log(JSON.stringify(this.notasPlanilla))
               setTimeout(()=>{
                 this.construirPlanillaNotas()
-                
+                this.btnCargando = false
               },500)
             }
-            this.btnCargando = false
           }
         })
         .catch(err => {

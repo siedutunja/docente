@@ -29,8 +29,8 @@
             <div v-else-if="planillita == 2">
               <PreeParcialPeriodo :configuracionPlanilla="configuracionPlanilla"/>
             </div>
-            <div v-else-if="planillita == 5">
-              <ComportamientoFinalPeriodo :configuracionPlanilla="configuracionPlanilla"/>
+            <div v-else-if="planillita == 3">
+              <ComportamientoParcialPeriodo :configuracionPlanilla="configuracionPlanilla"/>
             </div>
           </b-card-text>
           <template #footer>
@@ -45,14 +45,14 @@
 <script>
   import axios from "axios"
   import * as CONFIG from '@/assets/config.js'
-  import ComportamientoFinalPeriodo from '@/views/evaluaciones/ComportamientoFinalPeriodo'
+  import ComportamientoParcialPeriodo from '@/views/evaluaciones/ComportamientoParcialPeriodo'
   import NotasParcialPeriodo from '@/views/evaluaciones/NotasParcialPeriodo'
   import PreeParcialPeriodo from '@/views/evaluaciones/PreeParcialPeriodo'
 
   export default {
     name: 'planillaparcialperiodo',
     components: {
-      ComportamientoFinalPeriodo,
+      ComportamientoParcialPeriodo,
       NotasParcialPeriodo,
       PreeParcialPeriodo
     },
@@ -69,7 +69,7 @@
     methods: {
       verPlanilla() {
         if (this.configuracionPlanilla.orden == 99) {
-          this.planillita = 5
+          this.planillita = 3
         } else {
           if (this.configuracionPlanilla.id_nivel > 1 && this.configuracionPlanilla.id_nivel < 7) {
             this.planillita = 1
