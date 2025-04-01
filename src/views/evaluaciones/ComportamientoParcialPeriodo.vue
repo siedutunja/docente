@@ -190,9 +190,8 @@
       },
       tdClassFuncDiversa(fila) {
         if (fila.id_diversa == 'S') {
-          return 'text-center text-white alert alert-info'
+          return 'text-center alert alert-warning'
         }
-        //return 'text-secondary text-center bg-light'
       },
       async cargarNotasPeriodoComportamiento() {
         this.notasPlanillaCompor = []

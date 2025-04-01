@@ -11,13 +11,18 @@
               <span><strong>{{props.row.definitivapree}}</strong></span>
             </span>
             <span v-if="props.column.field == 'diversa'">
-              <span><strong>{{props.row.diversa}}</strong></span>
+              <span v-if="props.row.id_diversa =='S'"><b-button class="small" variant="info" @click="capturarDescriptorInclusion(props.row)">{{props.row.diversa}}</b-button></span>
             </span>
             <span v-if="props.column.field == 'concepto'">
               <span><strong>{{props.row.concepto}}</strong></span>
             </span>
             <span v-if="props.column.field == 'descriptor'">
-              <span>{{tomarDescriptor(props.row)}}</span>
+              <div v-if="props.row.id_diversa =='S'">
+                <span>{{props.row.inclusion}}</span>
+              </div>
+              <div v-else>
+                <span>{{tomarDescriptor(props.row)}}</span>
+              </div>
             </span>
             <span v-if="props.column.field == 'ausJ'">
               <span><strong>{{props.row.ausJ}}</strong></span>
@@ -46,6 +51,22 @@
         </b-row>
       </b-col>
     </b-row>
+    <b-modal ref="modalDescriptorInclusion" size="" scrollable hide-footer title="Editar Descriptor" ok-only>
+      <div class="mx-3">
+        <b-row>
+          <b-col lg="12" md="12">
+            <b-form-group label="Descriptor" label-for="descriptor" class="etiqueta">
+              <b-form-textarea id="descriptor" v-model="descriptorInclusion" autocomplete="off" rows="5"></b-form-textarea>
+            </b-form-group>
+          </b-col>
+          <b-col lg="12" md="12"><hr></b-col>
+          <b-col lg="12" md="12">
+            <b-button class="small mt-1 mr-3" variant="primary" @click="guardarDescriptorInclusion()">Guardar Descriptor</b-button>
+            <b-button class="small mt-1 mr-3" variant="secondary" @click="cancelarVentana">Cancelar</b-button>
+          </b-col>
+        </b-row>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -68,17 +89,45 @@
         notasPlanilla: [],
         botonGuardando: false,
         encabColumnas: [
-          { label: 'Apellidos y Nombres Estudiante', field: 'estudiante', sortable: false },
-          { label: '', field: 'diversa', sortable: false, tdClass: this.tdClassFuncDiversa },
-          { label: 'Definitiva', field: 'definitivapree', width: '120px', sortable: false, tdClass: this.tdClassFuncDefinitiva, thClass: 'text-center' },
-          { label: 'Concepto', field: 'concepto', width: '140px', sortable: false, tdClass: this.tdClassFuncConcepto },
-          { label: 'Descriptor', field: 'descriptor', sortable: false },
-          { label: 'AJ', field: 'ausJ', width: '60px', sortable: false },
-          { label: 'AS', field: 'ausS', width: '60px', sortable: false },
+          { label: 'Apellidos y Nombres Estudiante', width: '30%', field: 'estudiante', sortable: false },
+          { label: '', field: 'diversa', sortable: false, tdClass: 'text-center' },
+          { label: 'Definitiva', field: 'definitivapree', sortable: false, tdClass: this.tdClassFuncDefinitiva, thClass: 'text-center' },
+          { label: 'Concepto', field: 'concepto', sortable: false, tdClass: this.tdClassFuncConcepto },
+          { label: 'Descriptor', field: 'descriptor', width: '40%', sortable: false },
+          { label: 'AJ', field: 'ausJ', sortable: false },
+          { label: 'AS', field: 'ausS', sortable: false },
         ],
+        descriptorInclusion: null,
+        filaEstudiante: null,
       }
     },
     methods: {
+      async guardarDescriptorInclusion() {
+        this.filaEstudiante.inclusion = this.descriptorInclusion
+        await axios
+        .put(CONFIG.ROOT_PATH + 'docente/notas/descriptorinclusion', JSON.stringify(this.filaEstudiante), { headers: {"Content-Type": "application/json; charset=utf-8" }})
+        .then(response => {
+          if (response.data.error){
+            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Actualizar Descriptor inclusión')
+          } else{
+            this.mensajeEmergente('success',CONFIG.TITULO_MSG,'El descriptor se ha guardado satisfactoriamente.')
+          }
+        })
+        .catch(err => {
+          this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Actualizar Descriptor inclusión. Intente más tarde. ' + err)
+        })
+        this.$refs['modalDescriptorInclusion'].hide()
+      },
+      cancelarVentana() {
+        this.descriptorInclusion = null
+        this.$refs['modalDescriptorInclusion'].hide()
+      },
+      capturarDescriptorInclusion(fila) {
+        this.filaEstudiante = fila
+        this.descriptorInclusion = this.filaEstudiante.inclusion
+        this.$refs['modalDescriptorInclusion'].show()
+        console.log(JSON.stringify(this.filaEstudiante))
+      },
       tdClassFuncDefinitiva(fila) {
         if (fila.definitivapree == this.configuracionPlanilla.preeL1) {
           return 'text-danger text-center bg-light'
@@ -117,9 +166,8 @@
       },
       tdClassFuncDiversa(fila) {
         if (fila.id_diversa == 'S') {
-          return 'text-center text-white alert alert-info'
+          return 'text-center alert alert-success'
         }
-        //return 'text-secondary text-center bg-light'
       },
       async cargarNotasPeriodo() {
         this.notasPlanilla = []

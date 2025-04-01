@@ -14,7 +14,7 @@
             </div>
             <div v-else>
               <span v-if="props.column.field == 'definitiva'">
-                <span><strong>{{props.row.definitiva}}</strong></span>
+                <span><strong>{{Number(props.row.definitiva).toFixed(1)}}</strong></span>
               </span>
             </div>
             <span v-if="props.column.field == 'diversa'">
@@ -80,23 +80,23 @@
       construirPlanillaNotasComportamiento() {
         if (this.configuracionPlanilla.tipoValComp == 0) {
           this.encabColumnas = [
-            { label: 'Apellidos y Nombres Estudiante', field: 'estudiante', sortable: false },
+            { label: 'Apellidos y Nombres Estudiante', width: '30%', field: 'estudiante', sortable: false },
             { label: '', field: 'diversa', sortable: false, tdClass: this.tdClassFuncDiversa },
-            { label: 'Definitiva', field: 'definitivacompor', width: '120px', sortable: false, tdClass: this.tdClassFuncDefinitivaLetra, thClass: 'text-center' },
-            { label: 'Concepto', field: 'concepto', width: '110px', sortable: false, tdClass: this.tdClassFuncConceptoComporLetra },
-            { label: 'Observaciones del Periodo', field: 'observaciones', sortable: false },
-            { label: 'AJ', field: 'ausJ', width: '60px', sortable: false },
-            { label: 'AS', field: 'ausS', width: '60px', sortable: false },
+            { label: 'Definitiva', field: 'definitivacompor', sortable: false, tdClass: this.tdClassFuncDefinitivaLetra, thClass: 'text-center' },
+            { label: 'Concepto', field: 'concepto', sortable: false, tdClass: this.tdClassFuncConceptoComporLetra },
+            { label: 'Observaciones del Periodo', field: 'observaciones', width: '40%', sortable: false },
+            { label: 'AJ', field: 'ausJ', sortable: false },
+            { label: 'AS', field: 'ausS', sortable: false },
           ]
         } else {
           this.encabColumnas = [
-            { label: 'Apellidos y Nombres Estudiante', field: 'estudiante', sortable: false },
+            { label: 'Apellidos y Nombres Estudiante', width: '30%', field: 'estudiante', sortable: false },
             { label: '', field: 'diversa', sortable: false, tdClass: this.tdClassFuncDiversa },
-            { label: 'Definitiva', field: 'definitiva', width: '120px', sortable: false, tdClass: this.tdClassFuncDefinitivaNota, thClass: 'text-center' },
-            { label: 'Concepto', field: 'concepto', width: '110px', sortable: false, tdClass: this.tdClassFuncConceptoComporNota },
-            { label: 'Observaciones del Periodo', field: 'observaciones', sortable: false },
-            { label: 'AJ', field: 'ausJ', width: '60px', sortable: false },
-            { label: 'AS', field: 'ausS', width: '60px', sortable: false },
+            { label: 'Definitiva', field: 'definitiva', sortable: false, tdClass: this.tdClassFuncDefinitivaNota, thClass: 'text-center' },
+            { label: 'Concepto', field: 'concepto', sortable: false, tdClass: this.tdClassFuncConceptoComporNota },
+            { label: 'Observaciones del Periodo', field: 'observaciones', width: '40%', sortable: false },
+            { label: 'AJ', field: 'ausJ', sortable: false },
+            { label: 'AS', field: 'ausS', sortable: false },
           ]
         }
       },
@@ -150,9 +150,8 @@
       },
       tdClassFuncDiversa(fila) {
         if (fila.id_diversa == 'S') {
-          return 'text-center text-white alert alert-info'
+          return 'text-center alert alert-warning'
         }
-        //return 'text-secondary text-center bg-light'
       },
       async cargarNotasPeriodoComportamiento() {
         this.notasPlanillaCompor = []
@@ -192,7 +191,7 @@
     beforeMount() {
       this.cargarNotasPeriodoComportamiento()
       this.construirPlanillaNotasComportamiento()
-      console.log(JSON.stringify(this.configuracionPlanilla))
+      //console.log(JSON.stringify(this.configuracionPlanilla))
     }
   }
 </script>
