@@ -61,6 +61,33 @@
           location.replace(CONFIG.ROOT_WEBSITE)
         })
       },
+      async cargarDatosSecciones() {
+        await axios
+        .get(CONFIG.ROOT_PATH + 'academico/carguesecciones', {params: {idInstitucion: this.$store.state.idInstitucion}})
+        .then(response => {
+          if (response.data.error){
+            alert(response.data.mensaje + ' - Consulta datos Secciones')
+            location.replace(CONFIG.ROOT_MODULO_LOGIN)
+          } else {
+            if(response.data.datos != 0) {
+              this.$store.commit('set', ['datosSecciones', response.data.datos])
+              this.$store.state.datosSecciones.forEach(element => {
+                if (element.id_seccion == this.$store.state.idSeccion) {
+                  this.$store.commit('set', ['nombreSeccion', element.seccion])
+                }
+              })
+            } else {
+              this.$store.commit('set', ['datosSecciones', []])
+              this.$store.commit('set', ['nombreSeccion', 'SIN SECCIÓN ACTIVA'])
+            }
+            //console.log(JSON.stringify(response.data.datos))
+          }
+        })
+        .catch(err => {
+          alert('Algo salio mal y no se pudo realizar: Consulta datos Secciones. Intente más tarde. ' + err)
+          location.replace(CONFIG.ROOT_WEBSITE)
+        })
+      },
       async cargarPlanillasDocente() {
         await axios
         .get(CONFIG.ROOT_PATH + 'docente/planillasasignadas/docente', { params: { idInstitucion: this.$store.state.idInstitucion, vigencia: this.$store.state.aLectivo, idDocente: this.$store.state.idDocente }})
@@ -123,8 +150,20 @@
               // DATOS DOCENTE
               this.$store.commit('set', ['idDocente', response.data.datos.usuario.idDocente])
               this.$store.commit('set', ['tituloDocente', response.data.datos.usuario.titulo])
+              this.$store.commit('set', ['notasP1_Ini', response.data.datos.usuario.notasP1_Ini])
+              this.$store.commit('set', ['notasP1_Fin', response.data.datos.usuario.notasP1_Fin])
+              this.$store.commit('set', ['notasP2_Ini', response.data.datos.usuario.notasP2_Ini])
+              this.$store.commit('set', ['notasP2_Fin', response.data.datos.usuario.notasP2_Fin])
+              this.$store.commit('set', ['notasP3_Ini', response.data.datos.usuario.notasP3_Ini])
+              this.$store.commit('set', ['notasP3_Fin', response.data.datos.usuario.notasP3_Fin])
+              this.$store.commit('set', ['notasP4_Ini', response.data.datos.usuario.notasP4_Ini])
+              this.$store.commit('set', ['notasP4_Fin', response.data.datos.usuario.notasP4_Fin])
+              this.$store.commit('set', ['notasP5_Ini', response.data.datos.usuario.notasP5_Ini])
+              this.$store.commit('set', ['notasP5_Fin', response.data.datos.usuario.notasP5_Fin])
+              this.$store.commit('set', ['fechaActual', response.data.datos.usuario.fechaA])
 
               this.cargarPlanillasDocente()
+              this.cargarDatosSecciones()
                             
               this.trazaProceso('Inicio de Sesión Docente')
             }
@@ -186,7 +225,7 @@
             this.cargarDatosSesionUsuario()
             setTimeout(()=>{
               this.btnHabilitado = true
-            },1500)
+            },100)
           }
         })
       }

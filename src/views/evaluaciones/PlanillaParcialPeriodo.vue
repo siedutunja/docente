@@ -23,6 +23,11 @@
               </b-col>
             </b-row>
             <b-row><b-col lg="12"><hr></b-col></b-row>
+            <b-row class="mt-2">
+              <b-col lg="12">
+                <b-alert v-if="contPeriodos <= 0" variant="danger" show><b>Periodos Cerrados:</b><hr>En el momento no tiene periodos activados para consultar o cargas evaluaciones.</b-alert>
+              </b-col>
+            </b-row>
             <div v-if="planillita == 1">
               <NotasParcialPeriodo :configuracionPlanilla="configuracionPlanilla"/>
             </div>
@@ -64,6 +69,7 @@
         comboPlanillas: [],
         configuracionPlanilla: {},
         planillita: null,
+        contPeriodos: 0
       }
     },
     methods: {
@@ -76,7 +82,7 @@
           } else if (this.configuracionPlanilla.id_nivel == 1) {
             this.planillita = 2
           } else {
-            this.mensajeEmergente('info',CONFIG.TITULO_MSG,'Lo sentimos, algo salio mal con la planilla seleccionada.')
+            this.mensajeEmergente('info',CONFIG.TITULO_MSG,'Lo sentimos, debe seleccionar una planilla para consultar las valoraciones.')
           }
         }
       },
@@ -96,11 +102,58 @@
         this.$store.state.listaPlanillasDocente.forEach(element => {
           this.comboPlanillas.push({ 'value': element.idPlanilla, 'text': element.nomenclatura.toUpperCase() + ' - ' + element.asignatura.toUpperCase() })
         })
+        //console.log(JSON.stringify(this.$store.state.listaPlanillasDocente))
       },
       async ocuparComboPeriodos() {
         this.comboPeriodos = []
+        let fechaVigencia = 0
+        let restaVigencia = 0
         this.$store.state.datosTablas.periodos.forEach(element => {
-          this.comboPeriodos.push({ 'value': element.id, 'text': element.periodo.toUpperCase() })
+          if (element.id == 1) {
+            fechaVigencia = new Date(this.$store.state.notasP1_Fin)
+            fechaVigencia = fechaVigencia.getTime()
+            restaVigencia = this.$store.state.fechaActual - (fechaVigencia + 86400000)
+            if (restaVigencia < 0) {
+              this.comboPeriodos.push({ 'value': element.id, 'text': element.periodo.toUpperCase() })
+              this.contPeriodos++
+            }
+          }
+          if (element.id == 2) {
+            fechaVigencia = new Date(this.$store.state.notasP2_Fin)
+            fechaVigencia = fechaVigencia.getTime()
+            restaVigencia = this.$store.state.fechaActual - (fechaVigencia + 86400000)
+            if (restaVigencia < 0) {
+              this.comboPeriodos.push({ 'value': element.id, 'text': element.periodo.toUpperCase() })
+              this.contPeriodos++
+            }
+          }
+          if (element.id == 3) {
+            fechaVigencia = new Date(this.$store.state.notasP3_Fin)
+            fechaVigencia = fechaVigencia.getTime()
+            restaVigencia = this.$store.state.fechaActual - (fechaVigencia + 86400000)
+            if (restaVigencia < 0) {
+              this.comboPeriodos.push({ 'value': element.id, 'text': element.periodo.toUpperCase() })
+              this.contPeriodos++
+            }
+          }
+          if (element.id == 4) {
+            fechaVigencia = new Date(this.$store.state.notasP4_Fin)
+            fechaVigencia = fechaVigencia.getTime()
+            restaVigencia = this.$store.state.fechaActual - (fechaVigencia + 86400000)
+            if (restaVigencia < 0) {
+              this.comboPeriodos.push({ 'value': element.id, 'text': element.periodo.toUpperCase() })
+              this.contPeriodos++
+            }
+          }
+          if (element.id == 5) {
+            fechaVigencia = new Date(this.$store.state.notasP5_Fin)
+            fechaVigencia = fechaVigencia.getTime()
+            restaVigencia = this.$store.state.fechaActual - (fechaVigencia + 86400000)
+            if (restaVigencia < 0) {
+              this.comboPeriodos.push({ 'value': element.id, 'text': element.periodo.toUpperCase() })
+              this.contPeriodos++
+            }
+          }
         })
       },
       mensajeEmergente(variante, titulo, contenido) {

@@ -179,6 +179,24 @@ function configRoutes () {
             },
           ]
         },
+        // 2024-12-12
+        {
+          path: 'informes',
+          redirect: '/informes/consolidadomatricula',  
+          name: 'Informes y Estadísticas',
+          component: {
+            render (c) { return c('router-view') }
+          },
+          children: [
+            // 2025-04-02
+            {
+              path: 'consolidadoscurso',
+              beforeEnter: autenticar,
+              name: 'Consolidados Curso',
+              component: () => import('@/views/informes/ConsolidadosCurso')
+            },
+          ]
+        },
         // 2025-03-01
         {
           path: 'restringida',

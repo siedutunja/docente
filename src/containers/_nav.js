@@ -80,6 +80,16 @@ jwt.verify(token, CONFIG.SECRET_KEY, (err, data) => {
     menu[0]._children[indice].items.push({ name: 'Generales', to: '/descriptores/generales'})
     menu[0]._children[indice].items.push({ name: 'Complementarios', to: '/descriptores/complementarios'})
     //menu[0]._children[indice].items.push({ name: 'Recomendaciones', to: '/descriptores/recomendaciones'})
+    menu[0]._children.push(
+      {
+        _name: 'CSidebarNavDropdown',
+        name: 'Informes y Estadísticas',
+        icon: 'cilBarChart',
+        items: []
+      }
+    )
+    indice++
+    menu[0]._children[indice].items.push({ name: 'Consolidados por Periodo', to: '/informes/consolidadoscurso'})
   }
 })
 
