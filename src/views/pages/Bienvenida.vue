@@ -134,6 +134,8 @@
               } else {
                 this.$store.commit('set', ['foto', response.data.datos.usuario.foto])
               }
+              this.$store.commit('set', ['rol', 'Docente'])
+              this.$store.commit('set', ['nemoRol', 'Docente'])
               this.$store.commit('set', ['generoUsuario', response.data.datos.usuario.id_genero])
               this.$store.commit('set', ['telefonoUsuario', response.data.datos.usuario.telefono1])
               this.$store.commit('set', ['correoUsuario', response.data.datos.usuario.correo])
@@ -225,7 +227,7 @@
             this.cargarDatosSesionUsuario()
             setTimeout(()=>{
               this.btnHabilitado = true
-            },100)
+            },500)
           }
         })
       }

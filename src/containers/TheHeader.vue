@@ -16,7 +16,7 @@
       <CHeaderNavItem class="d-md-down-none mx-2">
         <CHeaderNavLink>
           <CIcon name="cil-calendar"/><span class="ml-2 text-primary"><strong>AÑO LECTIVO {{ $store.state.aLectivo }}</strong></span><span class="mx-3">|</span>
-          <CIcon name="cil-user" class="mr-1"/>{{ $store.state.nombre1Usuario }} {{ $store.state.apellido1Usuario }} - Docente
+          <CIcon name="cil-user" class="mr-1"/>{{ $store.state.nombre1Usuario }} {{ $store.state.apellido1Usuario }} - {{ $store.state.nemoRol }}
         </CHeaderNavLink>
       </CHeaderNavItem>
       <TheHeaderDropdownAccnt/>

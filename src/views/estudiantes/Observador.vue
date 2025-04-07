@@ -233,54 +233,69 @@
     <b-modal ref="modalRegistroObservador" size="xl" scrollable hide-footer :title="'Registro Observación de: ' + datosFichaE.estudiante" ok-only>
       <div class="mx-3">
         <b-row>
-          <b-col lg="4">
-            <b-form-group label="Tipo Observación*" label-for="tipoObservacion" class="etiqueta">
-              <b-form-select  id="tipoObservacion" ref="tipoObservacion" v-model="$v.registroObservador.id_tipo_observacion.$model" :options="comboTiposObservacion" :state="validateStateO('id_tipo_observacion')" aria-describedby="feedTipoObservacion"></b-form-select>
-              <b-form-invalid-feedback id="feedTipoObservacion">Campo requerido.</b-form-invalid-feedback>
-            </b-form-group>
-          </b-col>
-          <b-col lg="6">
+          <b-col lg="8">
             <b-form-group label="Responsable:" label-for="responsable" class="etiqueta">
               <b-form-input  id="responsable" ref="responsable" v-model="registroObservador.responsable" disabled></b-form-input>
             </b-form-group>
           </b-col>
-          <b-col lg="2">
-            <b-form-group label="Fecha Registro:" label-for="creado" class="etiqueta">
-              <b-form-input id="creado" ref="creado" v-model="registroObservador.creado" disabled></b-form-input>
+          <b-col lg="4">
+            <b-form-group label="Rol:" label-for="rol" class="etiqueta">
+              <b-form-input  id="rol" ref="rol" v-model="registroObservador.rol" disabled></b-form-input>
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row><b-col lg="12"><hr></b-col></b-row>
+        <b-row>
+          <b-col lg="4">
+            <b-form-group label="Fecha Registro:*" label-for="fecha" class="etiqueta">
+              <b-form-input type="date" id="fecha" ref="fecha" v-model="$v.registroObservador.fecha_observacion.$model" :state="validateStateO('fecha_observacion')" aria-describedby="feedFecha" :disabled="cerrado"></b-form-input>
+              <b-form-invalid-feedback id="feedFecha">Campo requerido.</b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+          <b-col lg="4">
+            <b-form-group label="Tipo Observación:*" label-for="tipoObservacion" class="etiqueta">
+              <b-form-select  id="tipoObservacion" ref="tipoObservacion" v-model="$v.registroObservador.id_tipo_observacion.$model" :options="comboTiposObservacion" :state="validateStateO('id_tipo_observacion')" aria-describedby="feedTipoObservacion" :disabled="cerrado"></b-form-select>
+              <b-form-invalid-feedback id="feedTipoObservacion">Campo requerido.</b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+          <b-col lg="4">
+            <b-form-group label="SubTipo Observación:*" label-for="subtipoObservacion" class="etiqueta">
+              <b-form-select  id="subtipoObservacion" ref="subtipoObservacion" v-model="$v.registroObservador.id_subtipo.$model" :options="comboSubTipos" :state="validateStateO('id_subtipo')" aria-describedby="feedSubTipoObservacion" :disabled="registroObservador.id_tipo_observacion==4 && !cerrado ? false : true"></b-form-select>
+              <b-form-invalid-feedback id="feedSubTipoObservacion">Campo requerido.</b-form-invalid-feedback>
             </b-form-group>
           </b-col>
           <b-col lg="12" md="12">
-            <b-form-group label="Describa la Situación a Registrar*" label-for="situacion" class="etiqueta">
-              <b-form-textarea id="situacion" ref="situacion" v-model.trim="$v.registroObservador.situacion.$model" :state="validateStateO('situacion')" aria-describedby="feedSituacion" autocomplete="off" rows="2"></b-form-textarea>
+            <b-form-group label="Describa la Situación a Registrar:*" label-for="situacion" class="etiqueta">
+              <b-form-textarea id="situacion" ref="situacion" v-model.trim="$v.registroObservador.situacion.$model" :state="validateStateO('situacion')" aria-describedby="feedSituacion" autocomplete="off" rows="2" :disabled="cerrado"></b-form-textarea>
               <b-form-invalid-feedback id="feedSituacion">Campo requerido.</b-form-invalid-feedback>
             </b-form-group>
           </b-col>
           <b-col lg="12" md="12">
-            <b-form-group label="Versión del Estudiante" label-for="descargos" class="etiqueta">
-              <b-form-textarea id="descargos" ref="descargos" v-model.trim="registroObservador.descargos" autocomplete="off" rows="2"></b-form-textarea>
+            <b-form-group label="Versión del Estudiante:" label-for="descargos" class="etiqueta">
+              <b-form-textarea id="descargos" ref="descargos" v-model.trim="registroObservador.descargos" autocomplete="off" rows="2" :disabled="cerrado"></b-form-textarea>
             </b-form-group>
           </b-col>
           <b-col lg="12" md="12">
-            <b-form-group label="Compromisos" label-for="compromisos" class="etiqueta">
-              <b-form-textarea id="compromisos" ref="compromisos" v-model.trim="registroObservador.compromisos" autocomplete="off" rows="2"></b-form-textarea>
+            <b-form-group label="Compromisos:" label-for="compromisos" class="etiqueta">
+              <b-form-textarea id="compromisos" ref="compromisos" v-model.trim="registroObservador.compromisos" autocomplete="off" rows="2" :disabled="cerrado"></b-form-textarea>
+            </b-form-group>
+          </b-col>
+          <b-col lg="12" md="12">
+            <b-form-group label="Nota de Seguimiento:" label-for="seguimiento" class="etiqueta">
+              <b-form-textarea id="seguimiento" ref="seguimiento" v-model.trim="registroObservador.seguimiento" autocomplete="off" rows="2" :disabled="cerrado"></b-form-textarea>
             </b-form-group>
           </b-col>
           <b-col lg="6">
-            <b-form-group label="Estado del Seguimiento*" label-for="estadoSegui" class="etiqueta">
-              <b-form-select  id="estadoSegui" ref="estadoSegui" v-model="$v.registroObservador.id_estado_seguimiento.$model" :options="comboEstadosSeguimiento" :state="validateStateO('id_estado_seguimiento')" aria-describedby="feedSegui"></b-form-select>
+            <b-form-group label="Estado del Seguimiento:*" label-for="estadoSegui" class="etiqueta">
+              <b-form-select  id="estadoSegui" ref="estadoSegui" v-model="$v.registroObservador.id_estado_seguimiento.$model" :options="comboEstadosSeguimiento" :state="validateStateO('id_estado_seguimiento')" aria-describedby="feedSegui" :disabled="cerrado"></b-form-select>
               <b-form-invalid-feedback id="feedSegui">Campo requerido.</b-form-invalid-feedback>
-            </b-form-group>
-          </b-col>
-          <b-col lg="12" md="12">
-            <b-form-group label="Nota de Seguimiento" label-for="seguimiento" class="etiqueta">
-              <b-form-textarea id="seguimiento" ref="seguimiento" v-model.trim="registroObservador.seguimiento" autocomplete="off" rows="2"></b-form-textarea>
             </b-form-group>
           </b-col>
         </b-row>
         <b-row><b-col lg="12"><hr></b-col></b-row>
         <b-row>
           <b-col lg="12" v-if="!botonGuardando">
-            <b-button class="small ml-3" variant="primary" @click="validarDatosFormulario()">Guardar Registro</b-button>
+            <b-button v-if="!cerrado" class="small ml-3" variant="primary" @click="validarDatosFormulario()">Guardar Observación</b-button>
             <b-button class="small ml-3" variant="secondary" @click="cancelarFormulario">Cerrar</b-button>
           </b-col>
           <b-col v-else>
@@ -316,7 +331,7 @@
         datosFichaE: {},
         listaAnotaciones: [],
         encabColumnas: [
-          { label: 'Fecha', field: 'creado', sortable: false },
+          { label: 'Fecha', field: 'fecha_observacion', sortable: false },
           { label: 'Tipo', field: 'tipoobservacion', sortable: false },
           { label: 'Descripción de la Situación', field: 'situacion', sortable: false },
           { label: 'Versión del Estudiante', field: 'descargos', sortable: false },
@@ -330,27 +345,39 @@
           id_estudiante: null,
           situacion: null,
           id_tipo_observacion: null,
+          id_subtipo: null,
           descargos: null,
           compromisos: null,
           id_estado_seguimiento: null,
           seguimiento: null,
           id_responsable: null,
           responsable	: null,
+          rol: null,
           id_institucion: null,
+          fecha_observacion: null,
           creado: null,
           actualizado: null,
           editar: null
         },
         comboTiposObservacion: [],
+        comboSubTipos: [
+          { 'value': '1', 'text': 'TIPO I' },
+          { 'value': '2', 'text': 'TIPO II' },
+          { 'value': '3', 'text': 'TIPO III' },
+          { 'value': '9', 'text': 'NO APLICA' },
+        ],
         comboEstadosSeguimiento: [],
-        botonGuardando: false
+        botonGuardando: false,
+        cerrado: false
       }
     },
     validations: {
       registroObservador: {
+        fecha_observacion: { required },
         situacion: { required, minLength: minLength(10) },
         id_tipo_observacion: { required },
-        id_estado_seguimiento: { required }
+        id_subtipo: { required },
+        id_estado_seguimiento: { required },
       }
     },
     methods: {
@@ -422,19 +449,31 @@
         this.consultaObservador()
       },
       consultarObservacion(item) {
+        //console.log(JSON.stringify(item))
         this.registroObservador.id = item.id
         this.registroObservador.id_estudiante = item.id_estudiante
         this.registroObservador.situacion = item.situacion
         this.registroObservador.id_tipo_observacion = item.id_tipo_observacion
+        this.registroObservador.id_subtipo = item.id_subtipo
         this.registroObservador.descargos = item.descargos
         this.registroObservador.compromisos = item.compromisos
         this.registroObservador.id_estado_seguimiento = item.id_estado_seguimiento
         this.registroObservador.seguimiento = item.seguimiento
         this.registroObservador.id_responsable = item.id_responsable
         this.registroObservador.responsable = item.responsable
+        this.registroObservador.rol = item.rol
         this.registroObservador.id_institucion = item.id_institucion
-        this.registroObservador.creado = item.creado
+        this.registroObservador.fecha_observacion = item.fecha_observacion
         this.registroObservador.actualizado = item.actualizado
+        if (this.registroObservador.id_responsable == this.$store.state.idDocente) {
+          if ((this.registroObservador.id_estado_seguimiento == 3 || this.registroObservador.id_estado_seguimiento == 4)) {
+            this.cerrado = true
+          } else {
+            this.cerrado = false
+          }
+        } else {
+          this.cerrado = true
+        }
         this.registroObservador.editar = true
         this.$refs['modalRegistroObservador'].show()
       },
@@ -443,15 +482,20 @@
         this.registroObservador.id_estudiante = this.datosFichaE.id_estudiante
         this.registroObservador.situacion = null
         this.registroObservador.id_tipo_observacion = null
+        this.registroObservador.id_subtipo = 9
         this.registroObservador.descargos = null
         this.registroObservador.compromisos = null
         this.registroObservador.id_estado_seguimiento = null
         this.registroObservador.seguimiento = null
         this.registroObservador.id_responsable = this.$store.state.idDocente
         this.registroObservador.responsable = this.$store.state.Docente
+        this.registroObservador.rol = this.$store.state.rol
         this.registroObservador.id_institucion = this.$store.state.idInstitucion
+        let fechaHoy = new Date()
+        this.registroObservador.fecha_observacion = fechaHoy.toJSON().slice(0,10)
         this.registroObservador.creado = null
         this.registroObservador.actualizado = null
+        this.cerrado = false
         this.registroObservador.editar = false
         this.$refs['modalRegistroObservador'].show()
       },
