@@ -152,6 +152,13 @@ function configRoutes () {
               name: 'Resumen Final por Periodo',
               component: () => import('@/views/evaluaciones/PlanillaFinalPeriodo')
             },
+            // 2025-04-08
+            {
+              path: 'planillarecuperacionperiodo',
+              beforeEnter: autenticar,
+              name: 'Recuperaciones por Periodo',
+              component: () => import('@/views/evaluaciones/PlanillaRecuperacionPeriodo')
+            },
           ]
         },
         // 2025-03-01
