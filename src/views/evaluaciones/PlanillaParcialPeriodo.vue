@@ -37,6 +37,9 @@
             <div v-else-if="planillita == 3">
               <ComportamientoParcialPeriodo :configuracionPlanilla="configuracionPlanilla"/>
             </div>
+            <div v-else-if="planillita == 4">
+              <PreeParcialPeriodoRural :configuracionPlanilla="configuracionPlanilla"/>
+            </div>
           </b-card-text>
           <template #footer>
             <em>Planilla de evaluación parcial por periodo.</em>
@@ -53,13 +56,15 @@
   import ComportamientoParcialPeriodo from '@/views/evaluaciones/ComportamientoParcialPeriodo'
   import NotasParcialPeriodo from '@/views/evaluaciones/NotasParcialPeriodo'
   import PreeParcialPeriodo from '@/views/evaluaciones/PreeParcialPeriodo'
+  import PreeParcialPeriodoRural from '@/views/evaluaciones/PreeParcialPeriodoRural'
 
   export default {
     name: 'planillaparcialperiodo',
     components: {
       ComportamientoParcialPeriodo,
       NotasParcialPeriodo,
-      PreeParcialPeriodo
+      PreeParcialPeriodo,
+      PreeParcialPeriodoRural
     },
     data () {
       return {
@@ -80,7 +85,11 @@
           if (this.configuracionPlanilla.id_nivel > 1 && this.configuracionPlanilla.id_nivel < 7) {
             this.planillita = 1
           } else if (this.configuracionPlanilla.id_nivel == 1) {
-            this.planillita = 2
+            if (this.$store.state.idInstitucion == '097b7b10-fcaa-11ec-8267-536b07c743c4') {
+              this.planillita = 4
+            } else {
+              this.planillita = 2
+            }
           } else {
             this.mensajeEmergente('info',CONFIG.TITULO_MSG,'Lo sentimos, debe seleccionar una planilla para consultar las valoraciones.')
           }

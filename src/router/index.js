@@ -56,6 +56,13 @@ function configRoutes () {
               name: 'Recomendaciones',
               component: () => import('@/views/descriptores/Recomendaciones')
             },
+            // 2025-04-21
+            {
+              path: 'preescolar',
+              beforeEnter: autenticar,
+              name: 'Preescolar',
+              component: () => import('@/views/descriptores/Preescolar')
+            },
           ]
         },
         // 2025-03-01
@@ -204,6 +211,26 @@ function configRoutes () {
             },
           ]
         },
+        // 2024-04-06
+        {
+          path: 'reportes',
+          redirect: '/reportes/reportesperiodos',
+          name: 'Reportes',
+          component: {
+            render (c) { return c('router-view') }
+          },
+          children: [
+            // 2025-04-07
+            {
+              path: 'reportesperiodos',
+              beforeEnter: autenticar,
+              name: 'Reportes por Periodo',
+              component: () => import('@/views/reportes/ReportesPeriodos')
+            },
+          ]
+        },
+
+
         // 2025-03-01
         {
           path: 'restringida',

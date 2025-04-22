@@ -68,6 +68,17 @@ jwt.verify(token, CONFIG.SECRET_KEY, (err, data) => {
     menu[0]._children[indice].items.push({ name: 'Notas Parciales por Periodo', to: '/evaluaciones/planillaparcialperiodo'})
     menu[0]._children[indice].items.push({ name: 'Resumen Final por Periodo', to: '/evaluaciones/planillafinalperiodo'})
     menu[0]._children[indice].items.push({ name: 'Recuperaciones por Periodo', to: '/evaluaciones/planillarecuperacionperiodo'})
+    menu[0]._children.push(
+      {
+        _name: 'CSidebarNavDropdown',
+        name: 'Reportes',
+        icon: 'cilCalendar',
+        items: []
+      }
+    )
+    indice++
+    menu[0]._children[indice].items.push({ name: 'Reportes por Periodo', to: '/reportes/reportesperiodos'})
+
     // DESCRIPTORES
     menu[0]._children.push(
       {
@@ -80,7 +91,9 @@ jwt.verify(token, CONFIG.SECRET_KEY, (err, data) => {
     indice++
     menu[0]._children[indice].items.push({ name: 'Generales', to: '/descriptores/generales'})
     menu[0]._children[indice].items.push({ name: 'Complementarios', to: '/descriptores/complementarios'})
-    //menu[0]._children[indice].items.push({ name: 'Recomendaciones', to: '/descriptores/recomendaciones'})
+    if (tokenDecodificado.id_institucion == '17ee4f30-fc80-11ec-a1d1-1dc2835404e5' || tokenDecodificado.id_institucion == '097b7b10-fcaa-11ec-8267-536b07c743c4') {
+      menu[0]._children[indice].items.push({ name: 'Preescolar', to: '/descriptores/preescolar'})
+    }
     menu[0]._children.push(
       {
         _name: 'CSidebarNavDropdown',

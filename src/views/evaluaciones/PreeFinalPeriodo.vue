@@ -126,7 +126,7 @@
         this.filaEstudiante = fila
         this.descriptorInclusion = this.filaEstudiante.inclusion
         this.$refs['modalDescriptorInclusion'].show()
-        console.log(JSON.stringify(this.filaEstudiante))
+        //console.log(JSON.stringify(this.filaEstudiante))
       },
       tdClassFuncDefinitiva(fila) {
         if (fila.definitivapree == this.configuracionPlanilla.preeL1) {
