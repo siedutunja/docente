@@ -93,6 +93,9 @@ jwt.verify(token, CONFIG.SECRET_KEY, (err, data) => {
     if (tokenDecodificado.id_institucion == '17ee4f30-fc80-11ec-a1d1-1dc2835404e5' || tokenDecodificado.id_institucion == '097b7b10-fcaa-11ec-8267-536b07c743c4') {
       menu[0]._children[indice].items.push({ name: 'Preescolar', to: '/descriptores/preescolar'})
     }
+    if (tokenDecodificado.id_institucion == 'eb58bf60-fc83-11ec-a1d1-1dc2835404e5') {
+      menu[0]._children[indice].items.push({ name: 'Logros', to: '/descriptores/logros'})
+    }
     menu[0]._children.push(
       {
         _name: 'CSidebarNavDropdown',

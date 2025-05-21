@@ -63,6 +63,13 @@ function configRoutes () {
               name: 'Preescolar',
               component: () => import('@/views/descriptores/Preescolar')
             },
+            // 2025-05-21
+            {
+              path: 'logros',
+              beforeEnter: autenticar,
+              name: 'Logros',
+              component: () => import('@/views/descriptores/Logros')
+            },
           ]
         },
         // 2025-03-01
