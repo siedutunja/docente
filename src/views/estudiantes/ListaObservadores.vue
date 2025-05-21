@@ -9,11 +9,25 @@
           <b-card-text>
             <b-row>
               <b-col lg="6">
+                <b-form-group label="Seleccione la Sede:" label-for="sedes" class="etiqueta">
+                  <b-form-select  id="sedes" ref="sedes" v-model="idSede" :options="comboSedes" @change="idCurso=null,ocuparComboCursosSede()"></b-form-select>
+                </b-form-group>
+              </b-col>
+              <b-col lg="6">
+                <b-form-group label="Seleccione el Curso:" label-for="cursos" class="etiqueta">
+                  <b-form-select  id="cursos" ref="cursos" v-model="idCurso" :options="comboCursosSede" @change="consultaListaCurso()" :disabled="idSede!=null ? false : true"></b-form-select>
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <!--
+            <b-row>
+              <b-col lg="6">
                 <b-form-group label="Seleccione el Curso:" label-for="cursos" class="etiqueta">
                   <b-form-select  id="cursos" ref="cursos" v-model="idCurso" :options="comboCursosDocente" @change="consultaListaCurso()"></b-form-select>
                 </b-form-group>
               </b-col>
             </b-row>
+            -->
             <b-row><b-col lg="12"><hr></b-col></b-row>
             <div v-if="idCurso!=null">
               <vue-good-table :columns="encabColumnas" :rows="listaEstudiantesCurso" styleClass="vgt-table condensed bordered striped" :line-numbers="true">
@@ -50,7 +64,10 @@
     },
     data () {
       return {
+        idSede: null,
+        comboSedes: [],
         idCurso: null,
+        comboCursosSede: [],
         comboCursosDocente: [],
         listaEstudiantesCurso: [],
         encabColumnas: [
@@ -101,6 +118,7 @@
         }
         return edad
       },
+      /*
       ocuparComboCursosDocente() {
         let unicos = []
         this.comboCursosDocente = []
@@ -111,12 +129,28 @@
           }
         })
       },
+      */
+      async ocuparComboCursosSede() {
+        this.comboCursosSede = []
+        this.$store.state.datosCursos.forEach(element => {
+          if (element.id_sede == this.idSede) {
+            this.comboCursosSede.push({ 'value': element.id, 'text': element.nomenclatura.toUpperCase() })
+          }
+        })
+      },
+      async ocuparComboSedes() {
+        this.comboSedes = []
+        this.$store.state.datosSedes.forEach(element => {
+          this.comboSedes.push({ 'value': element.id, 'text': element.sede.toUpperCase() })
+        })
+      },
       mensajeEmergente(variante, titulo, contenido) {
         this.$bvToast.toast(contenido, { title: titulo, variant: variante, toaster: "b-toaster-top-center", solid: true, autoHideDelay: 4000, appendToast: false })
       }
     },
     beforeMount() {
-      this.ocuparComboCursosDocente()
+      this.ocuparComboSedes()
+      //this.ocuparComboCursosDocente()
     }
   }
 </script>

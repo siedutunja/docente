@@ -1,6 +1,6 @@
 //*** Api Localhost
 //export const ROOT_PATH = "http://localhost:5001/api/"
-//export const ROOT_HOME = "http://localhost:8081/docente/"
+//export const ROOT_HOME = "http://localhost:8082/docente/"
 //export const ROOT_MODULO_LOGIN = "http://localhost:8080/login/"
 
 //*** Api Servidor

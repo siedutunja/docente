@@ -4,11 +4,11 @@
       <b-col lg="12">
         <b-card>
           <template #header>
-            <h5 class="mb-0"><b-icon icon="card-checklist" aria-hidden="true"></b-icon> REPORTES POR PERIODO</h5>
+            <h5 class="mb-0"><b-icon icon="card-checklist" aria-hidden="true"></b-icon> INFORMES DE EVALUACIÓN POR PERIODO</h5>
           </template>
           <b-card-text>
             <b-row>
-              <b-col lg="2">
+              <b-col lg="6">
                 <b-form-group label="Periodo:" label-for="periodo" class="etiqueta">
                   <b-form-select id="periodo" ref="periodo" v-model="idPeriodo" :options="comboPeriodos" @change="idCurso=null"></b-form-select>
                 </b-form-group>
@@ -20,36 +20,41 @@
                 </b-form-group>
               </b-col>
               -->
-              <b-col lg="4">
+              <b-col lg="6">
                 <b-form-group label="Seleccione el Curso:" label-for="cursos" class="etiqueta">
                   <b-form-select id="cursos" ref="cursos" v-model="idCurso" :options="comboCursosDirector" @change="consultaListaCurso()" :disabled="idPeriodo!=null ? false : true"></b-form-select>
                 </b-form-group>
               </b-col>
             </b-row>
             <b-row class="mt-2" v-if="idCurso!=null">
-              <b-row><b-col lg="12"><hr></b-col></b-row>
+              <b-col lg="12"><hr></b-col>
               <!-- **************** LISTA CURSO ************** -->
-              <div v-if="btnCargando">
-                <div class="text-center m-5 text-primary">
-                  <b-spinner style="width: 3rem; height: 3rem;" label="Spinner"></b-spinner>
-                  <br><strong>Cargando planilla...</strong>
+              <b-col lg="12">
+                <div v-if="btnCargando">
+                  <div class="text-center m-5 text-primary">
+                    <b-spinner style="width: 3rem; height: 3rem;" label="Spinner"></b-spinner>
+                    <br><strong>Cargando planilla...</strong>
+                  </div>
                 </div>
-              </div>
-              <div v-else>
-                <b-row>
-                  <b-col lg="12">
-                    <vue-good-table ref="estudiantes" :columns="encabColumnas" :rows="listaEstudiantesCurso" styleClass="vgt-table condensed bordered striped" :line-numbers="true"
-                    :select-options="{enabled: true,selectionText: 'estudiantes seleccionados',clearSelectionText: 'Limpiar',}">
-                      <template #selected-row-actions>
-                        <button class="small btn btn-primary" @click="imprimirReportes()">Imprimir Reportes</button>
-                      </template>
-                      <div slot="emptystate">
-                        <h5 class="text-danger ml-5">No existen estudiantes matriculados</h5>
-                      </div>
-                    </vue-good-table>
-                  </b-col>
-                </b-row>
-              </div>
+                <div v-else>
+                  <b-row class="text-right">
+                    <b-col lg="12">
+                      <b-form-group label="" v-slot="{ ariaDescribedby }">
+                        <b-form-radio-group v-model="idBoletin" :options="tiposBoletin" :aria-describedby="ariaDescribedby" name="radio-inline"></b-form-radio-group>
+                      </b-form-group>
+                    </b-col>
+                  </b-row>
+                  <vue-good-table ref="estudiantes" :columns="encabColumnas" :rows="listaEstudiantesCurso" styleClass="vgt-table condensed bordered striped" :line-numbers="true"
+                  :select-options="{enabled: true,selectionText: 'estudiantes seleccionados',clearSelectionText: 'Limpiar',}">
+                    <template #selected-row-actions>
+                      <button class="small btn btn-primary" @click="imprimirReportes()">Imprimir Reportes</button>
+                    </template>
+                    <div slot="emptystate">
+                      <h5 class="text-danger ml-5">No existen estudiantes matriculados</h5>
+                    </div>
+                  </vue-good-table>
+                </div>
+              </b-col>
             </b-row>
           </b-card-text>
           <template #footer>
@@ -87,6 +92,11 @@
           { label: 'Documento', field: 'documento', sortable: false, tdClass: this.tdClassFuncE },
           { label: 'Estado', field: 'estado', sortable: false, tdClass: this.tdClassFuncE },
         ],
+        idBoletin: 1,
+        tiposBoletin: [
+          { 'value': 1, 'text': 'Informes organizados por Areas' },
+          { 'value': 2, 'text': 'Informes organizados solo por Asignaturas' },
+        ],
         btnCargando: false,
         listaReportes: [],
         nombreSede: null,
@@ -105,17 +115,23 @@
         let sede = this.nombreSede
         let curso = document.getElementById('cursos')[document.getElementById('cursos').selectedIndex].text
         let periodo = document.getElementById('periodo')[document.getElementById('periodo').selectedIndex].text
-        let uri = "?datos=" + JSON.stringify(this.listaReportes) + "&ie=" + this.$store.state.nombreInstitucion + "&vigencia=" + this.$store.state.aLectivo + "&escudo=" + this.$store.state.escudoInstitucion + "&sede=" + sede + "&idCurso=" + this.idCurso + "&curso=" + curso + "&jornada=" + this.jornada + "&director=" + this.director + "&periodo=" + periodo + "&idPeriodo=" + this.idPeriodo + "&idIe=" + this.$store.state.idInstitucion + "&puesto=" + this.puesto
-        let encoded = encodeURI(uri);
-        //window.open("http://localhost/siedutunja/php/reportes/" + this.$store.state.daneInstitucion + ".php" + encoded,"_blank")
-        window.open("https://siedutunja.gov.co/php/reportes/" + this.$store.state.daneInstitucion + ".php" + encoded,"_blank")
-        //console.log(JSON.stringify(this.listaReportes))
+
+        let uri = "?datos=" + JSON.stringify(this.listaReportes) + "&ie=" + this.$store.state.nombreInstitucion + "&vigencia=" + this.$store.state.aLectivo + "&escudo=" + this.$store.state.escudoInstitucion + "&sede=" + sede + "&idCurso=" + this.idCurso + "&curso=" + curso + "&jornada=" + this.jornada + "&director=" + this.director + "&periodo=" + periodo + "&idPeriodo=" + this.idPeriodo + "&idIe=" + this.$store.state.idInstitucion + "&idNivel=" + this.idNivel + "&puesto=" + this.puesto +
+        "&minBaj=" + this.$store.state.datosSecciones[0].minBaj + "&maxBaj=" + this.$store.state.datosSecciones[0].maxBaj + "&minBas=" + this.$store.state.datosSecciones[0].minBas + "&maxBas=" + this.$store.state.datosSecciones[0].maxBas + "&minAlt=" + this.$store.state.datosSecciones[0].minAlt + "&maxAlt=" + this.$store.state.datosSecciones[0].maxAlt + "&minSup=" + this.$store.state.datosSecciones[0].minSup + "&maxSup=" + this.$store.state.datosSecciones[0].maxSup
+        let encoded = encodeURI(uri)
+        if ( this.idBoletin == 1) {
+          //window.open("http://localhost/siedutunja/php/boletines/" + this.$store.state.daneInstitucion + "ar.php" + encoded,"_blank")
+          window.open("https://siedutunja.gov.co/php/boletines/" + this.$store.state.daneInstitucion + "ar.php" + encoded,"_blank")
+        } else {
+          //window.open("http://localhost/siedutunja/php/boletines/" + this.$store.state.daneInstitucion + "as.php" + encoded,"_blank")
+          window.open("https://siedutunja.gov.co/php/boletines/" + this.$store.state.daneInstitucion + "as.php" + encoded,"_blank")
+        }
         return true
       },
       async consultaListaCurso() {
         this.btnCargando = true
         this.jornada = 'MAÑANA'
-        this.director = this.$store.state.docente
+        this.director = this.$store.state.nombre1Usuario + " " + this.$store.state.nombre2Usuario + " " + this.$store.state.apellido1Usuario + " " + this.$store.state.apellido2Usuario
         this.listaEstudiantesCurso = []
         await axios
         .get(CONFIG.ROOT_PATH + 'academico/listacurso/reportes', { params: { idCurso: this.idCurso }})

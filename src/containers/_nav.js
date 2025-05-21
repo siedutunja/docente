@@ -53,7 +53,6 @@ jwt.verify(token, CONFIG.SECRET_KEY, (err, data) => {
     )
     indice++
     menu[0]._children[indice].items.push({ name: 'Consultar Estudiante', to: '/estudiantes/buscarestudiante'})
-    menu[0]._children[indice].items.push({ name: 'Listas y Planillas', to: '/planillas/listadoscurso'})
     menu[0]._children[indice].items.push({ name: 'Observador', to: '/estudiantes/listaobservadores'})
     // EVALUACIONES
     menu[0]._children.push(
@@ -71,13 +70,13 @@ jwt.verify(token, CONFIG.SECRET_KEY, (err, data) => {
     menu[0]._children.push(
       {
         _name: 'CSidebarNavDropdown',
-        name: 'Reportes',
+        name: 'Listados y Formatos',
         icon: 'cilCalendar',
         items: []
       }
     )
     indice++
-    menu[0]._children[indice].items.push({ name: 'Reportes por Periodo', to: '/reportes/reportesperiodos'})
+    menu[0]._children[indice].items.push({ name: 'Listas y Planillas', to: '/planillas/listadoscurso'})
 
     // DESCRIPTORES
     menu[0]._children.push(
@@ -104,6 +103,7 @@ jwt.verify(token, CONFIG.SECRET_KEY, (err, data) => {
     )
     indice++
     menu[0]._children[indice].items.push({ name: 'Consolidados por Periodo', to: '/informes/consolidadoscurso'})
+    menu[0]._children[indice].items.push({ name: 'Reportes por Periodo', to: '/informes/reportesperiodos'})
   }
 })
 

@@ -176,6 +176,8 @@
 
               this.cargarPlanillasDocente()
               this.cargarDatosSecciones()
+              this.cargarDatosSedes()
+              this.cargarDatosCursos()
                             
               this.trazaProceso('Inicio de Sesión Docente')
             }
@@ -203,6 +205,46 @@
         })
         .catch(err => {
           alert('Algo salio mal y no se pudo realizar: Consulta datos tablas de la Sesión. Intente más tarde. ' + err)
+          location.replace(CONFIG.ROOT_WEBSITE)
+        })
+      },
+      async cargarDatosCursos() {
+        await axios
+        .get(CONFIG.ROOT_PATH + 'academico/carguecursos', {params: {idInstitucion: this.$store.state.idInstitucion, vigencia: this.$store.state.aLectivo}})
+        .then(response => {
+          if (response.data.error){
+            alert(response.data.mensaje + ' - Consulta datos Cursos Activos')
+            location.replace(CONFIG.ROOT_MODULO_LOGIN)
+          } else {
+            if(response.data.datos != 0) {
+              this.$store.commit('set', ['datosCursos', response.data.datos])
+            } else {
+              this.$store.commit('set', ['datosCursos', []])
+            }
+          }
+        })
+        .catch(err => {
+          alert('Algo salio mal y no se pudo realizar: Consulta datos Cursos Activos. Intente más tarde. ' + err)
+          location.replace(CONFIG.ROOT_WEBSITE)
+        })
+      },
+      async cargarDatosSedes() {
+        await axios
+        .get(CONFIG.ROOT_PATH + 'academico/carguesedes', {params: {idInstitucion: this.$store.state.idInstitucion, idSeccion: 1}})
+        .then(response => {
+          if (response.data.error){
+            alert(response.data.mensaje + ' - Consulta datos Sedes Activas')
+            location.replace(CONFIG.ROOT_MODULO_LOGIN)
+          } else {
+            if(response.data.datos != 0) {
+              this.$store.commit('set', ['datosSedes', response.data.datos])
+            } else {
+              this.$store.commit('set', ['datosSedes', []])
+            }
+          }
+        })
+        .catch(err => {
+          alert('Algo salio mal y no se pudo realizar: Consulta datos Sedes Activas. Intente más tarde. ' + err)
           location.replace(CONFIG.ROOT_WEBSITE)
         })
       },

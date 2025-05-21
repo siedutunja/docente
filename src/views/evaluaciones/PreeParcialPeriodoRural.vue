@@ -346,7 +346,7 @@
           item.c3 = null
         } else  {
           if (item.c3 == 'E' || item.c3 == 'L' || item.c3 == 'R') {
-            this.notasPlanillaPree[indice].c3 = item.c1
+            this.notasPlanillaPree[indice].c3 = item.c3
           } else {
             this.notasPlanillaPree[indice].c3 = null
             this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'La evaluación: ' + item.c3  + ' no es válida.')
@@ -361,7 +361,7 @@
           item.c4 = null
         } else  {
           if (item.c4 == 'E' || item.c4 == 'L' || item.c4 == 'R') {
-            this.notasPlanillaPree[indice].c4 = item.c1
+            this.notasPlanillaPree[indice].c4 = item.c4
           } else {
             this.notasPlanillaPree[indice].c4 = null
             this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'La evaluación: ' + item.c4  + ' no es válida.')

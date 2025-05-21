@@ -209,23 +209,12 @@ function configRoutes () {
               name: 'Consolidados Curso',
               component: () => import('@/views/informes/ConsolidadosCurso')
             },
-          ]
-        },
-        // 2024-04-06
-        {
-          path: 'reportes',
-          redirect: '/reportes/reportesperiodos',
-          name: 'Reportes',
-          component: {
-            render (c) { return c('router-view') }
-          },
-          children: [
-            // 2025-04-07
+            // 2025-04-24
             {
               path: 'reportesperiodos',
               beforeEnter: autenticar,
               name: 'Reportes por Periodo',
-              component: () => import('@/views/reportes/ReportesPeriodos')
+              component: () => import('@/views/informes/ReportesPeriodos')
             },
           ]
         },
