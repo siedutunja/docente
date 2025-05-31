@@ -42,6 +42,7 @@ jwt.verify(token, CONFIG.SECRET_KEY, (err, data) => {
     indice++
     menu[0]._children[indice].items.push({ name: 'Asignación Académica', to: '/planillas/asignacionacademica'})
     menu[0]._children[indice].items.push({ name: 'Configurar Planillas', to: '/planillas/configurarplanillas'})
+    menu[0]._children[indice].items.push({ name: 'Actividades Académicas', to: '/planillas/actividadesacademicas'})
     // ESTUDIANTES
     menu[0]._children.push(
       {

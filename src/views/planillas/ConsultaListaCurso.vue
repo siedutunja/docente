@@ -46,29 +46,7 @@
           { label: 'Apellidos y Nombres del Estudiante', field: 'estudiante' },
           { label: 'Documento', field: 'documento' },
         ],
-        encabColumnasExcel: [
-          { label: 'Apellidos y Nombres del Estudiante', field: 'estudiante' },
-          { label: 'Documento', field: 'documento' },
-          { label: 'Tipo', field: 'nomenclatura' },
-          { label: 'Fecha Nace', field: 'fecha_nacimiento' },
-          { label: 'Genero', field: 'id_genero' },
-          { label: 'Nacionalidad', field: 'pais' },
-          { label: 'Estrato', field: 'id_estrato' },
-          { label: 'Rh', field: 'rh' },
-          { label: 'Sisben', field: 'subgrupo' },
-          { label: 'Nuevo', field: 'id_nuevo' },
-          { label: 'Repitente', field: 'id_repitente' },
-          { label: 'Especialidad', field: 'especialidad' },
-          { label: 'Discapacidad', field: 'discapacidad' },
-          { label: 'Observaciones', field: 'obs_matricula' },
-          { label: 'Ruta', field: 'ruta' },
-          { label: 'Acudiente', field: 'acudiente' },
-          { label: 'Dirección', field: 'direccion' },
-          { label: 'Teléfono1', field: 'telefono1' },
-          { label: 'Teléfono2', field: 'telefono2' },
-          { label: 'Correo', field: 'correo' },
-          { label: 'Parentesco', field: 'parentesco' },
-        ]
+        encabColumnasExcel: []
       }
     },
     methods: {
@@ -80,13 +58,29 @@
             this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Consulta Lista Curso')
           } else{
             if (response.data.datos != 0) {
+              this.listaEstudiantesCurso = []
+              response.data.datos.forEach(element => {
+                element.edad = this.calcularEdad(element.fecha_nacimiento.substr(0,10)) + " Años"
+              })
               this.listaEstudiantesCurso = response.data.datos
+              //console.log(JSON.stringify(this.listaEstudiantesCurso))
             }
           }
         })
         .catch(err => {
           this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Consulta Lista Curso. Intente más tarde.' + err)
         })
+      },
+      calcularEdad(fecha) {
+        var hoy = new Date()
+        var cumpleanos = new Date(fecha)
+        var edad = hoy.getFullYear() - cumpleanos.getFullYear()
+        var m = hoy.getMonth() - cumpleanos.getMonth()
+    
+        if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+            edad--
+        }
+        return edad
       },
       cancelarFormulario() {
         this.$emit("retorno", 0)
@@ -96,6 +90,51 @@
       }
     },
     beforeMount() {
+      this.encabColumnasExcel.push({ label: 'Apellidos y Nombres del Estudiante', field: 'estudiante' })
+      this.encabColumnasExcel.push({ label: 'Estado', field: 'estado' })
+      this.datosCurso.campos.forEach(element => {
+        if (element == 1) {
+          this.encabColumnasExcel.push({ label: 'Documento', field: 'documento' })
+          this.encabColumnasExcel.push({ label: 'Tipo', field: 'nomenclatura' })
+        }
+        if (element == 25) this.encabColumnasExcel.push({ label: 'Municipio Documento', field: 'munidoc' })
+        if (element == 2) this.encabColumnasExcel.push({ label: 'Fecha Nacimiento', field: 'fecha_nacimiento' })
+        if (element == 24) this.encabColumnasExcel.push({ label: 'Municipio Nacimiento', field: 'muninace' })
+        if (element == 3) this.encabColumnasExcel.push({ label: 'Edad', field: 'edad' })
+        if (element == 4) this.encabColumnasExcel.push({ label: 'Genero', field: 'id_genero' })
+        if (element == 5) this.encabColumnasExcel.push({ label: 'Repitente', field: 'id_repitente' })
+        if (element == 6) this.encabColumnasExcel.push({ label: 'Nuevo', field: 'id_nuevo' })
+        if (element == 7) this.encabColumnasExcel.push({ label: 'Nacionalidad', field: 'pais' })
+        if (element == 8) this.encabColumnasExcel.push({ label: 'Estrato', field: 'id_estrato' })
+        if (element == 9) this.encabColumnasExcel.push({ label: 'Rh', field: 'rh' })
+        if (element == 10) this.encabColumnasExcel.push({ label: 'Sisben', field: 'subgrupo' })
+        if (element == 11) this.encabColumnasExcel.push({ label: 'Especialidad', field: 'especialidad' })
+        if (element == 12) this.encabColumnasExcel.push({ label: 'Discapacidad', field: 'discapacidad' })
+        if (element == 13) this.encabColumnasExcel.push({ label: 'Capacidad Excepcional', field: 'capacidad' })
+        if (element == 14) this.encabColumnasExcel.push({ label: 'Trastorno del Aprendizaje', field: 'trastorno' })
+        if (element == 15) this.encabColumnasExcel.push({ label: 'Apoyo Académico Especial', field: 'apoyo' })
+        if (element == 16) this.encabColumnasExcel.push({ label: 'Victima del Conflicto', field: 'victima' })
+        if (element == 17) this.encabColumnasExcel.push({ label: 'Etnia', field: 'etnia' })
+        if (element == 18) this.encabColumnasExcel.push({ label: 'Eps', field: 'eps' })
+        if (element == 19) this.encabColumnasExcel.push({ label: 'Enfermedades', field: 'enfermedades' })
+        if (element == 20) {
+          this.encabColumnasExcel.push({ label: 'Dir Estudiante', field: 'dire' })
+          this.encabColumnasExcel.push({ label: 'Mun Estudiante', field: 'munidire' })
+          this.encabColumnasExcel.push({ label: 'Barrio Estudiante', field: 'barrio' })
+          this.encabColumnasExcel.push({ label: 'Tel1 Estudiante', field: 'tel1e' })
+          this.encabColumnasExcel.push({ label: 'Tel2 Estudiante', field: 'tel2e' })
+        }
+        if (element == 21) this.encabColumnasExcel.push({ label: 'Observaciones', field: 'obs_matricula' })
+        if (element == 22) this.encabColumnasExcel.push({ label: 'Ruta', field: 'ruta' })
+        if (element == 23) {
+          this.encabColumnasExcel.push({ label: 'Acudiente', field: 'acudiente' })
+          this.encabColumnasExcel.push({ label: 'Dir Acudiente', field: 'direccion' })
+          this.encabColumnasExcel.push({ label: 'Tel1 Acudiente', field: 'telefono1' })
+          this.encabColumnasExcel.push({ label: 'Tel2 Acudiente', field: 'telefono2' })
+          this.encabColumnasExcel.push({ label: 'Correo Acudiente', field: 'correo' })
+          this.encabColumnasExcel.push({ label: 'Parentesco', field: 'parentesco' })
+        }
+      })
       this.consultaListaCurso()
     }
   }

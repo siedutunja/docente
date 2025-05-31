@@ -40,6 +40,9 @@
             <div v-else-if="planillita == 4">
               <PreeParcialPeriodoRural :configuracionPlanilla="configuracionPlanilla"/>
             </div>
+            <div v-else-if="planillita == 5">
+              <PreeParcialPeriodoSilvino :configuracionPlanilla="configuracionPlanilla"/>
+            </div>
           </b-card-text>
           <template #footer>
             <em>Planilla de evaluación parcial por periodo.</em>
@@ -57,6 +60,7 @@
   import NotasParcialPeriodo from '@/views/evaluaciones/NotasParcialPeriodo'
   import PreeParcialPeriodo from '@/views/evaluaciones/PreeParcialPeriodo'
   import PreeParcialPeriodoRural from '@/views/evaluaciones/PreeParcialPeriodoRural'
+  import PreeParcialPeriodoSilvino from '@/views/evaluaciones/PreeParcialPeriodoSilvino'
 
   export default {
     name: 'planillaparcialperiodo',
@@ -64,7 +68,8 @@
       ComportamientoParcialPeriodo,
       NotasParcialPeriodo,
       PreeParcialPeriodo,
-      PreeParcialPeriodoRural
+      PreeParcialPeriodoRural,
+      PreeParcialPeriodoSilvino
     },
     data () {
       return {
@@ -85,8 +90,10 @@
           if (this.configuracionPlanilla.id_nivel > 1 && this.configuracionPlanilla.id_nivel < 7) {
             this.planillita = 1
           } else if (this.configuracionPlanilla.id_nivel == 1) {
-            if (this.$store.state.idInstitucion == '097b7b10-fcaa-11ec-8267-536b07c743c4') {
+            if (this.$store.state.idInstitucion == '097b7b10-fcaa-11ec-8267-536b07c743c4') { // PREE RURAL
               this.planillita = 4
+            } else if (this.$store.state.idInstitucion == 'c50f3d80-fca0-11ec-8267-536b07c743c4') { // PREE SILVINO
+              this.planillita = 5
             } else {
               this.planillita = 2
             }

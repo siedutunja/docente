@@ -102,6 +102,13 @@ function configRoutes () {
               name: 'Configuración Planillas',
               component: () => import('@/views/planillas/ConfigurarPlanillas')
             },
+            // 2025-05-21
+            {
+              path: 'actividadesacademicas',
+              beforeEnter: autenticar,
+              name: 'Actividades Académicas',
+              component: () => import('@/views/planillas/ActividadesAcademicas')
+            },
           ]
         },
         // 2025-03-02

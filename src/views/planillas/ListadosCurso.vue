@@ -143,7 +143,9 @@
         campos: [
           { value: 0, text: 'Apellidos y Nombres', disabled: true },
           { value: 1, text: 'Documento' },
+          { value: 25, text: 'Municipio de Expedición'},
           { value: 2, text: 'Fecha de Nacimiento' },
+          { value: 24, text: 'Municipio de Nacimiento'},
           { value: 3, text: 'Edad'},
           { value: 4, text: 'Genero'},
           { value: 5, text: 'Repitencia'},
@@ -154,9 +156,17 @@
           { value: 10, text: 'Sisben'},
           { value: 11, text: 'Especialidad'},
           { value: 12, text: 'Discapacidad'},
-          { value: 13, text: 'Observaciones Matricula'},
-          { value: 14, text: 'Ruta'},
-          { value: 15, text: 'Acudiente (Nombre,Dirección,Teléfono,Correo)'},
+          { value: 13, text: 'Capacidad Excepcional'},
+          { value: 14, text: 'Trastorno del Aprendizaje'},
+          { value: 15, text: 'Apoyo Académico Especial'},
+          { value: 16, text: 'Victima del Conflicto'},
+          { value: 17, text: 'Etnia'},
+          { value: 18, text: 'Eps'},
+          { value: 19, text: 'Enfermedades/Tratamiento'},
+          { value: 20, text: 'Ubicación (Dirección,Municipio,Barrio,Teléfono)'},
+          { value: 21, text: 'Observaciones Matricula'},
+          { value: 22, text: 'Ruta'},
+          { value: 23, text: 'Acudiente (Nombre,Dirección,Teléfono,Correo)'}
         ],
         datosCurso: [],
         comboNumeroColumnas: [
@@ -190,6 +200,7 @@
     methods: {
       consultaListaCurso(item) {
         this.datosCurso = item
+        this.datosCurso.campos = this.camposSeleccionados
         this.$refs['modalConsultaListaCurso'].show()
       },
       datosRecibidosConsulta(retorno) {
