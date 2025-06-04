@@ -50,6 +50,79 @@
                   </b-row>
                 </div>
               </b-col>
+              <!-- **************** CONSOLIDADO AREAS ************** -->
+              <b-col lg="12" v-if="idInforme == 2">
+                <div v-if="btnCargando">
+                  <div class="text-center m-5 text-primary">
+                    <b-spinner style="width: 3rem; height: 3rem;" label="Spinner"></b-spinner>
+                    <br><strong>Cargando planilla...</strong>
+                  </div>
+                </div>
+                <div v-else>
+                  <vue-good-table ref="table" :columns="encabColumnasAreas" :rows="listaMatriculados" styleClass="vgt-table condensed bordered striped">
+                    <div slot="emptystate">
+                      <h5 class="text-danger ml-5">No existen estudiantes matriculados</h5>
+                    </div>
+                  </vue-good-table>
+                  <b-row>
+                    <b-col lg="12">
+                      <b-button class="small mx-1 mt-3" variant="primary" @click="imprimirConsolidado">Imprimir Consolidado</b-button>
+                      <vue-excel-xlsx class="small mx-1 mt-3 btn btn-outline-primary" :data="listaMatriculados" :columns="encabColumnasAreas" :file-name="'ConsolidadoNotas-' + new Date().toLocaleDateString()" :file-type="'xlsx'" :sheet-name="'Consolidado'">
+                        Exportar Consolidado Evaluaciones a Excel
+                      </vue-excel-xlsx>
+                    </b-col>
+                  </b-row>
+                </div>
+              </b-col>
+              <!-- **************** CONSOLIDADO ASIGNATURAS CON RECUPERACIONES ************** -->
+              <b-col lg="12" v-if="idInforme == 3">
+                <div v-if="btnCargando">
+                  <div class="text-center m-5 text-primary">
+                    <b-spinner style="width: 3rem; height: 3rem;" label="Spinner"></b-spinner>
+                    <br><strong>Cargando planilla...</strong>
+                  </div>
+                </div>
+                <div v-else>
+                  <vue-good-table ref="table" :columns="encabColumnasRecup" :rows="listaMatriculados" styleClass="vgt-table condensed bordered striped">
+                    <div slot="emptystate">
+                      <h5 class="text-danger ml-5">No existen estudiantes matriculados</h5>
+                    </div>
+                  </vue-good-table>
+                  <b-row>
+                    <b-col lg="12">
+                      <b-button class="small mx-1 mt-3" variant="primary" @click="imprimirConsolidado">Imprimir Consolidado</b-button>
+                      <vue-excel-xlsx class="small mx-1 mt-3 btn btn-outline-primary" :data="listaMatriculados" :columns="encabColumnasRecup" :file-name="'ConsolidadoNotas-' + new Date().toLocaleDateString()" :file-type="'xlsx'" :sheet-name="'Consolidado'">
+                        Exportar Consolidado Evaluaciones a Excel
+                      </vue-excel-xlsx>
+                    </b-col>
+                  </b-row>
+                </div>
+              </b-col>
+              <!-- **************** CONSOLIDADO AREAS CON RECUPERACIONES ************** -->
+              <b-col lg="12" v-if="idInforme == 4">
+                <div v-if="btnCargando">
+                  <div class="text-center m-5 text-primary">
+                    <b-spinner style="width: 3rem; height: 3rem;" label="Spinner"></b-spinner>
+                    <br><strong>Cargando planilla...</strong>
+                  </div>
+                </div>
+                <div v-else>
+                  <vue-good-table ref="table" :columns="encabColumnasAreasRecup" :rows="listaMatriculados" styleClass="vgt-table condensed bordered striped">
+                    <div slot="emptystate">
+                      <h5 class="text-danger ml-5">No existen estudiantes matriculados</h5>
+                    </div>
+                  </vue-good-table>
+                  <b-row>
+                    <b-col lg="12">
+                      <b-button class="small mx-1 mt-3" variant="primary" @click="imprimirConsolidado">Imprimir Consolidado</b-button>
+                      <vue-excel-xlsx class="small mx-1 mt-3 btn btn-outline-primary" :data="listaMatriculados" :columns="encabColumnasAreasRecup" :file-name="'ConsolidadoNotas-' + new Date().toLocaleDateString()" :file-type="'xlsx'" :sheet-name="'Consolidado'">
+                        Exportar Consolidado Evaluaciones a Excel
+                      </vue-excel-xlsx>
+                    </b-col>
+                  </b-row>
+                </div>
+              </b-col>
+
             </b-row>
           </b-card-text>
           <template #footer>
@@ -77,11 +150,15 @@
         idInforme: null,
         comboInformes: [
           { 'value': 1, 'text': 'INFORME CONSOLIDADO DE EVALUACIÓN POR PERIODO Y ASIGNATURA'},
+          { 'value': 2, 'text': 'CONSOLIDADO DE EVALUACIONES POR AREA'},
+          { 'value': 3, 'text': 'CONSOLIDADO DE EVALUACIONES POR ASIGNATURA CON RECUPERACIONES'},
+          { 'value': 4, 'text': 'CONSOLIDADO DE EVALUACIONES POR AREA CON RECUPERACIONES'},
         ],
         comboCursosDirector: [],
         idCurso: null,
         listaMatriculados: [],
         encabColumnas: [],
+        encabColumnasAreas: [],
         listaAsignaturasCurso: [],
         idPeriodo: null,
         comboPeriodos: [],
@@ -89,7 +166,8 @@
         nombreCurso: null,
         btnCargando: true,
         idNivel: null,
-        listaTotalesAsignaturas: []
+        listaTotalesAsignaturas: [],
+        listaAreasAsignaturasCurso: []
       }
     },
     methods: {
@@ -155,10 +233,540 @@
         this.btnCargando = true
         if (this.idInforme == 1) {
           this.consultarConsolidadoAsignaturas()
+        } else if (this.idInforme == 2) {
+          this.consultarConsolidadoAreas()
+        } else if (this.idInforme == 3) {
+          this.consultarConsolidadoAsignaturasRecuperaciones()
+        } else if (this.idInforme == 4) {
+          this.consultarConsolidadoAreasRecuperaciones()
+        }
+      },
+      async consultarConsolidadoAreas() {
+        this.nombreCurso = document.getElementById('cursos')[document.getElementById('cursos').selectedIndex].text
+        this.$store.state.datosCursos.forEach(element => {
+          if (element.id == this.idCurso) {
+            this.idNivel = element.id_nivel
+          }
+        })
+        this.listaAreasAsignaturasCurso = []
+        await axios
+        .get(CONFIG.ROOT_PATH + 'academico/asignacioncursoareas', {params: {idCurso: this.idCurso, idInstitucion: this.$store.state.idInstitucion, vigencia: this.$store.state.aLectivo}})
+        .then(response => {
+          if (response.data.error){
+            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Lista asignaturas curso')
+            this.btnCargando = false
+          } else{
+            if (response.data.datos != 0) {
+              this.listaAreasAsignaturasCurso = response.data.datos
+            }
+          }
+        })
+        .catch(err => {
+          this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Lista asignación docentes curso. Intente más tarde.' + err)
+          this.btnCargando = false
+        })
+        if (this.idNivel == 1) {
+          this.listaAsignaturasCurso = []
+          await axios
+          .get(CONFIG.ROOT_PATH + 'academico/asignacioncurso', {params: {idCurso: this.idCurso, idInstitucion: this.$store.state.idInstitucion}})
+          .then(response => {
+            if (response.data.error){
+              this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Lista asignaturas curso')
+              this.btnCargando = false
+            } else{
+              if (response.data.datos != 0) {
+                this.listaAsignaturasCurso = response.data.datos
+              }
+            }
+            //console.log(JSON.stringify(this.listaAsignaturasCurso))
+          })
+          .catch(err => {
+            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Lista asignación docentes curso. Intente más tarde.' + err)
+            this.btnCargando = false
+          })
+          this.encabColumnasAreas = []
+          this.encabColumnasAreas.push({label: 'Estudiante', field: 'estudiante', sortable: false})
+          this.listaAsignaturasCurso.forEach(element => {
+            this.encabColumnasAreas.push({label: element.nemo, field: element.nemo, sortable: false, tdClass: 'text-center'})
+          })
+          this.listaMatriculados = []
+          await axios
+          .get(CONFIG.ROOT_PATH + 'academico/estudiantes/curso/consolidadoasignaturas', {params: {idCurso: this.idCurso, periodo: this.idPeriodo}})
+          .then(response => {
+            if (response.data.error){
+              this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - consolidado asignaturas curso')
+              this.btnCargando = false
+            } else{
+              if (response.data.datos != 0) {
+                //console.log(JSON.stringify(response.data.datos))
+                let datosEstudiante = {}
+                response.data.datos.forEach(element => {         
+                  datosEstudiante.estudiante = element.estudiante
+                  element.notas.forEach(element2 => {
+                    if (element2.orden == 99) {
+                      if ( this.$store.state.datosSecciones[0].tipoValComp == 0) {
+                        datosEstudiante[element2.nemo] = element2.definitivacompor
+                      } else {
+                        datosEstudiante[element2.nemo] = Number(element2.definitiva).toFixed(1) == 0 ? '' : Number(element2.definitiva).toFixed(1)
+                      }
+                    } else {
+                      datosEstudiante[element2.nemo] = element2.definitivapree
+                    }
+                  })
+                  this.listaMatriculados.push(JSON.parse(JSON.stringify(datosEstudiante)))
+                  //console.log(JSON.stringify(datosEstudiante))
+                })
+              }
+              setTimeout(()=>{
+                this.btnCargando = false
+              },100)
+            }
+            //console.log(JSON.stringify(this.listaMatriculados))
+          })
+          .catch(err => {
+            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: consolidado asignaturas curso. Intente más tarde.' + err)
+            this.btnCargando = false
+          })
+        } else {
+          let bajosArea = {}
+          bajosArea.estudiante = 'Total Desempeño Bajo'
+          this.encabColumnasAreas = []
+          this.encabColumnasAreas.push({label: 'Estudiante', field: 'estudiante', sortable: false})
+          this.encabColumnasAreas.push({label: '#', field: 'orden', sortable: false})
+          this.listaAreasAsignaturasCurso.forEach(elementAr => {
+            this.encabColumnasAreas.push({label: elementAr.nemoArea, field: elementAr.nemoArea, sortable: false, tdClass: 'text-center'})
+            if ((elementAr.asignaturas).length > 1) {
+              elementAr.asignaturas.forEach(elementAs => {
+                this.encabColumnasAreas.push({label: elementAs.nemo, field: elementAs.nemo, sortable: false, tdClass: 'text-center'})
+                bajosArea[elementAs.nemo] = 0
+              })
+              bajosArea[elementAr.nemoArea] = 0
+            } else {
+              bajosArea[elementAr.nemoArea] = 0
+            }
+          })
+          this.encabColumnasAreas.push({label: '#', field: 'orden', sortable: false})
+          this.encabColumnasAreas.push({label: 'BJ', field: 'bajE', sortable: false, tdClass: 'text-center'})
+          this.encabColumnasAreas.push({label: 'BS', field: 'basE', sortable: false, tdClass: 'text-center'})
+          this.encabColumnasAreas.push({label: 'AL', field: 'altE', sortable: false, tdClass: 'text-center'})
+          this.encabColumnasAreas.push({label: 'SU', field: 'supE', sortable: false, tdClass: 'text-center'})
+          this.encabColumnasAreas.push({label: 'PRO', field: 'promedioAsignatura', sortable: false, tdClass: 'text-center'})
+          this.encabColumnasAreas.push({label: 'PTO', field: 'puesto', sortable: false, tdClass: 'text-center'})
+          this.encabColumnasAreas.push({label: 'AJ', field: 'ausJ', sortable: false, tdClass: 'text-center'})
+          this.encabColumnasAreas.push({label: 'AS', field: 'ausS', sortable: false, tdClass: 'text-center'})
+
+          this.listaMatriculados = []
+          let totalBajos = 0
+          let listaPuestos = []
+          let numOrden = 1
+          await axios
+          .get(CONFIG.ROOT_PATH + 'academico/estudiantes/curso/consolidadoasignaturas', {params: {idCurso: this.idCurso, periodo: this.idPeriodo}})
+          .then(response => {
+            if (response.data.error){
+              this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - consolidado asignaturas curso')
+              this.btnCargando = false
+            } else{
+              if (response.data.datos != 0) {
+                //console.log(JSON.stringify(response.data.datos))
+                response.data.datos.forEach(element => {         
+                  let contAsignaturas = 0
+                  let sumaAsignaturas = 0
+                  let bajE = 0
+                  let basE = 0
+                  let altE = 0
+                  let supE = 0
+                  let ausJ = 0
+                  let ausS = 0
+                  let datosEstudiante = {}
+                  datosEstudiante.estudiante = element.estudiante
+                  datosEstudiante.orden = numOrden
+                  datosEstudiante.id = element.id
+                  this.listaAreasAsignaturasCurso.forEach(elementAr => {
+                    if ((elementAr.asignaturas).length > 1) {
+                      let sumaPromArea = 0
+                      elementAr.asignaturas.forEach(elementAs => {
+                        let indice = element.notas.findIndex(nota => nota.id_asignatura_curso === elementAs.idAsignaturaCurso)
+                        if (indice >= 0) {
+                          if (isNaN(element.notas[indice].definitiva) || element.notas[indice].definitiva === null || element.notas[indice].definitiva <= 0 || element.notas[indice].definitiva > this.$store.state.datosSecciones[0].maxSup) {
+                            datosEstudiante[elementAs.nemo] = ''
+                          } else {
+                            datosEstudiante[elementAs.nemo] = Number(element.notas[indice].definitiva).toFixed(1)
+                            sumaPromArea += (element.notas[indice].definitiva * elementAs.porcentaje) / 100
+                            if (element.notas[indice].definitiva > 0 && element.notas[indice].definitiva < this.$store.state.datosSecciones[0].minBas) {
+                              bajE++
+                              bajosArea[elementAs.nemo]++
+                              totalBajos++
+                            } else if (element.notas[indice].definitiva >= this.$store.state.datosSecciones[0].minBas && element.notas[indice].definitiva < this.$store.state.datosSecciones[0].minAlt) {
+                              basE++
+                            } else if (element.notas[indice].definitiva >= this.$store.state.datosSecciones[0].minAlt && element.notas[indice].definitiva < this.$store.state.datosSecciones[0].minSup) {
+                              altE++
+                            } else if (element.notas[indice].definitiva >= this.$store.state.datosSecciones[0].minSup && element.notas[indice].definitiva <= this.$store.state.datosSecciones[0].maxSup) {
+                              supE++
+                            }
+                            sumaAsignaturas += element.notas[indice].definitiva
+                            ausJ += Number(element.notas[indice].ausJ)
+                            ausS += Number(element.notas[indice].ausS)
+                            contAsignaturas++
+                          }
+                        }
+                      })
+                      datosEstudiante[elementAr.nemoArea] = this.redondear(sumaPromArea).toFixed(1)
+                      if (datosEstudiante[elementAr.nemoArea] > 0 && datosEstudiante[elementAr.nemoArea] < this.$store.state.datosSecciones[0].minBas) {
+                        bajosArea[elementAr.nemoArea]++
+                      }
+                    } else {
+                      let indice = element.notas.findIndex(nota => nota.id_area === elementAr.idArea)
+                      if (indice >= 0) {
+                        if (element.notas[indice].orden == 99) {
+                          if ( this.$store.state.datosSecciones[0].tipoValComp == 0) {
+                            datosEstudiante[elementAr.nemoArea] = element.notas[indice].definitivacompor
+                          } else {
+                            if (isNaN(element.notas[indice].definitiva) || element.notas[indice].definitiva === null || element.notas[indice].definitiva <= 0 || element.notas[indice].definitiva > this.$store.state.datosSecciones[0].maxSup) {
+                              datosEstudiante[elementAr.nemoArea] = ''
+                            } else {
+                              datosEstudiante[elementAr.nemoArea] = Number(element.notas[indice].definitiva).toFixed(1)
+                            }
+                          }
+                        } else {
+                          if (isNaN(element.notas[indice].definitiva) || element.notas[indice].definitiva === null || element.notas[indice].definitiva <= 0 || element.notas[indice].definitiva > this.$store.state.datosSecciones[0].maxSup) {
+                            datosEstudiante[elementAr.nemoArea] = ''
+                          } else {
+                            datosEstudiante[elementAr.nemoArea] = Number(element.notas[indice].definitiva).toFixed(1)
+                            if (element.notas[indice].definitiva > 0 && element.notas[indice].definitiva < this.$store.state.datosSecciones[0].minBas) {
+                              bajE++
+                              bajosArea[elementAr.nemoArea]++
+                              totalBajos++
+                            } else if (element.notas[indice].definitiva >= this.$store.state.datosSecciones[0].minBas && element.notas[indice].definitiva < this.$store.state.datosSecciones[0].minAlt) {
+                              basE++
+                            } else if (element.notas[indice].definitiva >= this.$store.state.datosSecciones[0].minAlt && element.notas[indice].definitiva < this.$store.state.datosSecciones[0].minSup) {
+                              altE++
+                            } else if (element.notas[indice].definitiva >= this.$store.state.datosSecciones[0].minSup && element.notas[indice].definitiva <= this.$store.state.datosSecciones[0].maxSup) {
+                              supE++
+                            }
+                            sumaAsignaturas += element.notas[indice].definitiva
+                            ausJ += Number(element.notas[indice].ausJ)
+                            ausS += Number(element.notas[indice].ausS)
+                            contAsignaturas++
+                          }
+                        }
+                      }
+                    }
+                  })
+                  if (contAsignaturas > 0) {
+                    datosEstudiante.promedioAsignatura = Number(sumaAsignaturas / contAsignaturas).toFixed(1)
+                    listaPuestos.push({'id': element.id, 'promedio': sumaAsignaturas / contAsignaturas})
+                    datosEstudiante.bajE = bajE
+                    datosEstudiante.basE = basE
+                    datosEstudiante.altE = altE
+                    datosEstudiante.supE = supE
+                    datosEstudiante.ausJ = ausJ
+                    datosEstudiante.ausS = ausS
+                    datosEstudiante.puesto = ''
+                  } else {
+                    datosEstudiante.promedioAsignatura = ''
+                    listaPuestos.push({'id': element.id, 'promedio': 0})
+                  }
+                  this.listaMatriculados.push(JSON.parse(JSON.stringify(datosEstudiante)))
+                  //console.log(JSON.stringify(datosEstudiante))
+                  numOrden++
+                })
+                listaPuestos.sort(((a, b) => b.promedio - a.promedio));
+                //console.log(JSON.stringify(listaPuestos))
+                let numPuesto = 1
+                listaPuestos.forEach(element2 => {
+                  this.listaMatriculados.forEach(element => {
+                    if (element.id == element2.id) {
+                      element.puesto = numPuesto
+                      numPuesto++
+                    }
+                  })
+                })
+                bajosArea.bajE = totalBajos
+                this.listaMatriculados.push(JSON.parse(JSON.stringify(bajosArea)))
+                setTimeout(()=>{
+                  this.btnCargando = false
+                },100)
+              } else {
+                this.btnCargando = false
+              }
+            }
+            //console.log(JSON.stringify(this.listaMatriculados))
+          })
+          .catch(err => {
+            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: consolidado areas curso. Intente más tarde.' + err)
+            this.btnCargando = false
+          })
+        }
+      },
+      async consultarConsolidadoAreasRecuperaciones() {
+        this.nombreCurso = document.getElementById('cursos')[document.getElementById('cursos').selectedIndex].text
+        this.$store.state.datosCursos.forEach(element => {
+          if (element.id == this.idCurso) {
+            this.idNivel = element.id_nivel
+          }
+        })
+        this.listaAreasAsignaturasCurso = []
+        await axios
+        .get(CONFIG.ROOT_PATH + 'academico/asignacioncursoareas', {params: {idCurso: this.idCurso, idInstitucion: this.$store.state.idInstitucion, vigencia: this.$store.state.aLectivo}})
+        .then(response => {
+          if (response.data.error){
+            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Lista asignaturas curso')
+            this.btnCargando = false
+          } else{
+            if (response.data.datos != 0) {
+              this.listaAreasAsignaturasCurso = response.data.datos
+            }
+          }
+        })
+        .catch(err => {
+          this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Lista asignación docentes curso. Intente más tarde.' + err)
+          this.btnCargando = false
+        })
+        if (this.idNivel == 1) {
+          this.listaAsignaturasCurso = []
+          await axios
+          .get(CONFIG.ROOT_PATH + 'academico/asignacioncurso', {params: {idCurso: this.idCurso, idInstitucion: this.$store.state.idInstitucion}})
+          .then(response => {
+            if (response.data.error){
+              this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Lista asignaturas curso')
+              this.btnCargando = false
+            } else{
+              if (response.data.datos != 0) {
+                this.listaAsignaturasCurso = response.data.datos
+              }
+            }
+            //console.log(JSON.stringify(this.listaAsignaturasCurso))
+          })
+          .catch(err => {
+            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Lista asignación docentes curso. Intente más tarde.' + err)
+            this.btnCargando = false
+          })
+          this.encabColumnasAreasRecup = []
+          this.encabColumnasAreasRecup.push({label: 'Estudiante', field: 'estudiante', sortable: false})
+          this.listaAsignaturasCurso.forEach(element => {
+            this.encabColumnasAreasRecup.push({label: element.nemo, field: element.nemo, sortable: false, tdClass: 'text-center'})
+          })
+          this.listaMatriculados = []
+          await axios
+          .get(CONFIG.ROOT_PATH + 'academico/estudiantes/curso/consolidadoasignaturas', {params: {idCurso: this.idCurso, periodo: this.idPeriodo}})
+          .then(response => {
+            if (response.data.error){
+              this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - consolidado asignaturas curso')
+              this.btnCargando = false
+            } else{
+              if (response.data.datos != 0) {
+                //console.log(JSON.stringify(response.data.datos))
+                let datosEstudiante = {}
+                response.data.datos.forEach(element => {         
+                  datosEstudiante.estudiante = element.estudiante
+                  element.notas.forEach(element2 => {
+                    if (element2.orden == 99) {
+                      if ( this.$store.state.datosSecciones[0].tipoValComp == 0) {
+                        datosEstudiante[element2.nemo] = element2.definitivacompor
+                      } else {
+                        datosEstudiante[element2.nemo] = Number(element2.definitiva).toFixed(1) == 0 ? '' : Number(element2.definitiva).toFixed(1)
+                      }
+                    } else {
+                      datosEstudiante[element2.nemo] = element2.definitivapree
+                    }
+                  })
+                  this.listaMatriculados.push(JSON.parse(JSON.stringify(datosEstudiante)))
+                  //console.log(JSON.stringify(datosEstudiante))
+                })
+              }
+              setTimeout(()=>{
+                this.btnCargando = false
+              },100)
+            }
+            //console.log(JSON.stringify(this.listaMatriculados))
+          })
+          .catch(err => {
+            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: consolidado asignaturas curso. Intente más tarde.' + err)
+            this.btnCargando = false
+          })
+        } else {
+          let bajosArea = {}
+          bajosArea.estudiante = 'Total Desempeño Bajo'
+          this.encabColumnasAreasRecup = []
+          this.encabColumnasAreasRecup.push({label: 'Estudiante', field: 'estudiante', sortable: false})
+          this.encabColumnasAreasRecup.push({label: '#', field: 'orden', sortable: false})
+          this.listaAreasAsignaturasCurso.forEach(elementAr => {
+            this.encabColumnasAreasRecup.push({label: elementAr.nemoArea, field: elementAr.nemoArea, sortable: false, tdClass: 'text-center'})
+            if ((elementAr.asignaturas).length > 1) {
+              elementAr.asignaturas.forEach(elementAs => {
+                this.encabColumnasAreasRecup.push({label: elementAs.nemo, field: elementAs.nemo, sortable: false, tdClass: 'text-center'})
+                bajosArea[elementAs.nemo] = 0
+              })
+              bajosArea[elementAr.nemoArea] = 0
+            } else {
+              bajosArea[elementAr.nemoArea] = 0
+            }
+          })
+          this.encabColumnasAreasRecup.push({label: '#', field: 'orden', sortable: false})
+          this.encabColumnasAreasRecup.push({label: 'BJ', field: 'bajE', sortable: false, tdClass: 'text-center'})
+          this.encabColumnasAreasRecup.push({label: 'BS', field: 'basE', sortable: false, tdClass: 'text-center'})
+          this.encabColumnasAreasRecup.push({label: 'AL', field: 'altE', sortable: false, tdClass: 'text-center'})
+          this.encabColumnasAreasRecup.push({label: 'SU', field: 'supE', sortable: false, tdClass: 'text-center'})
+          this.encabColumnasAreasRecup.push({label: 'PRO', field: 'promedioAsignatura', sortable: false, tdClass: 'text-center'})
+          this.encabColumnasAreasRecup.push({label: 'PTO', field: 'puesto', sortable: false, tdClass: 'text-center'})
+          this.encabColumnasAreasRecup.push({label: 'AJ', field: 'ausJ', sortable: false, tdClass: 'text-center'})
+          this.encabColumnasAreasRecup.push({label: 'AS', field: 'ausS', sortable: false, tdClass: 'text-center'})
+
+          this.listaMatriculados = []
+          let totalBajos = 0
+          let listaPuestos = []
+          let numOrden = 1
+          await axios
+          .get(CONFIG.ROOT_PATH + 'academico/estudiantes/curso/consolidadoasignaturas', {params: {idCurso: this.idCurso, periodo: this.idPeriodo}})
+          .then(response => {
+            if (response.data.error){
+              this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - consolidado asignaturas curso')
+              this.btnCargando = false
+            } else{
+              if (response.data.datos != 0) {
+                //console.log(JSON.stringify(response.data.datos))
+                response.data.datos.forEach(element => {         
+                  let contAsignaturas = 0
+                  let sumaAsignaturas = 0
+                  let bajE = 0
+                  let basE = 0
+                  let altE = 0
+                  let supE = 0
+                  let ausJ = 0
+                  let ausS = 0
+                  let datosEstudiante = {}
+                  datosEstudiante.estudiante = element.estudiante
+                  datosEstudiante.orden = numOrden
+                  datosEstudiante.id = element.id
+                  this.listaAreasAsignaturasCurso.forEach(elementAr => {
+                    if ((elementAr.asignaturas).length > 1) {
+                      let sumaPromArea = 0
+                      elementAr.asignaturas.forEach(elementAs => {
+                        let indice = element.notas.findIndex(nota => nota.id_asignatura_curso === elementAs.idAsignaturaCurso)
+                        if (indice >= 0) {
+                          if (isNaN(element.notas[indice].definitiva) || element.notas[indice].definitiva === null || element.notas[indice].definitiva <= 0 || element.notas[indice].definitiva > this.$store.state.datosSecciones[0].maxSup) {
+                            datosEstudiante[elementAs.nemo] = ''
+                          } else {
+                            if (element.notas[indice].recuperacion > element.notas[indice].definitiva) {
+                              element.notas[indice].definitiva = element.notas[indice].recuperacion
+                              datosEstudiante[elementAs.nemo] = '[' + Number(element.notas[indice].recuperacion).toFixed(1) + ']'
+                            } else {
+                              datosEstudiante[elementAs.nemo] = Number(element.notas[indice].definitiva).toFixed(1)
+                            }
+                            sumaPromArea += (element.notas[indice].definitiva * elementAs.porcentaje) / 100
+                            if (element.notas[indice].definitiva > 0 && element.notas[indice].definitiva < this.$store.state.datosSecciones[0].minBas) {
+                              bajE++
+                              bajosArea[elementAs.nemo]++
+                              totalBajos++
+                            } else if (element.notas[indice].definitiva >= this.$store.state.datosSecciones[0].minBas && element.notas[indice].definitiva < this.$store.state.datosSecciones[0].minAlt) {
+                              basE++
+                            } else if (element.notas[indice].definitiva >= this.$store.state.datosSecciones[0].minAlt && element.notas[indice].definitiva < this.$store.state.datosSecciones[0].minSup) {
+                              altE++
+                            } else if (element.notas[indice].definitiva >= this.$store.state.datosSecciones[0].minSup && element.notas[indice].definitiva <= this.$store.state.datosSecciones[0].maxSup) {
+                              supE++
+                            }
+                            sumaAsignaturas += element.notas[indice].definitiva
+                            ausJ += Number(element.notas[indice].ausJ)
+                            ausS += Number(element.notas[indice].ausS)
+                            contAsignaturas++
+                          }
+                        }
+                      })
+                      datosEstudiante[elementAr.nemoArea] = this.redondear(sumaPromArea).toFixed(1)
+                      if (datosEstudiante[elementAr.nemoArea] > 0 && datosEstudiante[elementAr.nemoArea] < this.$store.state.datosSecciones[0].minBas) {
+                        bajosArea[elementAr.nemoArea]++
+                      }
+                    } else {
+                      let indice = element.notas.findIndex(nota => nota.id_area === elementAr.idArea)
+                      if (indice >= 0) {
+                        if (element.notas[indice].orden == 99) {
+                          if ( this.$store.state.datosSecciones[0].tipoValComp == 0) {
+                            datosEstudiante[elementAr.nemoArea] = element.notas[indice].definitivacompor
+                          } else {
+                            if (isNaN(element.notas[indice].definitiva) || element.notas[indice].definitiva === null || element.notas[indice].definitiva <= 0 || element.notas[indice].definitiva > this.$store.state.datosSecciones[0].maxSup) {
+                              datosEstudiante[elementAr.nemoArea] = ''
+                            } else {
+                              datosEstudiante[elementAr.nemoArea] = Number(element.notas[indice].definitiva).toFixed(1)
+                            }
+                          }
+                        } else {
+                          if (isNaN(element.notas[indice].definitiva) || element.notas[indice].definitiva === null || element.notas[indice].definitiva <= 0 || element.notas[indice].definitiva > this.$store.state.datosSecciones[0].maxSup) {
+                            datosEstudiante[elementAr.nemoArea] = ''
+                          } else {
+                            if (element.notas[indice].recuperacion > element.notas[indice].definitiva) {
+                              element.notas[indice].definitiva = element.notas[indice].recuperacion
+                              datosEstudiante[elementAr.nemoArea] = '[' + Number(element.notas[indice].recuperacion).toFixed(1) + ']'
+                            } else {
+                              datosEstudiante[elementAr.nemoArea] = Number(element.notas[indice].definitiva).toFixed(1)
+                            }
+                            if (element.notas[indice].definitiva > 0 && element.notas[indice].definitiva < this.$store.state.datosSecciones[0].minBas) {
+                              bajE++
+                              bajosArea[elementAr.nemoArea]++
+                              totalBajos++
+                            } else if (element.notas[indice].definitiva >= this.$store.state.datosSecciones[0].minBas && element.notas[indice].definitiva < this.$store.state.datosSecciones[0].minAlt) {
+                              basE++
+                            } else if (element.notas[indice].definitiva >= this.$store.state.datosSecciones[0].minAlt && element.notas[indice].definitiva < this.$store.state.datosSecciones[0].minSup) {
+                              altE++
+                            } else if (element.notas[indice].definitiva >= this.$store.state.datosSecciones[0].minSup && element.notas[indice].definitiva <= this.$store.state.datosSecciones[0].maxSup) {
+                              supE++
+                            }
+                            sumaAsignaturas += element.notas[indice].definitiva
+                            ausJ += Number(element.notas[indice].ausJ)
+                            ausS += Number(element.notas[indice].ausS)
+                            contAsignaturas++
+                          }
+                        }
+                      }
+                    }
+                  })
+                  if (contAsignaturas > 0) {
+                    datosEstudiante.promedioAsignatura = Number(sumaAsignaturas / contAsignaturas).toFixed(1)
+                    listaPuestos.push({'id': element.id, 'promedio': sumaAsignaturas / contAsignaturas})
+                    datosEstudiante.bajE = bajE
+                    datosEstudiante.basE = basE
+                    datosEstudiante.altE = altE
+                    datosEstudiante.supE = supE
+                    datosEstudiante.ausJ = ausJ
+                    datosEstudiante.ausS = ausS
+                    datosEstudiante.puesto = ''
+                  } else {
+                    datosEstudiante.promedioAsignatura = Number(0).toFixed(1)
+                    listaPuestos.push({'id': element.id, 'promedio': 0})
+                  }
+                  this.listaMatriculados.push(JSON.parse(JSON.stringify(datosEstudiante)))
+                  //console.log(JSON.stringify(datosEstudiante))
+                  numOrden++
+                })
+                listaPuestos.sort(((a, b) => b.promedio - a.promedio));
+                //console.log(JSON.stringify(listaPuestos))
+                let numPuesto = 1
+                listaPuestos.forEach(element2 => {
+                  this.listaMatriculados.forEach(element => {
+                    if (element.id == element2.id) {
+                      element.puesto = numPuesto
+                      numPuesto++
+                    }
+                  })
+                })
+                bajosArea.bajE = totalBajos
+                this.listaMatriculados.push(JSON.parse(JSON.stringify(bajosArea)))
+                console.log(JSON.stringify(bajosArea))
+                setTimeout(()=>{
+                  this.btnCargando = false
+                },100)
+              } else {
+                this.btnCargando = false
+              }
+            }
+            //console.log(JSON.stringify(this.listaMatriculados))
+          })
+          .catch(err => {
+            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: consolidado areas curso. Intente más tarde.' + err)
+            this.btnCargando = false
+          })
         }
       },
       async consultarConsolidadoAsignaturas() {
-        //this.nombreSede = document.getElementById('sedes')[document.getElementById('sedes').selectedIndex].text
         if (this.idCurso != null) { 
           this.nombreCurso = document.getElementById('cursos')[document.getElementById('cursos').selectedIndex].text
           this.listaAsignaturasCurso = []
@@ -338,6 +946,207 @@
           }
         }
       },
+      async consultarConsolidadoAsignaturasRecuperaciones() {
+        if (this.idCurso != null) { 
+          this.nombreCurso = document.getElementById('cursos')[document.getElementById('cursos').selectedIndex].text
+          this.listaAsignaturasCurso = []
+          this.$store.state.datosCursos.forEach(element => {
+            if (element.id == this.idCurso) {
+              this.idNivel = element.id_nivel
+            }
+          })
+          await axios
+          .get(CONFIG.ROOT_PATH + 'academico/asignacioncurso', {params: {idCurso: this.idCurso, idInstitucion: this.$store.state.idInstitucion}})
+          .then(response => {
+            if (response.data.error){
+              this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Lista asignaturas curso')
+              this.btnCargando = false
+            } else{
+              if (response.data.datos != 0) {
+                this.listaAsignaturasCurso = response.data.datos
+              }
+            }
+            //console.log(JSON.stringify(this.listaAsignaturasCurso))
+          })
+          .catch(err => {
+            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Lista asignación docentes curso. Intente más tarde.' + err)
+            this.btnCargando = false
+          })
+          if (this.idNivel == 1) {
+            this.encabColumnasRecup = []
+            this.encabColumnasRecup.push({label: 'Estudiante', field: 'estudiante', sortable: false})
+            this.listaAsignaturasCurso.forEach(element => {
+              this.encabColumnasRecup.push({label: element.nemo, field: element.nemo, sortable: false, tdClass: 'text-center'})
+            })
+            this.listaMatriculados = []
+            await axios
+            .get(CONFIG.ROOT_PATH + 'academico/estudiantes/curso/consolidadoasignaturas', {params: {idCurso: this.idCurso, periodo: this.idPeriodo}})
+            .then(response => {
+              if (response.data.error){
+                this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - consolidado asignaturas curso')
+                this.btnCargando = false
+              } else{
+                if (response.data.datos != 0) {
+                  //console.log(JSON.stringify(response.data.datos))
+                  let datosEstudiante = {}
+                  response.data.datos.forEach(element => {         
+                    datosEstudiante.estudiante = element.estudiante
+                    element.notas.forEach(element2 => {
+                      if (element2.orden == 99) {
+                        if ( this.$store.state.datosSecciones[0].tipoValComp == 0) {
+                          datosEstudiante[element2.nemo] = element2.definitivacompor
+                        } else {
+                          datosEstudiante[element2.nemo] = Number(element2.definitiva).toFixed(1) == 0 ? '' : Number(element2.definitiva).toFixed(1)
+                        }
+                      } else {
+                        datosEstudiante[element2.nemo] = element2.definitivapree
+                      }
+                    })
+                    this.listaMatriculados.push(JSON.parse(JSON.stringify(datosEstudiante)))
+                    //console.log(JSON.stringify(datosEstudiante))
+                  })
+                }
+                setTimeout(()=>{
+                  this.btnCargando = false
+                },100)
+              }
+              //console.log(JSON.stringify(this.listaMatriculados))
+            })
+            .catch(err => {
+              this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: consolidado asignaturas curso. Intente más tarde.' + err)
+              this.btnCargando = false
+            })
+          } else {
+            let bajosAsignatura = {}
+            bajosAsignatura.estudiante = 'Total Desempeño Bajo'
+            this.encabColumnasRecup = []
+            this.encabColumnasRecup.push({label: 'Estudiante', field: 'estudiante', sortable: false})
+            this.encabColumnasRecup.push({label: '#', field: 'orden', sortable: false})
+            this.listaAsignaturasCurso.forEach(element => {
+              this.encabColumnasRecup.push({label: element.nemo, field: element.nemo, sortable: false, tdClass: 'text-center'})
+              bajosAsignatura[element.nemo] = 0
+            })
+            this.encabColumnasRecup.push({label: '#', field: 'orden', sortable: false})
+            this.encabColumnasRecup.push({label: 'BAJ', field: 'bajE', sortable: false, tdClass: 'text-center'})
+            this.encabColumnasRecup.push({label: 'BAS', field: 'basE', sortable: false, tdClass: 'text-center'})
+            this.encabColumnasRecup.push({label: 'ALT', field: 'altE', sortable: false, tdClass: 'text-center'})
+            this.encabColumnasRecup.push({label: 'SUP', field: 'supE', sortable: false, tdClass: 'text-center'})
+            this.encabColumnasRecup.push({label: 'PRO', field: 'promedioAsignatura', sortable: false, tdClass: 'text-center'})
+            this.encabColumnasRecup.push({label: 'PTO', field: 'puesto', sortable: false, tdClass: 'text-center'})
+            this.encabColumnasRecup.push({label: 'AJ', field: 'ausJ', sortable: false, tdClass: 'text-center'})
+            this.encabColumnasRecup.push({label: 'AS', field: 'ausS', sortable: false, tdClass: 'text-center'})
+            this.listaMatriculados = []
+            let totalBajos = 0
+            let listaPuestos = []
+            let numOrden = 1
+            await axios
+            .get(CONFIG.ROOT_PATH + 'academico/estudiantes/curso/consolidadoasignaturas', {params: {idCurso: this.idCurso, periodo: this.idPeriodo}})
+            .then(response => {
+              if (response.data.error){
+                this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - consolidado asignaturas curso')
+                this.btnCargando = false
+              } else{
+                if (response.data.datos != 0) {
+                  //console.log(JSON.stringify(response.data.datos))
+                  response.data.datos.forEach(element => {         
+                    let contAsignaturas = 0
+                    let sumaAsignaturas = 0
+                    let bajE = 0
+                    let basE = 0
+                    let altE = 0
+                    let supE = 0
+                    let ausJ = 0
+                    let ausS = 0
+                    let datosEstudiante = {}
+                    datosEstudiante.estudiante = element.estudiante
+                    datosEstudiante.orden = numOrden
+                    datosEstudiante.id = element.id
+                    element.notas.forEach(element2 => {
+                      if (element2.orden == 99) {
+                        if ( this.$store.state.datosSecciones[0].tipoValComp == 0) {
+                          datosEstudiante[element2.nemo] = element2.definitivacompor
+                        } else {
+                          if (isNaN(element2.definitiva) || element2.definitiva === null) {
+                            datosEstudiante[element2.nemo] = ''
+                          } else {
+                            datosEstudiante[element2.nemo] = Number(element2.definitiva).toFixed(1)
+                          }
+                        }
+                      } else {
+                        if (isNaN(element2.definitiva) || element2.definitiva === null || element2.definitiva <= 0 || element2.definitiva > this.$store.state.datosSecciones[0].maxSup) {
+                          datosEstudiante[element2.nemo] = null
+                        } else {
+                          if (element2.recuperacion > element2.definitiva) {
+                            element2.definitiva = element2.recuperacion
+                            datosEstudiante[element2.nemo] = '[' + Number(element2.recuperacion).toFixed(1) + ']'
+                          } else {
+                            datosEstudiante[element2.nemo] = Number(element2.definitiva).toFixed(1)
+                          }
+                          if (element2.definitiva >= this.$store.state.datosSecciones[0].minBaj && element2.definitiva < this.$store.state.datosSecciones[0].minBas) {
+                            bajE++
+                            bajosAsignatura[element2.nemo]++
+                            totalBajos++
+                          } else if (element2.definitiva >= this.$store.state.datosSecciones[0].minBas && element2.definitiva < this.$store.state.datosSecciones[0].minAlt) {
+                            basE++
+                          } else if (element2.definitiva >= this.$store.state.datosSecciones[0].minAlt && element2.definitiva < this.$store.state.datosSecciones[0].minSup) {
+                            altE++
+                          } else if (element2.definitiva >= this.$store.state.datosSecciones[0].minSup && element2.definitiva <= this.$store.state.datosSecciones[0].maxSup) {
+                            supE++
+                          }
+                          sumaAsignaturas += element2.definitiva
+                          ausJ += Number(element2.ausJ)
+                          ausS += Number(element2.ausS)
+                          contAsignaturas++
+                        }
+                      }
+                    })
+                    if (contAsignaturas > 0) {
+                      datosEstudiante.promedioAsignatura = Number(sumaAsignaturas / contAsignaturas).toFixed(1)
+                      listaPuestos.push({'id': element.id, 'promedio': sumaAsignaturas / contAsignaturas})
+                      //sumaPromedios += Number(sumaAsignaturas / contAsignaturas).toFixed(1)
+                      datosEstudiante.bajE = bajE
+                      datosEstudiante.basE = basE
+                      datosEstudiante.altE = altE
+                      datosEstudiante.supE = supE
+                      datosEstudiante.ausJ = ausJ
+                      datosEstudiante.ausS = ausS
+                      datosEstudiante.puesto = ''
+                    } else {
+                      datosEstudiante.promedioAsignatura = Number(0).toFixed(1)
+                      listaPuestos.push({'id': element.id, 'promedio': 0})
+                    }
+                    this.listaMatriculados.push(JSON.parse(JSON.stringify(datosEstudiante)))
+                    //console.log(JSON.stringify(datosEstudiante))
+                    numOrden++
+                  })
+                  listaPuestos.sort(((a, b) => b.promedio - a.promedio));
+                  let numPuesto = 1
+                  listaPuestos.forEach(element2 => {
+                    this.listaMatriculados.forEach(element => {
+                      if (element.id == element2.id) {
+                        element.puesto = numPuesto
+                        numPuesto++
+                      }
+                    })
+                  })
+                  bajosAsignatura.bajE = totalBajos
+                  this.listaMatriculados.push(JSON.parse(JSON.stringify(bajosAsignatura)))
+                  setTimeout(()=>{
+                    this.btnCargando = false
+                  },100)
+                } else {
+                  this.btnCargando = false
+                }
+              }
+              //console.log(JSON.stringify(this.listaMatriculados))
+            })
+            .catch(err => {
+              this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: consolidado asignaturas curso. Intente más tarde.' + err)
+              this.btnCargando = false
+            })
+          }
+        }
+      },
       async ocuparComboCursosDirector() {
         //console.log(JSON.stringify(this.$store.state.listaPlanillasDocente))
         this.comboCursosDirector = []
@@ -354,6 +1163,10 @@
         this.$store.state.datosTablas.periodos.forEach(element => {
           this.comboPeriodos.push({ 'value': element.id, 'text': element.periodo.toUpperCase() })
         })
+      },
+      redondear(num) {
+        var m = Number((Math.abs(num) * 10).toPrecision(15))
+        return Math.round(m) / 10 * Math.sign(num);
       },
       cancelarFormulario() {
         this.$router.push('/')
