@@ -78,6 +78,7 @@ jwt.verify(token, CONFIG.SECRET_KEY, (err, data) => {
     )
     indice++
     menu[0]._children[indice].items.push({ name: 'Listas y Planillas', to: '/planillas/listadoscurso'})
+    menu[0]._children[indice].items.push({ name: 'Auxiliar con Notas', to: '/planillas/planillasnotas'})
 
     // DESCRIPTORES
     menu[0]._children.push(
