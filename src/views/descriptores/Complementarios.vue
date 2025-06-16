@@ -48,6 +48,11 @@
                     <b-button class="small mx-1 mt-4" variant="primary" @click="nuevoDescriptor()">Nuevo Descriptor Complementario</b-button>
               </b-col>
             </b-row>
+            <b-row class="mt-2">
+              <b-col lg="12">
+                <b-alert v-if="contPeriodos == 0" variant="danger" show><b>Periodos Cerrados:</b><hr>En el momento no tiene periodos activados para consultar o cargas descriptores.</b-alert>
+              </b-col>
+            </b-row>
           </b-card-text>
           <template #footer>
             <em>Seleccione la planilla, actualice los descriptores, seleccionelos y haga clic en el botón Guardar Descriptores.</em>
@@ -143,7 +148,8 @@
         descriptoresSeleccionadosGuardar: [],
         listaPlanillasCopiar: [],
         planillasSeleccionadasCopiar: [],
-        descriptoresSeleccionadosCopiar: []
+        descriptoresSeleccionadosCopiar: [],
+        contPeriodos: 0,
       }
     },
     validations: {
@@ -286,6 +292,53 @@
         this.$store.state.listaPlanillasDocente.forEach(element => {
           this.comboPlanillas.push({ 'value': element.idPlanilla, 'text': element.nomenclatura.toUpperCase() + ' - ' + element.asignatura.toUpperCase() })
           this.listaPlanillasCopiar.push({'idPlanillaCopiar':  element.idPlanilla, 'planillaCopiar': element.nomenclatura.toUpperCase() + ' - ' + element.asignatura.toUpperCase()})
+        })
+        let fechaVigencia = 0
+        let restaVigencia = 0
+        this.$store.state.datosTablas.periodos.forEach(element => {
+          if (element.id == 1) {
+            fechaVigencia = new Date(this.$store.state.notasP1_Fin)
+            fechaVigencia = fechaVigencia.getTime()
+            restaVigencia = this.$store.state.fechaActual - (fechaVigencia + 86400000)
+            if (restaVigencia < 0) {
+              this.contPeriodos++
+            }
+          }
+          if (element.id == 2) {
+            fechaVigencia = new Date(this.$store.state.notasP2_Fin)
+            fechaVigencia = fechaVigencia.getTime()
+            restaVigencia = this.$store.state.fechaActual - (fechaVigencia + 86400000)
+            if (restaVigencia < 0) {
+              this.contPeriodos++
+            }
+          }
+          if (element.id == 3) {
+            fechaVigencia = new Date(this.$store.state.notasP3_Fin)
+            fechaVigencia = fechaVigencia.getTime()
+            restaVigencia = this.$store.state.fechaActual - (fechaVigencia + 86400000)
+            if (restaVigencia < 0) {
+              this.contPeriodos++
+            }
+          }
+          if (element.id == 4) {
+            fechaVigencia = new Date(this.$store.state.notasP4_Fin)
+            fechaVigencia = fechaVigencia.getTime()
+            restaVigencia = this.$store.state.fechaActual - (fechaVigencia + 86400000)
+            if (restaVigencia < 0) {
+              this.contPeriodos++
+            }
+          }
+          if (element.id == 5) {
+            fechaVigencia = new Date(this.$store.state.notasP5_Fin)
+            fechaVigencia = fechaVigencia.getTime()
+            restaVigencia = this.$store.state.fechaActual - (fechaVigencia + 86400000)
+            if (restaVigencia < 0) {
+              this.contPeriodos++
+            }
+          }
+          if (this.contPeriodos == 0) {
+            this.comboPlanillas = []
+          }
         })
       },
       async ocuparComboConceptos() {

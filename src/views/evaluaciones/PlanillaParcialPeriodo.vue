@@ -25,7 +25,7 @@
             <b-row><b-col lg="12"><hr></b-col></b-row>
             <b-row class="mt-2">
               <b-col lg="12">
-                <b-alert v-if="contPeriodos <= 0" variant="danger" show><b>Periodos Cerrados:</b><hr>En el momento no tiene periodos activados para consultar o cargas evaluaciones.</b-alert>
+                <b-alert v-if="contPeriodos == 0" variant="danger" show><b>Periodos Cerrados:</b><hr>En el momento no tiene periodos activados para consultar o cargas evaluaciones.</b-alert>
               </b-col>
             </b-row>
             <div v-if="planillita == 1">
@@ -79,7 +79,7 @@
         comboPlanillas: [],
         configuracionPlanilla: {},
         planillita: null,
-        contPeriodos: 0
+        contPeriodos: 0,
       }
     },
     methods: {
