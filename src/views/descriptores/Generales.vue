@@ -43,7 +43,7 @@
             </b-row>
             <b-row class="mt-2">
               <b-col lg="12">
-                <b-alert v-if="contPeriodos == 0" variant="danger" show><b>Periodos Cerrados:</b><hr>En el momento no tiene periodos activados para consultar o cargas descriptores.</b-alert>
+                <b-alert v-if="contPeriodos==0" variant="danger" show><b>Periodos Cerrados:</b><hr>En el momento no tiene periodos activados para consultar o cargas descriptores.</b-alert>
               </b-col>
             </b-row>
           </b-card-text>
@@ -188,10 +188,6 @@
       },
       async ocuparComboPlanillas() {
         this.comboPlanillas = []
-        this.$store.state.listaPlanillasDocente.forEach(element => {
-          this.comboPlanillas.push({ 'value': element.idPlanilla, 'text': element.nomenclatura.toUpperCase() + ' - ' + element.asignatura.toUpperCase() })
-          this.listaPlanillasCopiar.push({'idPlanillaCopiar':  element.idPlanilla, 'planillaCopiar': element.nomenclatura.toUpperCase() + ' - ' + element.asignatura.toUpperCase()})
-        })
         let fechaVigencia = 0
         let restaVigencia = 0
         this.$store.state.datosTablas.periodos.forEach(element => {
@@ -235,10 +231,13 @@
               this.contPeriodos++
             }
           }
-          if (this.contPeriodos == 0) {
-            this.comboPlanillas = []
-          }
         })
+        if (this.contPeriodos > 0) {
+          this.$store.state.listaPlanillasDocente.forEach(element => {
+            this.comboPlanillas.push({ 'value': element.idPlanilla, 'text': element.nomenclatura.toUpperCase() + ' - ' + element.asignatura.toUpperCase() })
+            this.listaPlanillasCopiar.push({'idPlanillaCopiar':  element.idPlanilla, 'planillaCopiar': element.nomenclatura.toUpperCase() + ' - ' + element.asignatura.toUpperCase()})
+          })
+        }
       },
       tdClassFuncE(row) {
         return 'text-center' 

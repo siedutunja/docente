@@ -144,7 +144,7 @@
                       <b-row>
                         <b-col lg="9" md="6">
                           <b-form-group label="Encabezado Columna No. 1:" label-for="e-col1-1" class="etiqueta">
-                            <b-form-input id="e-col1-1" v-model.trim="encabezados.enc01" autocomplete="off" maxlength="25"></b-form-input>
+                            <b-form-input id="e-col1-1" v-model.trim="encabezados.enc01" autocomplete="off" maxlength="50"></b-form-input>
                           </b-form-group>
                         </b-col>
                         <b-col lg="3" md="6">
@@ -156,7 +156,7 @@
                       <b-row>
                         <b-col lg="9" md="6">
                           <b-form-group label="Encabezado Columna No. 2:" label-for="e-col1-2" class="etiqueta">
-                            <b-form-input id="e-col1-2" v-model.trim="encabezados.enc02" autocomplete="off" maxlength="25"></b-form-input>
+                            <b-form-input id="e-col1-2" v-model.trim="encabezados.enc02" autocomplete="off" maxlength="50"></b-form-input>
                           </b-form-group>
                         </b-col>
                         <b-col lg="3" md="6">
@@ -168,7 +168,7 @@
                       <b-row>
                         <b-col lg="9" md="6">
                           <b-form-group label="Encabezado Columna No. 3:" label-for="e-col1-3" class="etiqueta">
-                            <b-form-input id="e-col1-3" v-model.trim="encabezados.enc03" autocomplete="off" maxlength="25"></b-form-input>
+                            <b-form-input id="e-col1-3" v-model.trim="encabezados.enc03" autocomplete="off" maxlength="50"></b-form-input>
                           </b-form-group>
                         </b-col>
                         <b-col lg="3" md="6">
@@ -180,7 +180,7 @@
                       <b-row>
                         <b-col lg="9" md="6">
                           <b-form-group label="Encabezado Columna No. 4:" label-for="e-col1-4" class="etiqueta">
-                            <b-form-input id="e-col1-4" v-model.trim="encabezados.enc04" autocomplete="off" maxlength="25"></b-form-input>
+                            <b-form-input id="e-col1-4" v-model.trim="encabezados.enc04" autocomplete="off" maxlength="50"></b-form-input>
                           </b-form-group>
                         </b-col>
                         <b-col lg="3" md="6">
@@ -192,7 +192,7 @@
                       <b-row>
                         <b-col lg="9" md="6">
                           <b-form-group label="Encabezado Columna No. 5:" label-for="e-col1-5" class="etiqueta">
-                            <b-form-input id="e-col1-5" v-model.trim="encabezados.enc05" autocomplete="off" maxlength="25"></b-form-input>
+                            <b-form-input id="e-col1-5" v-model.trim="encabezados.enc05" autocomplete="off" maxlength="50"></b-form-input>
                           </b-form-group>
                         </b-col>
                         <b-col lg="3" md="6">
@@ -233,7 +233,7 @@
                       <b-row>
                         <b-col lg="9" md="6">
                           <b-form-group label="Encabezado Columna No. 1:" label-for="e-col1-6" class="etiqueta">
-                            <b-form-input id="e-col1-6" v-model.trim="encabezados.enc06" autocomplete="off" maxlength="25"></b-form-input>
+                            <b-form-input id="e-col1-6" v-model.trim="encabezados.enc06" autocomplete="off" maxlength="50"></b-form-input>
                           </b-form-group>
                         </b-col>
                         <b-col lg="3" md="6">
@@ -245,7 +245,7 @@
                       <b-row>
                         <b-col lg="9" md="6">
                           <b-form-group label="Encabezado Columna No. 2:" label-for="e-col1-7" class="etiqueta">
-                            <b-form-input id="e-col1-7" v-model.trim="encabezados.enc07" autocomplete="off" maxlength="25"></b-form-input>
+                            <b-form-input id="e-col1-7" v-model.trim="encabezados.enc07" autocomplete="off" maxlength="50"></b-form-input>
                           </b-form-group>
                         </b-col>
                         <b-col lg="3" md="6">
@@ -257,7 +257,7 @@
                       <b-row>
                         <b-col lg="9" md="6">
                           <b-form-group label="Encabezado Columna No. 3:" label-for="e-col1-8" class="etiqueta">
-                            <b-form-input id="e-col1-8" v-model.trim="encabezados.enc08" autocomplete="off" maxlength="25"></b-form-input>
+                            <b-form-input id="e-col1-8" v-model.trim="encabezados.enc08" autocomplete="off" maxlength="50"></b-form-input>
                           </b-form-group>
                         </b-col>
                         <b-col lg="3" md="6">
@@ -269,7 +269,7 @@
                       <b-row>
                         <b-col lg="9" md="6">
                           <b-form-group label="Encabezado Columna No. 4:" label-for="e-col1-9" class="etiqueta">
-                            <b-form-input id="e-col1-9" v-model.trim="encabezados.enc09" autocomplete="off" maxlength="25"></b-form-input>
+                            <b-form-input id="e-col1-9" v-model.trim="encabezados.enc09" autocomplete="off" maxlength="50"></b-form-input>
                           </b-form-group>
                         </b-col>
                         <b-col lg="3" md="6">
@@ -281,7 +281,7 @@
                       <b-row>
                         <b-col lg="9" md="6">
                           <b-form-group label="Encabezado Columna No. 5:" label-for="e-col1-10" class="etiqueta">
-                            <b-form-input id="e-col1-10" v-model.trim="encabezados.enc10" autocomplete="off" maxlength="25"></b-form-input>
+                            <b-form-input id="e-col1-10" v-model.trim="encabezados.enc10" autocomplete="off" maxlength="50"></b-form-input>
                           </b-form-group>
                         </b-col>
                         <b-col lg="3" md="6">
@@ -322,7 +322,7 @@
                       <b-row>
                         <b-col lg="9" md="6">
                           <b-form-group label="Encabezado Columna No. 1:" label-for="e-col1-11" class="etiqueta">
-                            <b-form-input id="e-col1-11" v-model.trim="encabezados.enc11" autocomplete="off" maxlength="25"></b-form-input>
+                            <b-form-input id="e-col1-11" v-model.trim="encabezados.enc11" autocomplete="off" maxlength="50"></b-form-input>
                           </b-form-group>
                         </b-col>
                         <b-col lg="3" md="6">
@@ -334,7 +334,7 @@
                       <b-row>
                         <b-col lg="9" md="6">
                           <b-form-group label="Encabezado Columna No. 2:" label-for="e-col1-12" class="etiqueta">
-                            <b-form-input id="e-col1-12" v-model.trim="encabezados.enc12" autocomplete="off" maxlength="25"></b-form-input>
+                            <b-form-input id="e-col1-12" v-model.trim="encabezados.enc12" autocomplete="off" maxlength="50"></b-form-input>
                           </b-form-group>
                         </b-col>
                         <b-col lg="3" md="6">
@@ -346,7 +346,7 @@
                       <b-row>
                         <b-col lg="9" md="6">
                           <b-form-group label="Encabezado Columna No. 3:" label-for="e-col1-13" class="etiqueta">
-                            <b-form-input id="e-col1-13" v-model.trim="encabezados.enc13" autocomplete="off" maxlength="25"></b-form-input>
+                            <b-form-input id="e-col1-13" v-model.trim="encabezados.enc13" autocomplete="off" maxlength="50"></b-form-input>
                           </b-form-group>
                         </b-col>
                         <b-col lg="3" md="6">
@@ -358,7 +358,7 @@
                       <b-row>
                         <b-col lg="9" md="6">
                           <b-form-group label="Encabezado Columna No. 4:" label-for="e-col1-14" class="etiqueta">
-                            <b-form-input id="e-col1-14" v-model.trim="encabezados.enc14" autocomplete="off" maxlength="25"></b-form-input>
+                            <b-form-input id="e-col1-14" v-model.trim="encabezados.enc14" autocomplete="off" maxlength="50"></b-form-input>
                           </b-form-group>
                         </b-col>
                         <b-col lg="3" md="6">
@@ -370,7 +370,7 @@
                       <b-row>
                         <b-col lg="9" md="6">
                           <b-form-group label="Encabezado Columna No. 5:" label-for="e-col1-15" class="etiqueta">
-                            <b-form-input id="e-col1-15" v-model.trim="encabezados.enc15" autocomplete="off" maxlength="25"></b-form-input>
+                            <b-form-input id="e-col1-15" v-model.trim="encabezados.enc15" autocomplete="off" maxlength="50"></b-form-input>
                           </b-form-group>
                         </b-col>
                         <b-col lg="3" md="6">
