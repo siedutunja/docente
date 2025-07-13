@@ -418,12 +418,7 @@
           editar: null
         },
         comboTiposObservacion: [],
-        comboSubTipos: [
-          { 'value': '1', 'text': 'TIPO I - FALTAS LEVES' },
-          { 'value': '2', 'text': 'TIPO II - FALTAS GRAVES' },
-          { 'value': '3', 'text': 'TIPO III - FALTAS GRAVÍSIMAS' },
-          { 'value': '9', 'text': 'NO APLICA' },
-        ],
+        comboSubTipos: [],
         comboEstadosSeguimiento: [],
         listaSituaciones: [],
         idSituacion: null,
@@ -695,6 +690,24 @@
       this.idMatricula = this.$store.state.idMatricula
       this.consultaObservador()
       this.ocuparCombos()
+      if (this.$store.state.idInstitucion == 'eb58bf60-fc83-11ec-a1d1-1dc2835404e5') {
+        this.comboSubTipos = [
+          { 'value': '1', 'text': 'TIPO I - FALTAS LEVES' },
+          { 'value': '2', 'text': 'TIPO II - FALTAS GRAVES' },
+          { 'value': '3', 'text': 'TIPO III - FALTAS GRAVÍSIMAS' },
+          { 'value': '9', 'text': 'NO APLICA' },
+        ]
+      } else {
+        this.comboSubTipos = [
+          { 'value': '1', 'text': 'TIPO I' },
+          { 'value': '2', 'text': 'TIPO II' },
+          { 'value': '3', 'text': 'TIPO III' },
+          { 'value': '4', 'text': 'FALTA LEVE' },
+          { 'value': '5', 'text': 'FALTA GRAVE' },
+          { 'value': '6', 'text': 'FALTA GRAVÍSIMA' },
+          { 'value': '9', 'text': 'NO APLICA' },
+        ]
+      }
       this.listaSituaciones = [
         {'id': 1, nivel: '1', 'situacion': 'Evadir clases o actividades programadas por el plantel'},
         {'id': 2, nivel: '1', 'situacion': 'Inasistencia al colegio sin justificación'},

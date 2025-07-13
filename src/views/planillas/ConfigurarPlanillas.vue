@@ -201,6 +201,12 @@
                           </b-form-group>
                         </b-col>
                       </b-row>
+                      <hr>
+                      <b-row>
+                        <b-col>
+                          <b-button class="small" variant="outline-success" @click="seleccionarPlanillasC1()">Copiar Encabezados Criterio de Evaluación No. 1 <b-icon icon="box-arrow-in-right" aria-hidden="true"></b-icon></b-button>
+                        </b-col>
+                      </b-row>
                     </b-card-text>
                   </b-card>
                 </b-col>
@@ -288,6 +294,12 @@
                           <b-form-group label="Porcentaje:" label-for="p-col1-10" class="etiqueta">
                             <b-form-input type="number" id="p-col1-10" v-model.trim="encabezados.por10" autocomplete="off" maxlength="3" :disabled="encabezados.val02==0 ? true : false"></b-form-input>
                           </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <hr>
+                      <b-row>
+                        <b-col>
+                          <b-button class="small" variant="outline-success" @click="seleccionarPlanillasC2()">Copiar Encabezados Criterio de Evaluación No. 2 <b-icon icon="box-arrow-in-right" aria-hidden="true"></b-icon></b-button>
                         </b-col>
                       </b-row>
                     </b-card-text>
@@ -379,6 +391,12 @@
                           </b-form-group>
                         </b-col>
                       </b-row>
+                      <hr>
+                      <b-row>
+                        <b-col>
+                          <b-button class="small" variant="outline-success" @click="seleccionarPlanillasC3()">Copiar Encabezados Criterio de Evaluación No. 3 <b-icon icon="box-arrow-in-right" aria-hidden="true"></b-icon></b-button>
+                        </b-col>
+                      </b-row>
                     </b-card-text>
                   </b-card>
                 </b-col>
@@ -399,16 +417,37 @@
         </b-card>
       </b-col>
     </b-row>
+    <b-modal ref="modalCopiarEncabezados" size="xl" scrollable hide-footer title="Seleccione las Planillas a donde se van a Copiar los Encabezados" ok-only>
+      <div class="mx-3">
+        <b-card header-bg-variant="secondary">
+          <vue-good-table ref="planillasCopy" :columns="encabColumnas" :rows="listaPlanillas" styleClass="vgt-table condensed bordered striped"
+            :select-options="{enabled: true, selectOnCheckboxOnly: true, selectionText: 'Marcados', clearSelectionText: 'Desmarcar', selectAllByGroup: true}">
+            <div slot="selected-row-actions">
+              <b-button v-if="criterio==1" class="mr-2" variant="primary" @click="copiarEncabezadosC1()">Copiar Encabezados Criterio 1 <b-icon icon="box-arrow-in-down" aria-hidden="true"></b-icon></b-button>
+              <b-button v-if="criterio==2" class="mr-2" variant="primary" @click="copiarEncabezadosC2()">Copiar Encabezados Criterio 2  <b-icon icon="box-arrow-in-down" aria-hidden="true"></b-icon></b-button>
+              <b-button v-if="criterio==3" class="mr-2" variant="primary" @click="copiarEncabezadosC3()">Copiar Encabezados Criterio 3 <b-icon icon="box-arrow-in-down" aria-hidden="true"></b-icon></b-button>
+            </div>
+            <div slot="emptystate">
+              <h5 class="text-danger ml-5">No existen planillas para copiar</h5>
+            </div>
+          </vue-good-table>
+        </b-card>
+        <b-button class="small mx-1 mt-2" variant="secondary" @click="cancelarFormulario">Cancelar</b-button>
+      </div>
+    </b-modal>
   </div>
 </template>
 
 <script>
   import axios from "axios"
   import * as CONFIG from '@/assets/config.js'
+  import 'vue-good-table/dist/vue-good-table.css'
+  import { VueGoodTable } from 'vue-good-table'
 
   export default {
     name: 'configurarplanillas',
     components: {
+      VueGoodTable
     },
     data () {
       return {
@@ -421,10 +460,118 @@
         comboEvaluacion: [
           { 'value': 0, 'text': 'EQUITATIVO'},
           //{ 'value': 1, 'text': 'PORCENTUAL'}
-        ]
+        ],
+        listaPlanillas: [],
+        encabColumnas : [
+          { label: 'Planillas a Copiar Encabezados', field: 'asignatura', sortable: false },
+          { label: 'Periodo', field: 'periodo', sortable: false },
+          { label: 'Id', field: 'idAsigCurso', sortable: false },
+          { label: '1', field: 'enc1', sortable: false },
+          { label: '2', field: 'enc2', sortable: false },
+          { label: '3', field: 'enc3', sortable: false },
+          { label: '4', field: 'enc4', sortable: false },
+          { label: '5', field: 'enc5', sortable: false },
+        ],
+        criterio: null
       }
     },
     methods: {
+      async copiarEncabezadosC1() {
+        let planillasSeleccionadasCopiar = []
+        this.$refs.planillasCopy.selectedRows.forEach(element => {
+          planillasSeleccionadasCopiar.push(element)
+        })
+        await axios
+        .put(CONFIG.ROOT_PATH + 'docente/copiarencabezados/c1', JSON.stringify(planillasSeleccionadasCopiar), { headers: {"Content-Type": "application/json; charset=utf-8" }})
+        .then(response => {
+          if (response.data.error){
+            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Copia encabezados')
+          } else{
+            this.mensajeEmergente('success',CONFIG.TITULO_MSG,'Los encabezados se han copiado correctamente.')
+          }
+        })
+        .catch(err => {
+          this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Copia encabezados. Intente más tarde. ' + err)
+        })
+        this.cancelarFormulario()
+      },
+      async copiarEncabezadosC2() {
+        let planillasSeleccionadasCopiar = []
+        this.$refs.planillasCopy.selectedRows.forEach(element => {
+          planillasSeleccionadasCopiar.push(element)
+        })
+        await axios
+        .put(CONFIG.ROOT_PATH + 'docente/copiarencabezados/c2', JSON.stringify(planillasSeleccionadasCopiar), { headers: {"Content-Type": "application/json; charset=utf-8" }})
+        .then(response => {
+          if (response.data.error){
+            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Copia encabezados')
+          } else{
+            this.mensajeEmergente('success',CONFIG.TITULO_MSG,'Los encabezados se han copiado correctamente.')
+          }
+        })
+        .catch(err => {
+          this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Copia encabezados. Intente más tarde. ' + err)
+        })
+        this.cancelarFormulario()
+      },
+      async copiarEncabezadosC3() {
+        let planillasSeleccionadasCopiar = []
+        this.$refs.planillasCopy.selectedRows.forEach(element => {
+          planillasSeleccionadasCopiar.push(element)
+        })
+        await axios
+        .put(CONFIG.ROOT_PATH + 'docente/copiarencabezados/c3', JSON.stringify(planillasSeleccionadasCopiar), { headers: {"Content-Type": "application/json; charset=utf-8" }})
+        .then(response => {
+          if (response.data.error){
+            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Copia encabezados')
+          } else{
+            this.mensajeEmergente('success',CONFIG.TITULO_MSG,'Los encabezados se han copiado correctamente.')
+          }
+        })
+        .catch(err => {
+          this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Copia encabezados. Intente más tarde. ' + err)
+        })
+        this.cancelarFormulario()
+      },
+      seleccionarPlanillasC1() {
+        this.listaPlanillas.forEach(element => {
+          element.periodo = this.idPeriodo
+          element.enc1 = this.encabezados.enc01
+          element.enc2 = this.encabezados.enc02
+          element.enc3 = this.encabezados.enc03
+          element.enc4 = this.encabezados.enc04
+          element.enc5 = this.encabezados.enc05
+        })
+        this.criterio = 1
+        this.$refs['modalCopiarEncabezados'].show()
+      },
+      seleccionarPlanillasC2() {
+        this.listaPlanillas.forEach(element => {
+          element.periodo = this.idPeriodo
+          element.enc1 = this.encabezados.enc06
+          element.enc2 = this.encabezados.enc07
+          element.enc3 = this.encabezados.enc08
+          element.enc4 = this.encabezados.enc09
+          element.enc5 = this.encabezados.enc10
+        })
+        this.criterio = 2
+        this.$refs['modalCopiarEncabezados'].show()
+      },
+      seleccionarPlanillasC3() {
+        this.listaPlanillas.forEach(element => {
+          element.periodo = this.idPeriodo
+          element.enc1 = this.encabezados.enc11
+          element.enc2 = this.encabezados.enc12
+          element.enc3 = this.encabezados.enc13
+          element.enc4 = this.encabezados.enc14
+          element.enc5 = this.encabezados.enc15
+        })
+        this.criterio = 3
+        this.$refs['modalCopiarEncabezados'].show()
+      },
+      cancelarFormulario() {
+        this.$refs['modalCopiarEncabezados'].hide()
+      },
       validarDatosFormulario() {
         let titulo = 'Actualizar Configuración'
         let pregunta = '¿Esta seguro de actualizar la Configuración de la Planilla?'
@@ -471,7 +618,7 @@
           if (element.idPlanilla == this.idPlanilla) {
             this.configuracionPlanilla = element
           }
-          console.log(JSON.stringify(this.configuracionPlanilla))
+          //console.log(JSON.stringify(this.configuracionPlanilla))
           this.cargarEncabezados()
         })
       },
@@ -485,7 +632,7 @@
           } else{
             if (response.data.datos != 0) {
               this.encabezados = response.data.datos
-              console.log(JSON.stringify(this.encabezados))
+              //console.log(JSON.stringify(this.encabezados))
             }
           }
         })
@@ -495,10 +642,12 @@
       },
       async ocuparComboPlanillas() {
         this.comboPlanillas = []
+        this.listaPlanillas = []
         this.$store.state.listaPlanillasDocente.forEach(element => {
           this.comboPlanillas.push({ 'value': element.idPlanilla, 'text': element.nomenclatura.toUpperCase() + ' - ' + element.asignatura.toUpperCase() })
+          this.listaPlanillas.push({ 'idAsigCurso': element.idPlanilla, 'asignatura': element.asignatura.toUpperCase(), 'enc1': '', 'enc2': '', 'enc3': '', 'enc4': '', 'enc5': '', 'periodo': null })
         })
-        //console.log(JSON.stringify(this.$store.state.listaPlanillasDocente))
+        //console.log(JSON.stringify(this.listaPlanillas))
       },
       async ocuparComboPeriodos() {
         this.comboPeriodos = []

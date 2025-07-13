@@ -85,7 +85,7 @@
     methods: {
       verPlanilla() {
         if (this.configuracionPlanilla.orden == 99) {
-          if (this.$store.state.idInstitucion == '097b7b10-fcaa-11ec-8267-536b07c743c4') { // PREE RURAL
+          if (this.$store.state.idInstitucion == '097b7b10-fcaa-11ec-8267-536b07c743c4' && this.configuracionPlanilla.id_nivel == 1) { // PREE RURAL
               this.planillita = 4
             } else {
               this.planillita = 3

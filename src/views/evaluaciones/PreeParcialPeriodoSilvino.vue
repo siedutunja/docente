@@ -16,7 +16,7 @@
       -->
       <b-row class="mt-2">
         <b-col lg="12">
-          <b-alert v-if="cambioActivo==true" variant="danger" show><b>Advertencia: </b>La planilla se ha modificado, se recomienda guradar la planilla.</b-alert>
+          <b-alert v-if="cambioActivo==true" variant="danger" show><b>Advertencia: </b>La planilla se ha modificado, se recomienda guardar la planilla.</b-alert>
         </b-col>
       </b-row>
       <b-row class="mt-2">
@@ -47,7 +47,7 @@
       </b-row>
       <b-row class="mt-2">
         <b-col lg="12">
-          <b-alert v-if="cambioActivo==true" variant="danger" show><b>Advertencia: </b>La planilla se ha modificado, se recomienda guradar la planilla.</b-alert>
+          <b-alert v-if="cambioActivo==true" variant="danger" show><b>Advertencia: </b>La planilla se ha modificado, se recomienda guardar la planilla.</b-alert>
         </b-col>
       </b-row>
       <b-row v-if="notasPlanillaPree">
