@@ -43,6 +43,9 @@
             <div v-else-if="planillita == 5">
               <PreeParcialPeriodoSilvino :configuracionPlanilla="configuracionPlanilla"/>
             </div>
+            <div v-else-if="planillita == 6">
+              <PreeParcialPeriodoLibertador :configuracionPlanilla="configuracionPlanilla"/>
+            </div>
           </b-card-text>
           <template #footer>
             <em>Planilla de evaluación parcial por periodo.</em>
@@ -60,6 +63,7 @@
   import NotasParcialPeriodo from '@/views/evaluaciones/NotasParcialPeriodo'
   import PreeParcialPeriodo from '@/views/evaluaciones/PreeParcialPeriodo'
   import PreeParcialPeriodoRural from '@/views/evaluaciones/PreeParcialPeriodoRural'
+  import PreeParcialPeriodoLibertador from '@/views/evaluaciones/PreeParcialPeriodoLibertador'
   import PreeParcialPeriodoSilvino from '@/views/evaluaciones/PreeParcialPeriodoSilvino'
 
   export default {
@@ -69,7 +73,8 @@
       NotasParcialPeriodo,
       PreeParcialPeriodo,
       PreeParcialPeriodoRural,
-      PreeParcialPeriodoSilvino
+      PreeParcialPeriodoSilvino,
+      PreeParcialPeriodoLibertador
     },
     data () {
       return {
@@ -98,6 +103,8 @@
               this.planillita = 4
             } else if (this.$store.state.idInstitucion == 'c50f3d80-fca0-11ec-8267-536b07c743c4') { // PREE SILVINO
               this.planillita = 5
+            } else if (this.$store.state.idInstitucion == '8a1bd1e0-fcb2-11ec-8267-536b07c743c4') { // PREE LIBERTADOR SIMON BOLIVAR
+              this.planillita = 6
             } else {
               this.planillita = 2
             }
