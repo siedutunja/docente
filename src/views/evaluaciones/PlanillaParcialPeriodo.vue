@@ -29,8 +29,13 @@
               </b-col>
             </b-row>
             <div v-if="planillita == 1">
+              <PlanillaNotasPeriodo :configuracionPlanilla="configuracionPlanilla"/>
+            </div>
+            <!--
+            <div v-if="planillita == 10">
               <NotasParcialPeriodo :configuracionPlanilla="configuracionPlanilla"/>
             </div>
+            -->
             <div v-else-if="planillita == 2">
               <PreeParcialPeriodo :configuracionPlanilla="configuracionPlanilla"/>
             </div>
@@ -60,7 +65,8 @@
   import axios from "axios"
   import * as CONFIG from '@/assets/config.js'
   import ComportamientoParcialPeriodo from '@/views/evaluaciones/ComportamientoParcialPeriodo'
-  import NotasParcialPeriodo from '@/views/evaluaciones/NotasParcialPeriodo'
+  import PlanillaNotasPeriodo from '@/views/evaluaciones/PlanillaNotasPeriodo'
+  //import NotasParcialPeriodo from '@/views/evaluaciones/NotasParcialPeriodo'
   import PreeParcialPeriodo from '@/views/evaluaciones/PreeParcialPeriodo'
   import PreeParcialPeriodoRural from '@/views/evaluaciones/PreeParcialPeriodoRural'
   import PreeParcialPeriodoLibertador from '@/views/evaluaciones/PreeParcialPeriodoLibertador'
@@ -70,7 +76,8 @@
     name: 'planillaparcialperiodo',
     components: {
       ComportamientoParcialPeriodo,
-      NotasParcialPeriodo,
+      PlanillaNotasPeriodo,
+      //NotasParcialPeriodo,
       PreeParcialPeriodo,
       PreeParcialPeriodoRural,
       PreeParcialPeriodoSilvino,

@@ -96,11 +96,20 @@ function configRoutes () {
               component: () => import('@/views/planillas/ListadosCurso')
             },
             // 2025-03-04
+            /*
             {
               path: 'configurarplanillas',
               beforeEnter: autenticar,
               name: 'Configuración Planillas',
               component: () => import('@/views/planillas/ConfigurarPlanillas')
+            },
+            */
+            // 2025-03-04
+            {
+              path: 'configurarplanilla',
+              beforeEnter: autenticar,
+              name: 'Configuración Planilla',
+              component: () => import('@/views/planillas/ConfigurarPlanilla')
             },
             // 2025-05-21
             {
@@ -155,6 +164,13 @@ function configRoutes () {
               name: 'Observador del Estudiante',
               component: () => import('@/views/estudiantes/Observador')
             },
+            // 2025-08-27
+            {
+              path: 'listaentrevistasfamiliares',
+              beforeEnter: autenticar,
+              name: 'Entrevista Familiar',
+              component: () => import('@/views/estudiantes/ListaEntrevistasFamiliares')
+            },
           ]
         },
         // 2025-03-02
@@ -186,6 +202,13 @@ function configRoutes () {
               beforeEnter: autenticar,
               name: 'Recuperaciones por Periodo',
               component: () => import('@/views/evaluaciones/PlanillaRecuperacionPeriodo')
+            },
+            // 2025-08-25
+            {
+              path: 'ausencias',
+              beforeEnter: autenticar,
+              name: 'Ausencias',
+              component: () => import('@/views/evaluaciones/Ausencias')
             },
           ]
         },

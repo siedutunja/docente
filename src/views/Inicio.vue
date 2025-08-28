@@ -22,45 +22,44 @@
                 </CRow>
               </CCardFooter>
             </CCard>
-            
-            <!--
             <b-card-group deck class="mt-5">
+              <b-card border-variant="light" class="text-center linkini" @click="irAusencias">
+                <b-card-text>
+                  <span><b-icon icon="person-x-fill" font-scale="3"></b-icon></span>
+                  <h5 class="mt-2">Ausencias</h5>
+                </b-card-text>
+                <b-card-text>Consulte y registre las ausencias de los estudiante</b-card-text>
+              </b-card>
+              <b-card border-variant="light" class="text-center linkini" @click="irObservador">
+                <b-card-text>
+                  <span><b-icon icon="person-badge" font-scale="3"></b-icon></span>
+                  <h5 class="mt-2">Observador</h5>
+                </b-card-text>
+                <b-card-text>Consulte y actualice el observador del estudiante</b-card-text>
+              </b-card>
+              <b-card border-variant="light" class="text-center linkini" @click="irFichaMatricula">
+                <b-card-text>
+                  <span><b-icon icon="journal-bookmark-fill" font-scale="3"></b-icon></span>
+                  <h5 class="mt-2">Consulta Estudiante</h5>
+                </b-card-text>
+                <b-card-text>Consulte la ficha de matricula de estudiantes</b-card-text>
+              </b-card>
               <b-card border-variant="light" class="text-center linkini" @click="irListados">
                 <b-card-text>
                   <span><b-icon icon="card-list" font-scale="3"></b-icon></span>
                   <h5 class="mt-2">Listados</h5>
                 </b-card-text>
-                <b-card-text>Genere listados o planillas de Estudiantes</b-card-text>
+                <b-card-text>Genere listados o planillas de estudiantes</b-card-text>
               </b-card>
-              <b-card border-variant="light" class="text-center linkini" @click="irFichaMatricula">
-                <b-card-text>
-                  <span><b-icon icon="filter-square" font-scale="3"></b-icon></span>
-                  <h5 class="mt-2">Ficha Matricula</h5>
-                </b-card-text>
-                <b-card-text>Consulte la Ficha de Matricula de Estudiantes</b-card-text>
-              </b-card>
-              <b-card border-variant="light" class="text-center linkini" @click="irAsignacionAcademica">
-                <b-card-text>
-                  <span><b-icon icon="person-check" font-scale="3"></b-icon></span>
-                  <h5 class="mt-2">Asignación Académica</h5>
-                </b-card-text>
-                <b-card-text>Consulte y actualice la Asignación Académica por Curso</b-card-text>
-              </b-card>
+            </b-card-group>
+            <!--
+            <b-card-group deck class="mt-5">
               <b-card border-variant="light" class="text-center linkini" @click="irManuales">
                 <b-card-text>
                   <span><b-icon icon="book" font-scale="3"></b-icon></span>
                   <h5 class="mt-2">Manuales</h5>
                 </b-card-text>
-                <b-card-text>Consulte los Manuales de Usuario del sistema</b-card-text>
-              </b-card>
-            </b-card-group>
-            <b-card-group deck class="mt-5">
-              <b-card border-variant="light" class="text-center linkini" @click="irMatriculaPFC" v-if="$store.state.idSeccion == 2">
-                <b-card-text>
-                  <span><b-icon icon="card-list" font-scale="3"></b-icon></span>
-                  <h5 class="mt-2">Matricula Nuevo PFC</h5>
-                </b-card-text>
-                <b-card-text>Matricula de Estudiantes Nuevos del PFC</b-card-text>
+                <b-card-text>Consulte los manuales de usuario del docente</b-card-text>
               </b-card>
             </b-card-group>
             <b-row>
@@ -89,19 +88,19 @@
       }
     },
     methods: {
-      /*
-      irMatriculaPFC() {
-        this.$router.push('/matriculas/buscarnuevo')
+      irFichaMatricula() {
+        this.$router.push('/estudiantes/buscarestudiante')
+      },
+      irObservador() {
+        this.$router.push('/estudiantes/listaobservadores')
+      },
+      irAusencias() {
+        this.$router.push('/evaluaciones/ausencias')
       },
       irListados() {
-        this.$router.push('/listados/listadoscurso')
+        //this.$router.push('/listados/listadoscurso')
       },
-      irFichaMatricula() {
-        this.$router.push('/matriculas/buscarcarpetamatricula')
-      },
-      irAsignacionAcademica() {
-        this.$router.push('/docentes/asignacionacademica')
-      },
+      /*
       irManuales() {
         this.$router.push('/manuales')
       }

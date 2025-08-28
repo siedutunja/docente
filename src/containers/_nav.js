@@ -41,7 +41,8 @@ jwt.verify(token, CONFIG.SECRET_KEY, (err, data) => {
     )
     indice++
     menu[0]._children[indice].items.push({ name: 'Asignación Académica', to: '/planillas/asignacionacademica'})
-    menu[0]._children[indice].items.push({ name: 'Configurar Planillas', to: '/planillas/configurarplanillas'})
+    //menu[0]._children[indice].items.push({ name: 'Configurar Planillas', to: '/planillas/configurarplanillas'})
+    menu[0]._children[indice].items.push({ name: 'Configurar Planillas', to: '/planillas/configurarplanilla'})
     menu[0]._children[indice].items.push({ name: 'Actividades Académicas', to: '/planillas/actividadesacademicas'})
     // ESTUDIANTES
     menu[0]._children.push(
@@ -55,6 +56,7 @@ jwt.verify(token, CONFIG.SECRET_KEY, (err, data) => {
     indice++
     menu[0]._children[indice].items.push({ name: 'Consultar Estudiante', to: '/estudiantes/buscarestudiante'})
     menu[0]._children[indice].items.push({ name: 'Observador', to: '/estudiantes/listaobservadores'})
+    menu[0]._children[indice].items.push({ name: 'Entrevista Familiar', to: '/estudiantes/listaentrevistasfamiliares'})
     // EVALUACIONES
     menu[0]._children.push(
       {
@@ -68,6 +70,7 @@ jwt.verify(token, CONFIG.SECRET_KEY, (err, data) => {
     menu[0]._children[indice].items.push({ name: 'Notas Parciales por Periodo', to: '/evaluaciones/planillaparcialperiodo'})
     menu[0]._children[indice].items.push({ name: 'Resumen Final por Periodo', to: '/evaluaciones/planillafinalperiodo'})
     menu[0]._children[indice].items.push({ name: 'Recuperaciones por Periodo', to: '/evaluaciones/planillarecuperacionperiodo'})
+    menu[0]._children[indice].items.push({ name: 'Ausencias', to: '/evaluaciones/ausencias'})
     menu[0]._children.push(
       {
         _name: 'CSidebarNavDropdown',
