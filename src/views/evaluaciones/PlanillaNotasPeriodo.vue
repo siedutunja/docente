@@ -83,7 +83,6 @@
                     @keydown="navegarAusencia(rowIndex, 'ausJ', $event),soloNumeros($event)"
                     @change="cambioActivo = true"
                     maxlength="2"
-                    disabled
                   />
                 </td>
                 <td>
@@ -95,7 +94,6 @@
                     @keydown="navegarAusencia(rowIndex, 'ausS', $event),soloNumeros($event)"
                     @change="cambioActivo = true"
                     maxlength="2"
-                    disabled
                   />
                 </td>
               </tr>
