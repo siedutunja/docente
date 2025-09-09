@@ -74,6 +74,18 @@ jwt.verify(token, CONFIG.SECRET_KEY, (err, data) => {
     menu[0]._children.push(
       {
         _name: 'CSidebarNavDropdown',
+        name: 'Listas y Planillas',
+        icon: 'cilListRich',
+        items: []
+      }
+    )
+    indice++
+    menu[0]._children[indice].items.push({ name: 'De Estudiantes', to: '/listados/ListadosEstudiantes'})
+    menu[0]._children[indice].items.push({ name: 'Descriptores', to: '/listados/descriptores'})
+    /*
+    menu[0]._children.push(
+      {
+        _name: 'CSidebarNavDropdown',
         name: 'Listados y Formatos',
         icon: 'cilCalendar',
         items: []
@@ -82,7 +94,7 @@ jwt.verify(token, CONFIG.SECRET_KEY, (err, data) => {
     indice++
     menu[0]._children[indice].items.push({ name: 'Listas y Planillas', to: '/planillas/listadoscurso'})
     menu[0]._children[indice].items.push({ name: 'Auxiliar con Notas', to: '/planillas/planillasnotas'})
-
+    */
     // DESCRIPTORES
     menu[0]._children.push(
       {
@@ -94,7 +106,7 @@ jwt.verify(token, CONFIG.SECRET_KEY, (err, data) => {
     )
     indice++
     menu[0]._children[indice].items.push({ name: 'Generales', to: '/descriptores/generales'})
-    menu[0]._children[indice].items.push({ name: 'Complementarios', to: '/descriptores/complementarios'})
+    //menu[0]._children[indice].items.push({ name: 'Complementarios', to: '/descriptores/complementarios'})
     if (tokenDecodificado.id_institucion == '17ee4f30-fc80-11ec-a1d1-1dc2835404e5' || tokenDecodificado.id_institucion == '097b7b10-fcaa-11ec-8267-536b07c743c4' || tokenDecodificado.id_institucion == '8a1bd1e0-fcb2-11ec-8267-536b07c743c4') {
       menu[0]._children[indice].items.push({ name: 'Preescolar', to: '/descriptores/preescolar'})
     }
@@ -110,8 +122,9 @@ jwt.verify(token, CONFIG.SECRET_KEY, (err, data) => {
       }
     )
     indice++
-    menu[0]._children[indice].items.push({ name: 'Consolidados por Periodo', to: '/informes/consolidadoscurso'})
-    menu[0]._children[indice].items.push({ name: 'Reportes por Periodo', to: '/informes/reportesperiodos'})
+    //menu[0]._children[indice].items.push({ name: 'Consolidados por Periodo', to: '/informes/consolidadoscurso'})
+    menu[0]._children[indice].items.push({ name: 'Consolidados', to: '/informes/consolidados'})
+    //menu[0]._children[indice].items.push({ name: 'Reportes por Periodo', to: '/informes/reportesperiodos'})
   }
 })
 

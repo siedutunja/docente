@@ -109,6 +109,26 @@
           location.replace(CONFIG.ROOT_WEBSITE)
         })
       },
+      async cargarDataEstudiantes() {
+        await axios
+        .get(CONFIG.ROOT_PATH + 'academico/data/estudiantes', { params: { idInstitucion: this.$store.state.idInstitucion, vigencia: this.$store.state.aLectivo }})
+        .then(response => {
+          if (response.data.error){
+            alert(response.data.mensaje + ' - Consulta Data Estudiantes')
+            location.replace(CONFIG.ROOT_MODULO_LOGIN)
+          } else{
+            if(response.data.datos != 0) {
+              this.$store.commit('set', ['datosDataEstudiantes', response.data.datos])
+            } else {
+              this.$store.commit('set', ['datosDataEstudiantes', []])
+            }
+          }
+        })
+        .catch(err => {
+          alert('Algo salio mal y no se pudo realizar: Consulta Data Estudiantes. Intente más tarde.' + err)
+          location.replace(CONFIG.ROOT_WEBSITE)
+        })
+      },
       async cargarDatosSesionUsuario() {
         await axios
         .get(CONFIG.ROOT_PATH + 'docente/iniciosesion', { params: { idPersona: this.tokenDecodificado.id_persona, idIE: this.tokenDecodificado.id_institucion }})
@@ -177,8 +197,9 @@
               this.cargarPlanillasDocente()
               this.cargarDatosSecciones()
               this.cargarDatosSedes()
+              this.cargarDatosGrados()
               this.cargarDatosCursos()
-                            
+              this.cargarDataEstudiantes()
               this.trazaProceso('Inicio de Sesión Docente')
             }
           }
@@ -205,6 +226,26 @@
         })
         .catch(err => {
           alert('Algo salio mal y no se pudo realizar: Consulta datos tablas de la Sesión. Intente más tarde. ' + err)
+          location.replace(CONFIG.ROOT_WEBSITE)
+        })
+      },
+      async cargarDatosGrados() {
+        await axios
+        .get(CONFIG.ROOT_PATH + 'academico/carguegrados', {params: {idInstitucion: this.$store.state.idInstitucion, vigencia: this.$store.state.aLectivo}})
+        .then(response => {
+          if (response.data.error){
+            alert(response.data.mensaje + ' - Consulta datos Grados Activos')
+            location.replace(CONFIG.ROOT_MODULO_LOGIN)
+          } else {
+            if(response.data.datos != 0) {
+              this.$store.commit('set', ['datosGrados', response.data.datos])
+            } else {
+              this.$store.commit('set', ['datosGrados', []])
+            }
+          }
+        })
+        .catch(err => {
+          alert('Algo salio mal y no se pudo realizar: Consulta datos Grados Activos. Intente más tarde. ' + err)
           location.replace(CONFIG.ROOT_WEBSITE)
         })
       },
@@ -265,6 +306,7 @@
             this.$store.commit('set', ['idEntorno', this.tokenDecodificado.id_entorno])
             this.$store.commit('set', ['idInstitucion', this.tokenDecodificado.id_institucion])
             this.$store.commit('set', ['idSector', this.tokenDecodificado.id_sector])
+            this.$store.commit('set', ['idSeccion', 1])
             //PERMISOS DEL USUARIO
             /*
             this.$store.commit('set', ['perMatricular', this.tokenDecodificado.permisos.perMatricular])

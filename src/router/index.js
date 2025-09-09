@@ -212,6 +212,31 @@ function configRoutes () {
             },
           ]
         },
+        // 2024-12-10
+        {
+          path: 'listados',
+          redirect: '/listados/listadoscurso',  
+          name: 'Listas y Planillas',
+          component: {
+            render (c) { return c('router-view') }
+          },
+          children: [
+            // 2025-08-07
+            {
+              path: 'listadosestudiantes',
+              beforeEnter: autenticar,
+              name: 'Listados Estudiantes',
+              component: () => import('@/views/listados/ListadosEstudiantes')
+            },
+            // 2025-08-11
+            {
+              path: 'descriptores',
+              beforeEnter: autenticar,
+              name: 'Descriptores',
+              component: () => import('@/views/listados/Descriptores')
+            },
+          ]
+        },
         // 2025-03-01
         {
           path: 'perfiles',
@@ -246,6 +271,13 @@ function configRoutes () {
             render (c) { return c('router-view') }
           },
           children: [
+            // 2025-04-02
+            {
+              path: 'consolidados',
+              beforeEnter: autenticar,
+              name: 'Consolidados',
+              component: () => import('@/views/informes/Consolidados')
+            },
             // 2025-04-02
             {
               path: 'consolidadoscurso',
