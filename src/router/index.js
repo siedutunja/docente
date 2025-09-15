@@ -230,10 +230,10 @@ function configRoutes () {
             },
             // 2025-08-11
             {
-              path: 'descriptores',
+              path: 'listadescriptores',
               beforeEnter: autenticar,
-              name: 'Descriptores',
-              component: () => import('@/views/listados/Descriptores')
+              name: 'Lista Descriptores',
+              component: () => import('@/views/listados/ListaDescriptores')
             },
           ]
         },

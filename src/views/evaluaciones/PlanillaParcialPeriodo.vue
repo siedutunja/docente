@@ -134,7 +134,7 @@
       async ocuparComboPlanillas() {
         this.comboPlanillas = []
         this.$store.state.listaPlanillasDocente.forEach(element => {
-          this.comboPlanillas.push({ 'value': element.idPlanilla, 'text': element.nomenclatura.toUpperCase() + ' - ' + element.asignatura.toUpperCase() })
+          this.comboPlanillas.push({ 'value': element.idPlanilla, 'text': element.sede.toUpperCase() + ' -> ' + element.nomenclatura.toUpperCase() + ' - ' + element.asignatura.toUpperCase() })
         })
         //console.log(JSON.stringify(this.$store.state.listaPlanillasDocente))
       },

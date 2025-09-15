@@ -409,6 +409,10 @@
               this.listaEstudiantes = response.data.datos
               //console.log(JSON.stringify(this.listaEstudiantes))
               this.btnCargando = false
+            } else {
+              this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'No hay estudiantes habilitados para esta planilla')
+              this.btnCargando = false
+              this.idAsignaturaCurso = null
             }
           }
         })

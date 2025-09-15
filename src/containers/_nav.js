@@ -81,7 +81,7 @@ jwt.verify(token, CONFIG.SECRET_KEY, (err, data) => {
     )
     indice++
     menu[0]._children[indice].items.push({ name: 'De Estudiantes', to: '/listados/ListadosEstudiantes'})
-    menu[0]._children[indice].items.push({ name: 'Descriptores', to: '/listados/descriptores'})
+    menu[0]._children[indice].items.push({ name: 'Lista Descriptores', to: '/listados/listadescriptores'})
     /*
     menu[0]._children.push(
       {
