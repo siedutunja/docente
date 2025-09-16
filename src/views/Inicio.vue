@@ -98,7 +98,7 @@
         this.$router.push('/evaluaciones/ausencias')
       },
       irListados() {
-        //this.$router.push('/listados/listadoscurso')
+        this.$router.push('/listados/listadosestudiantes')
       },
       /*
       irManuales() {
