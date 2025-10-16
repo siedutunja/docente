@@ -77,6 +77,7 @@
                 <div v-if="idConsolidado==32">
                   <ResumenPromocion/>
                 </div>
+                
               </b-col>
             </b-row>
           </b-card-text>

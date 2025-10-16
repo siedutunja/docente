@@ -36,6 +36,7 @@
               <NotasParcialPeriodo :configuracionPlanilla="configuracionPlanilla"/>
             </div>
             -->
+            
             <div v-else-if="planillita == 2">
               <PreeParcialPeriodo :configuracionPlanilla="configuracionPlanilla"/>
             </div>

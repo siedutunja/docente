@@ -257,7 +257,7 @@
       async consultaAusenciasEstudiantes() {
         this.listaEstudiantes = []
         await axios
-        .get(CONFIG.ROOT_PATH + 'docente/ausencias/planilla', {params: {idCurso: this.idCurso, idPeriodo: this.idPeriodo, idPlanilla: this.idPlanilla, fecha: this.fechaSeleccionada}})
+        .get(CONFIG.ROOT_PATH + 'docente/ausencias/planilla', {params: {idCurso: this.idCurso, idPeriodo: this.idPeriodo, idPlanilla: this.idPlanilla, fecha: this.fechaSeleccionada, vigencia: this.$store.state.aLectivo}})
         .then(response => {
           if (response.data.error){
             this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Consulta Ausencias')

@@ -139,7 +139,7 @@
           })
           this.listaEstudiantes = []
           await axios
-          .get(CONFIG.ROOT_PATH + 'consolidado/listaestudiantes/curso', { params: { idCurso: this.idCurso }})
+          .get(CONFIG.ROOT_PATH + 'consolidado/listaestudiantes/curso', { params: { idCurso: this.idCurso, vigencia: this.$store.state.aLectivo }})
           .then(response => {
             if (response.data.error){
               this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Consulta Lista Curso')
@@ -171,7 +171,7 @@
           })
           this.dataConsultada = []
           await axios
-          .get(CONFIG.ROOT_PATH + 'consolidados/ausencias/curso/periodos', {params: {idCurso: this.idCurso, periodo: this.idPeriodo}})
+          .get(CONFIG.ROOT_PATH + 'consolidados/ausencias/curso/periodos', {params: {idCurso: this.idCurso, periodo: this.idPeriodo, vigencia: this.$store.state.aLectivo}})
           .then(response => {
             if (response.data.error){
               this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Consolidados ausencias curso acumuladas')
@@ -249,7 +249,7 @@
     },
     computed: {
       asignaturasValidas() {
-        return this.listaAreasAsignaturas.filter(a => a.orden !== 98 && a.orden !== 99)
+        return this.listaAreasAsignaturas.filter(a => a.orden !== 999)
       },
       ausenciasConsolidadas() {
         return this.listaEstudiantes.map(est => {

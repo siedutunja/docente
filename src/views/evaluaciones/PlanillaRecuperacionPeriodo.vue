@@ -31,6 +31,7 @@
             <div v-if="planillita == 1">
               <RecuperacionPeriodo :configuracionPlanilla="configuracionPlanilla"/>
             </div>
+            
           </b-card-text>
           <template #footer>
             <em>Planilla de recuperaciones por periodo.</em>

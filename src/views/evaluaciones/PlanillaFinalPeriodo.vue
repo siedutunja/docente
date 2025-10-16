@@ -37,6 +37,7 @@
             <div v-else-if="planillita == 5">
               <ComportamientoFinalPeriodo :configuracionPlanilla="configuracionPlanilla"/>
             </div>
+            
           </b-card-text>
           <template #footer>
             <em>Resumen final de evaluación por periodo.</em>
