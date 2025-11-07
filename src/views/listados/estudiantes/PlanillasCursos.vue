@@ -270,6 +270,7 @@
       procesarListasCursos() {
         this.cursosConsultados = true
         this.cursosSeleccionados = this.$refs.cursitos.selectedRows
+        this.cargarDataEstudiantes()
         this.$refs['modalSeleccionarCursos'].hide()
       },
       seleccionarCursos() {
@@ -314,6 +315,31 @@
           this.comboSedes.push({ 'value': element.id, 'text': element.sede.toUpperCase() })
         })
       },
+      async cargarDataEstudiantes() {
+        //console.log(JSON.stringify(this.cursosSeleccionados))
+        await axios
+        //.get(CONFIG.ROOT_PATH + 'academico/data/estudiantes', { params: { idInstitucion: this.$store.state.idInstitucion, vigencia: this.$store.state.aLectivo, cursos: JSON.stringify(this.cursosSeleccionados) }})
+        .get(CONFIG.ROOT_PATH + 'academico/data/estudiantes', { params: { idInstitucion: this.$store.state.idInstitucion, vigencia: this.$store.state.aLectivo }})
+        .then(response => {
+          if (response.data.error){
+            alert(response.data.mensaje + ' - Consulta Data Estudiantes')
+            location.replace(CONFIG.ROOT_MODULO_LOGIN)
+          } else{
+            if(response.data.datos != 0) {
+              //this.$store.commit('set', ['datosDataEstudiantes', response.data.datos])
+              this.dataConsultada = response.data.datos
+            } else {
+              //this.$store.commit('set', ['datosDataEstudiantes', []])
+              this.dataConsultada = []
+            }
+            console.log('DatosE: ' + JSON.stringify(this.dataConsultada))
+          }
+        })
+        .catch(err => {
+          alert('Algo salio mal y no se pudo realizar: Consulta Data Estudiantes. Intente más tarde.' + err)
+          location.replace(CONFIG.ROOT_WEBSITE)
+        })
+      },
       mensajeEmergente(variante, titulo, contenido) {
         this.$bvToast.toast(contenido, { title: titulo, variant: variante, toaster: "b-toaster-top-center", solid: true, autoHideDelay: 4000, appendToast: false })
       }
@@ -322,7 +348,8 @@
     },
     beforeMount() {
       this.btnCargando = true
-      this.dataConsultada = this.$store.state.datosDataEstudiantes
+      //this.dataConsultada = this.$store.state.datosDataEstudiantes
+      //this.cargarDataEstudiantes()
       this.datosSeccion = this.$store.state.datosSecciones[this.$store.state.idSeccion - 1]
       this.fechaImpresion = 'Fecha: ' + new Date().toLocaleString()
       this.ocuparComboSedes()
