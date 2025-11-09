@@ -217,7 +217,7 @@
   export default {
     name: 'planillanotasperiodo',
     props: {
-      configuracionPlanilla: Object
+      configuracionPlanilla: Object,
     },
     components: {
       CChartDoughnut,
@@ -238,6 +238,7 @@
         totalAlt: 0,
         totalSup: 0,
         totalSin: 0,
+        dataConsultada: [],
       }
     },
     methods: {
@@ -407,19 +408,40 @@
           } else{
             if (response.data.datos != 0) {
               this.listaEstudiantes = response.data.datos
-              //console.log(JSON.stringify(this.listaEstudiantes))
               this.btnCargando = false
             } else {
-              this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'No hay estudiantes habilitados para esta planilla')
               this.btnCargando = false
-              this.idAsignaturaCurso = null
             }
+            //console.log(JSON.stringify(this.listaEstudiantes))
+            //console.log(JSON.stringify(this.dataConsultada))
           }
         })
         .catch(err => {
           this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Consulta Lista Curso. Intente más tarde.' + err)
           this.btnCargando = false
         })
+        this.dataConsultada.forEach(element => {
+          if (this.configuracionPlanilla.id_tipo == 1) {
+            let registro = this.listaEstudiantes.find(e => e.id_matricula === element.idMatricula)
+            if (!registro) {
+              if (element.estadoActual === 1) {
+                this.listaEstudiantes.push({'idMatricula': element.idMatricula, 'estudiante': element.estudiante, 'id_asignatura_curso': this.configuracionPlanilla.idPlanilla, 'periodo': this.configuracionPlanilla.idPeriodo, 'id_estado_actual': element.estadoActual, 'id_diversa': element.id_diversa, 'id_especialidad': element.id_especialidad,
+                  n1C1: null, n2C1: null, n3C1: null, n4C1: null, n5C1: null, n6C1: null, n7C1: null, n8C1: null, n9C1: null, n10C1: null, defC1: null, n1C2: null, n2C2: null, n3C2: null, n4C2: null, n5C2: null, n6C2: null, n7C2: null, n8C2: null, n9C2: null, n10C2: null, defC2: null, n1C3: null, n2C3: null, n3C3: null, n4C3: null, n5C3: null, n6C3: null, n7C3: null, n8C3: null, n9C3: null, n10C3: null, defC3: null, ausJ: null, ausS: null, definitiva: null, concepto: null
+                })
+              }
+            }
+          } else {
+            let registro = this.listaEstudiantes.find(e => e.id_matricula === element.idMatricula)
+            if (!registro) {
+              if (element.estadoActual === 1 && element.id_especialidad === this.configuracionPlanilla.id_especialidad) {
+                this.listaEstudiantes.push({'idMatricula': element.idMatricula, 'estudiante': element.estudiante, 'id_asignatura_curso': this.configuracionPlanilla.idPlanilla, 'periodo': this.configuracionPlanilla.idPeriodo, 'id_estado_actual': element.estadoActual, 'id_diversa': element.id_diversa, 'id_especialidad': element.id_especialidad,
+                  n1C1: null, n2C1: null, n3C1: null, n4C1: null, n5C1: null, n6C1: null, n7C1: null, n8C1: null, n9C1: null, n10C1: null, defC1: null, n1C2: null, n2C2: null, n3C2: null, n4C2: null, n5C2: null, n6C2: null, n7C2: null, n8C2: null, n9C2: null, n10C2: null, defC2: null, n1C3: null, n2C3: null, n3C3: null, n4C3: null, n5C3: null, n6C3: null, n7C3: null, n8C3: null, n9C3: null, n10C3: null, defC3: null, ausJ: null, ausS: null, definitiva: null, concepto: null
+                })
+              }
+            }
+          }
+        })
+        this.listaEstudiantes.sort((a, b) => a.estudiante.localeCompare(b.estudiante))
       },
       cargarConfiguracionCriterios() {
         this.criteriosEvaluacion = {}
@@ -639,6 +661,26 @@
         this.idColumnaCopiar = null
         this.$refs['modalSeleccionarColumna'].hide()
       },
+      async cargarDataEstudiantes() {
+        let cursillos = []
+        cursillos.push(this.configuracionPlanilla.idCurso)
+        await axios
+        .get(CONFIG.ROOT_PATH + 'docente/data/estudiantes/cursos', { params: { idInstitucion: this.$store.state.idInstitucion, vigencia: this.$store.state.aLectivo, cursos: JSON.stringify(cursillos) }})
+        .then(response => {
+          if (response.data.error){
+            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Consulta Estudiantes')
+          } else{
+            if(response.data.datos != 0) {
+              this.dataConsultada = response.data.datos
+            } else {
+              this.dataConsultada = []
+            }
+          }
+        })
+        .catch(err => {
+          this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Algo salio mal y no se pudo realizar: Consulta Data Estudiantes. Intente más tarde.' + err)
+        })
+      },
       mensajeEmergente(variante, titulo, contenido) {
         this.$bvToast.toast(contenido, { title: titulo, variant: variante, toaster: "b-toaster-top-center", solid: true, autoHideDelay: 4000, appendToast: false })
       }
@@ -728,7 +770,9 @@
     beforeMount() {
       this.idAsignaturaCurso = this.configuracionPlanilla.idPlanilla
       this.periodoActual = this.configuracionPlanilla.idPeriodo
+      this.cargarDataEstudiantes()
       this.cargarEncabezados()
+      //console.log(this.configuracionPlanilla)
     },
   }
 </script>

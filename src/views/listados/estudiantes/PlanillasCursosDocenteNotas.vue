@@ -4,7 +4,7 @@
       <b-col lg="12">
         <b-card>
           <template #header>
-            <h5 class="mb-0"><b-icon icon="card-checklist" aria-hidden="true"></b-icon> PLANILLAS DE ESTUDIANTES POR DOCENTE CON NOTAS</h5>
+            <h5 class="mb-0"><b-icon icon="card-checklist" aria-hidden="true"></b-icon> LISTAS DE ESTUDIANTES CON NOTAS</h5>
           </template>
           <b-card-text>
             <b-row>
@@ -18,13 +18,6 @@
               </b-col>
             </b-row>
             <b-row>
-              <!--
-              <b-col lg="6">
-                <b-form-group label="Seleccione el Docente:" label-for="docentes" class="etiqueta">
-                  <b-form-select id="docentes" ref="docentes" v-model="idDocente" :options="comboDocentes" @change="listarCursosAsignados(),cursosConsultados=null,periodoActual=null"></b-form-select>
-                </b-form-group>
-              </b-col>
-              -->
               <b-col lg="2">
                 <b-form-group label="Periodo:" label-for="periodo" class="etiqueta">
                   <b-form-select id="periodo" ref="periodo" v-model="periodoActual" :options="comboPeriodos" @change="cursosConsultados=null" :disabled="idDocente!=null ? false : true"></b-form-select>
@@ -100,13 +93,13 @@
                           <div ref="contenido">
                             <div v-for="(curso, index) in cursosSeleccionados" :key="index" class="bloque-curso">
                               <div class="encabezado">
-                                <p>SECRETARÍA DE EDUCACIÓN TERRITORIAL DE TUNJA<br><b>{{$store.state.nombreInstitucion}}</b><br>TUNJA - BOYACÁ<br>PANILLAS DE ESTUDIANTES POR DOCENTE<br></p>
+                                <p>SECRETARÍA DE EDUCACIÓN TERRITORIAL DE TUNJA<br><b>{{$store.state.nombreInstitucion}}</b><br>TUNJA - BOYACÁ<br>LISTAS DE ESTUDIANTES CON NOTAS<br></p>
                               </div>
                               <table class="tabla-estudiantes">
                                 <thead>
                                   <tr>
                                     <th>Sede: <b>{{ curso.sede }}</b></th>
-                                    <th>Curso: <b>{{ curso.curso }}</b></th>
+                                    <th>Curso: <b>{{ curso.nomenclatura }}</b></th>
                                     <th>Jornada:<b>{{ curso.jornada }}</b></th>
                                     <th>Año: <b>{{ $store.state.aLectivo }}</b></th>
                                   </tr>
@@ -115,7 +108,7 @@
                               <table class="tabla-estudiantes" style="margin-top: -20px">
                                 <thead>
                                   <tr>
-                                    <th>Asignatura: <b>{{ curso.asignatura }}</b></th>
+                                    <th>Asignatura: <b>{{ curso.asignatura.toUpperCase() }}</b></th>
                                     <th>Docente: <b>{{ nombreDocente }}</b></th>
                                   </tr>
                                 </thead>
@@ -207,7 +200,7 @@
         cursosConsultados: false,
         listaCursos: [],
         encabColumnasCursos: [
-          { label: 'Grado-Curso', field: 'curso' },
+          { label: 'Grado-Curso', field: 'nomenclatura' },
           { label: 'Asignatura', field: 'asignatura' },
           { label: 'Jornada', field: 'jornada' },
           //{ label: '', field: 'id', sortable: false }
@@ -225,7 +218,7 @@
         const nota = this.dataNotas.find(n =>
           n.idMatricula === estudiante.idMatricula &&
           n.periodo === periodo &&
-          n.idAsignaturaCurso === cursoSeleccionado.idAsignaturaCurso
+          n.idAsignaturaCurso === cursoSeleccionado.idPlanilla
         )
         if (!nota) return ''
         if (nota.orden === 99) return nota.definitivacompor || ''
@@ -305,15 +298,15 @@
         this.cursosConsultados = true
         this.cursosSeleccionados = this.$refs.cursitos.selectedRows
         this.$refs['modalSeleccionarCursos'].hide()
-        //console.log(JSON.stringify(this.cursosSeleccionados))
-        this.consultarNotasCursosSeleccionados()
+        this.cargarDataEstudiantes()
+        
       },
       async consultarNotasCursosSeleccionados() {
         this.btnCargando = true
         let listaAsignaturasCurso = []
         this.cursosSeleccionados.forEach(element => {
-          listaAsignaturasCurso.push(element.idAsignaturaCurso)
-        });
+          listaAsignaturasCurso.push(element.idPlanilla)
+        })
         this.dataNotas = []
         await axios
         .get(CONFIG.ROOT_PATH + 'consolidados/notas/planillas/docente', { params: { listaAsignCursos: listaAsignaturasCurso, periodo: this.periodoActual }})
@@ -324,6 +317,7 @@
           } else{
             if (response.data.datos != 0) {
               this.dataNotas = response.data.datos
+              //console.log(JSON.stringify(this.dataNotas))
             }
           }
         })
@@ -346,41 +340,37 @@
             return fila
           })
           const hoja = XLSX.utils.json_to_sheet(datos)
-          XLSX.utils.book_append_sheet(libro, hoja, curso.asignatura.slice(0, 31))
+          XLSX.utils.book_append_sheet(libro, hoja, (curso.nomenclatura + ' - ' + curso.asignatura).slice(0, 31))
         })
         XLSX.writeFile(libro, 'Planillas Docente.xlsx')
       },
-      async listarCursosAsignados() {
-        this.btnCargando = true
-        //this.nombreDocente = document.getElementById('docentes')[document.getElementById('docentes').selectedIndex].text
-        this.listaCursos = []
+      async cargarDataEstudiantes() {
+        let cursillos = []
+        this.cursosSeleccionados.forEach(element => {
+          cursillos.push(element.idCurso)
+        })
+        let arraySinDuplicados = cursillos.filter((valor, indice, self) => {
+          return self.indexOf(valor) === indice;
+        })
+        cursillos = arraySinDuplicados
         await axios
-        .get(CONFIG.ROOT_PATH + 'academico/cargaacademica/planillas/docente', { params: { idInstitucion: this.$store.state.idInstitucion, idDocente: this.idDocente }})
+        .get(CONFIG.ROOT_PATH + 'docente/data/estudiantes/cursos', { params: { idInstitucion: this.$store.state.idInstitucion, vigencia: this.$store.state.aLectivo, cursos: JSON.stringify(cursillos) }})
         .then(response => {
           if (response.data.error){
-            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Consulta Asignación Docente')
-            this.btnCargando = false
+            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Consulta Estudiantes')
           } else{
-            if (response.data.datos != 0) {
-              this.listaCursos = response.data.datos
+            if(response.data.datos != 0) {
+              this.dataConsultada = response.data.datos
+              this.consultarNotasCursosSeleccionados()
+            } else {
+              this.dataConsultada = []
             }
           }
         })
         .catch(err => {
-          this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Consulta Asignación Docente. Intente más tarde.' + err)
-          this.btnCargando = false
+          this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Algo salio mal y no se pudo realizar: Consulta Data Estudiantes. Intente más tarde.' + err)
         })
-        this.btnCargando = false
       },
-      /*
-      async ocuparComboDocentes() {
-        this.comboDocentes = []
-        this.$store.state.datosDocentes.forEach(element => {
-          this.comboDocentes.push({ 'value': element.id, 'text': element.docente.toUpperCase() })
-        })
-        //console.log(JSON.stringify(this.$store.state.datosDocentes))
-      },
-      */
       async ocuparComboPeriodos() {
         this.comboPeriodos = []
         this.$store.state.datosTablas.periodos.forEach(element => {
@@ -397,8 +387,7 @@
       this.btnCargando = true
       this.idDocente = this.$store.state.idDocente
       this.nombreDocente = this.$store.state.Docente
-      this.listarCursosAsignados()
-      this.dataConsultada = this.$store.state.datosDataEstudiantes
+      this.listaCursos = this.$store.state.listaPlanillasDocente
       this.datosSeccion = this.$store.state.datosSecciones[this.$store.state.idSeccion - 1]
       this.fechaImpresion = 'Fecha: ' + new Date().toLocaleString()
       //this.ocuparComboDocentes()

@@ -32,6 +32,7 @@
                           <b-form-radio v-model="idConsolidado" :aria-describedby="ariaDescribedby" name="some-radios" value="21">Áreas Perdidas</b-form-radio>
                         </b-form-group>
                       </b-col>
+                      <!--
                       <b-col lg="4">
                         <h6>Finales</h6>
                         <b-form-group label="" v-slot="{ ariaDescribedby }">
@@ -40,6 +41,7 @@
                           <b-form-radio v-model="idConsolidado" :aria-describedby="ariaDescribedby" name="some-radios" value="32">Resumen Final de Promoción</b-form-radio>
                         </b-form-group>
                       </b-col>
+                      -->
                     </b-row>
                   </b-card-text>
                 </b-card>

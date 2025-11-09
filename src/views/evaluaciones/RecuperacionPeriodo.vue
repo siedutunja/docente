@@ -31,9 +31,12 @@
               <span v-if="props.column.field == 'recuperacion'">
                 <b-form-input v-model="props.row.recuperacion" @blur="actualizarItemNota(props.row)" @change="cambioPlanilla" autocomplete="off" maxlength="3" @keydown="handleKeyNavigation($event, props.row.originalIndex, 'recuperacion'),soloDecimales($event)" :ref="'recuperacion-' + props.row.originalIndex"></b-form-input>
               </span>
+              <span v-if="props.column.field == 'fecha_recupera'">
+                <b-form-input type="date" v-model="props.row.fecha_recupera" @blur="actualizarItemFecha(props.row)" @change="cambioPlanilla" autocomplete="off" maxlength="3" @keydown="handleKeyNavigation($event, props.row.originalIndex, 'fecha_recupera'),soloDecimales($event)" :ref="'fecharecupera-' + props.row.originalIndex" :disabled="props.row.definitiva>0 ? false : true"></b-form-input>
+              </span>
             </template>
             <div slot="emptystate">
-              <h5 class="text-danger ml-5">No existen estudiantes en la planilla</h5>
+              <h5 class="text-danger ml-5">No existen notas parciales en la planilla</h5>
             </div>
           </vue-good-table>
         </b-col>
@@ -87,6 +90,15 @@
       }
     },
     methods: {
+      actualizarItemFecha(item) {
+        let indice = this.notasPlanilla.findIndex(asigna => asigna.idMatricula === item.idMatricula)
+        if (item.fecha_recupera == '' || item.fecha_recupera == null || item.fecha_recupera == 0) {
+          this.notasPlanilla[indice].fecha_recupera = null
+          item.fecha_recupera = null
+        } else  {
+          this.notasPlanilla[indice].fecha_recupera = item.fecha_recupera.substr(0,10)
+        }
+      },
       async guardarPlanilla() {
         await axios
         .put(CONFIG.ROOT_PATH + 'docente/notas/planillarecuperacion', JSON.stringify(this.notasPlanilla), { headers: {"Content-Type": "application/json; charset=utf-8" }})
@@ -167,13 +179,17 @@
               response.data.datos.forEach(element => {
                 element.id_asignatura_curso = this.configuracionPlanilla.idPlanilla
                 element.periodo = this.configuracionPlanilla.idPeriodo
+                if (element.fecha_recupera == '' || element.fecha_recupera == null || element.fecha_recupera == 0) {
+                  element.fecha_recupera = null
+                } else {
+                  element.fecha_recupera = element.fecha_recupera.substr(0,10)
+                }
               })
               this.notasPlanilla = response.data.datos
               //console.log(JSON.stringify(this.notasPlanilla))
-              setTimeout(()=>{
-                this.construirPlanillaNotas()
-                this.btnCargando = false
-              },500)
+              this.btnCargando = false
+            } else {
+              this.btnCargando = false
             }
           }
         })
@@ -189,6 +205,7 @@
           { label: 'Definitiva Periodo', field: 'definitiva', sortable: false, tdClass: 'text-center' },
           { label: 'Concepto Definitiva Periodo', field: 'concepto', sortable: false, tdClass: this.tdClassFuncConcepto },
           { label: 'Recuperación', field: 'recuperacion', sortable: false },
+          { label: 'Fecha Recuperación', field: 'fecha_recupera', sortable: false },
         ]
       },
       soloDecimales(e) {
@@ -221,6 +238,7 @@
     },
     beforeMount() {
       this.cargarNotasPeriodo()
+      this.construirPlanillaNotas()
     }
   }
 </script>

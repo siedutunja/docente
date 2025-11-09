@@ -261,16 +261,26 @@
               })
               this.notasPlanillaPree = response.data.datos
               //console.log(JSON.stringify(this.notasPlanillaPree))
-              setTimeout(()=>{
-                this.construirPlanillaNotasPreescolar()
-                this.btnCargando = false
-              },500)
+              this.btnCargando = false
+            } else {
+              this.btnCargando = false
             }
           }
         })
         .catch(err => {
           this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Notas periodo. Intente más tarde.' + err)
         })
+        this.dataConsultada.forEach(element => {
+          let registro = this.notasPlanillaPree.find(e => e.id_matricula === element.idMatricula)
+          if (!registro) {
+            if (element.estadoActual === 1) {
+              this.notasPlanillaPree.push({'idMatricula': element.idMatricula, 'estudiante': element.estudiante, 'id_asignatura_curso': this.configuracionPlanilla.idPlanilla, 'periodo': this.configuracionPlanilla.idPeriodo, 'id_estado_actual': element.estadoActual, 'id_diversa': element.id_diversa, 'id_especialidad': element.id_especialidad,
+                ausJ: null, ausS: null, c1: null, c2: null, c3: null, c4: null, c5: null, c6: null, c7: null, c8: null, c9: null, c10: null
+              })
+            }
+          }
+        })
+        this.notasPlanillaPree.sort((a, b) => a.estudiante.localeCompare(b.estudiante))
       },
       construirPlanillaNotasPreescolar() {
           this.comboColumnas = [
@@ -483,13 +493,35 @@
         this.idColumnaCopiar = null
         this.$refs['modalSeleccionarColumna'].hide()
       },
+      async cargarDataEstudiantes() {
+        let cursillos = []
+        cursillos.push(this.configuracionPlanilla.idCurso)
+        await axios
+        .get(CONFIG.ROOT_PATH + 'docente/data/estudiantes/cursos', { params: { idInstitucion: this.$store.state.idInstitucion, vigencia: this.$store.state.aLectivo, cursos: JSON.stringify(cursillos) }})
+        .then(response => {
+          if (response.data.error){
+            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Consulta Estudiantes')
+          } else{
+            if(response.data.datos != 0) {
+              this.dataConsultada = response.data.datos
+            } else {
+              this.dataConsultada = []
+            }
+          }
+        })
+        .catch(err => {
+          this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Algo salio mal y no se pudo realizar: Consulta Data Estudiantes. Intente más tarde.' + err)
+        })
+      },
       mensajeEmergente(variante, titulo, contenido) {
         this.$bvToast.toast(contenido, { title: titulo, variant: variante, toaster: "b-toaster-top-center", solid: true, autoHideDelay: 4000, appendToast: false })
       }
     },
     beforeMount() {
+      this.cargarDataEstudiantes()
       this.cargarEncabezados()
       this.cargarNotasPeriodoPreescolar()
+      this.construirPlanillaNotasPreescolar()
     }
   }
 </script>

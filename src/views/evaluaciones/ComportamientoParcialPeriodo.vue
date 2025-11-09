@@ -121,7 +121,8 @@
         botonGuardando: false,
         cambioActivo: false,
         encabColumnas: [],
-        btnCargando: true
+        btnCargando: true,
+        dataConsultada: []
       }
     },
     methods: {
@@ -214,16 +215,26 @@
               })
               this.notasPlanillaCompor = response.data.datos
               //console.log(JSON.stringify(this.notasPlanillaCompor))
-              setTimeout(()=>{
-                this.construirPlanillaNotasComportamiento()
-                this.btnCargando = false
-              },500)
+              this.btnCargando = false
+            } else {
+              this.btnCargando = false
             }
           }
         })
         .catch(err => {
           this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Notas periodo Comportamiento. Intente más tarde.' + err)
         })
+        this.dataConsultada.forEach(element => {
+          let registro = this.notasPlanillaCompor.find(e => e.id_matricula === element.idMatricula)
+          if (!registro) {
+            if (element.estadoActual === 1) {
+              this.notasPlanillaCompor.push({'idMatricula': element.idMatricula, 'estudiante': element.estudiante, 'id_asignatura_curso': this.configuracionPlanilla.idPlanilla, 'periodo': this.configuracionPlanilla.idPeriodo, 'id_estado_actual': element.estadoActual, 'id_diversa': element.id_diversa, 'id_especialidad': element.id_especialidad,
+                definitivacompor: null,ausJ: null, ausS: null, definitiva: null, concepto: null, observaciones: null
+              })
+            }
+          }
+        })
+        this.notasPlanillaCompor.sort((a, b) => a.estudiante.localeCompare(b.estudiante))
       },
       actualizarItemComporLetra(item) {
         let indice = this.notasPlanillaCompor.findIndex(asigna => asigna.idMatricula === item.idMatricula)
@@ -326,12 +337,34 @@
       cancelarFormulario() {
         this.$router.push('/')
       },
+      async cargarDataEstudiantes() {
+        let cursillos = []
+        cursillos.push(this.configuracionPlanilla.idCurso)
+        await axios
+        .get(CONFIG.ROOT_PATH + 'docente/data/estudiantes/cursos', { params: { idInstitucion: this.$store.state.idInstitucion, vigencia: this.$store.state.aLectivo, cursos: JSON.stringify(cursillos) }})
+        .then(response => {
+          if (response.data.error){
+            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Consulta Estudiantes')
+          } else{
+            if(response.data.datos != 0) {
+              this.dataConsultada = response.data.datos
+            } else {
+              this.dataConsultada = []
+            }
+          }
+        })
+        .catch(err => {
+          this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Algo salio mal y no se pudo realizar: Consulta Data Estudiantes. Intente más tarde.' + err)
+        })
+      },
       mensajeEmergente(variante, titulo, contenido) {
         this.$bvToast.toast(contenido, { title: titulo, variant: variante, toaster: "b-toaster-top-center", solid: true, autoHideDelay: 4000, appendToast: false })
       }
     },
     beforeMount() {
+      this.cargarDataEstudiantes()
       this.cargarNotasPeriodoComportamiento()
+      this.construirPlanillaNotasComportamiento()
       //console.log(JSON.stringify(this.configuracionPlanilla))
     }
   }

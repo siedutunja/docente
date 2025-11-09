@@ -12,15 +12,17 @@
                 <b-card bg-variant="light" text-variant="">
                   <b-card-text>
                     <b-row>
-                      <b-col lg="3">
-                        <h6>Por Grados-Cursos</h6>
+                      <b-col lg="6">
+                        <h6>Por Curso y Asignatura</h6>
                         <b-form-group label="" v-slot="{ ariaDescribedby }">
-                          <b-form-radio v-model="idInforme" :aria-describedby="ariaDescribedby" name="some-radios" value="1">Planillas por Curso</b-form-radio>
-                          <b-form-radio v-model="idInforme" :aria-describedby="ariaDescribedby" name="some-radios" value="2">Planillas por Grado</b-form-radio>
-                          <b-form-radio v-model="idInforme" :aria-describedby="ariaDescribedby" name="some-radios" value="3">Listas con Datos por Curso</b-form-radio>
-                          <b-form-radio v-model="idInforme" :aria-describedby="ariaDescribedby" name="some-radios" value="4">Listas con Datos por Grado</b-form-radio>
+                          <b-form-radio v-model="idInforme" :aria-describedby="ariaDescribedby" name="some-radios" value="1">Planillas Auxiliares</b-form-radio>
+                          <!--<b-form-radio v-model="idInforme" :aria-describedby="ariaDescribedby" name="some-radios" value="2">Planillas por Grado</b-form-radio>-->
+                          <b-form-radio v-model="idInforme" :aria-describedby="ariaDescribedby" name="some-radios" value="3">Listas con Datos</b-form-radio>
+                          <!--<b-form-radio v-model="idInforme" :aria-describedby="ariaDescribedby" name="some-radios" value="4">Listas con Datos por Grado</b-form-radio>-->
+                          <b-form-radio v-model="idInforme" :aria-describedby="ariaDescribedby" name="some-radios" value="11">Listas con Notas</b-form-radio>
                         </b-form-group>
                       </b-col>
+                      <!--
                       <b-col lg="3">
                         <h6>Por Docente</h6>
                         <b-form-group label="" v-slot="{ ariaDescribedby }">
@@ -28,20 +30,23 @@
                           <b-form-radio v-model="idInforme" :aria-describedby="ariaDescribedby" name="some-radios" value="11">Auxiliares con Notas </b-form-radio>
                         </b-form-group>
                       </b-col>
-                      <b-col lg="3">
+                      -->
+                      <b-col lg="6">
                         <h6>Formatos</h6>
                         <b-form-group label="" v-slot="{ ariaDescribedby }">
-                          <b-form-radio v-model="idInforme" :aria-describedby="ariaDescribedby" name="some-radios" value="21">Asistencia Semanal</b-form-radio>
-                          <b-form-radio v-model="idInforme" :aria-describedby="ariaDescribedby" name="some-radios" value="22">Actividades Mensual</b-form-radio>
-                          <b-form-radio v-model="idInforme" :aria-describedby="ariaDescribedby" name="some-radios" value="23">Observador</b-form-radio>
+                          <b-form-radio v-model="idInforme" :aria-describedby="ariaDescribedby" name="some-radios" value="21">Control Asistencia Semanal</b-form-radio>
+                          <b-form-radio v-model="idInforme" :aria-describedby="ariaDescribedby" name="some-radios" value="22">Seguimiento Actividades Mensual</b-form-radio>
+                          <!--<b-form-radio v-model="idInforme" :aria-describedby="ariaDescribedby" name="some-radios" value="23">Observador</b-form-radio>-->
                         </b-form-group>
                       </b-col>
+                      <!--
                       <b-col lg="3">
                         <h6>Otros</h6>
                         <b-form-group label="" v-slot="{ ariaDescribedby }">
                           <b-form-radio v-model="idInforme" :aria-describedby="ariaDescribedby" name="some-radios" value="30">Por Acudiente</b-form-radio>
                         </b-form-group>
                       </b-col>
+                      -->
                     </b-row>
                   </b-card-text>
                 </b-card>

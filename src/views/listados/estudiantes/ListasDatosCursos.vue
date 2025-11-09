@@ -4,7 +4,7 @@
       <b-col lg="12">
         <b-card>
           <template #header>
-            <h5 class="mb-0"><b-icon icon="card-checklist" aria-hidden="true"></b-icon> LISTAS DE ESTUDIANTES POR CURSO</h5>
+            <h5 class="mb-0"><b-icon icon="card-checklist" aria-hidden="true"></b-icon> LISTAS DE ESTUDIANTES CON DATOS</h5>
           </template>
           <b-card-text>
             <b-row>
@@ -18,13 +18,8 @@
               </b-col>
             </b-row>
             <b-row>
-              <b-col lg="9">
-                <b-form-group label="Seleccione la Sede:" label-for="sedes" class="etiqueta">
-                  <b-form-select id="sedes" ref="sedes" v-model="idSede" :options="comboSedes" @change="listarCursosSede(),cursosConsultados=null"></b-form-select>
-                </b-form-group>
-              </b-col>
               <b-col lg="3" class="mt-2">
-                <b-button class="small mx-1 mt-4" variant="success" @click="seleccionarCursos()" :disabled="idSede!=null ? false : true">Seleccionar Cursos</b-button>
+                <b-button class="small mx-1 mt-4" variant="success" @click="seleccionarCursos()" :disabled="idDocente!=null ? false : true">Seleccionar Planillas</b-button>
               </b-col>
             </b-row>
             <b-row v-if="cursosConsultados">
@@ -105,17 +100,25 @@
                         <div><hr></div>
                         <div class="informe-estudiantes">
                           <div ref="contenido">
-                            <div v-for="(curso, index) in cursosSeleccionados" :key="curso.idCurso" class="bloque-curso">
+                            <div v-for="(curso, index) in cursosSeleccionados" :key="index" class="bloque-curso">
                               <div class="encabezado">
-                                <p>SECRETARÍA DE EDUCACIÓN TERRITORIAL DE TUNJA<br><b>{{$store.state.nombreInstitucion}}</b><br>TUNJA - BOYACÁ<br>LISTAS DE ESTUDIANTES POR CURSO<br></p>
+                                <p>SECRETARÍA DE EDUCACIÓN TERRITORIAL DE TUNJA<br><b>{{$store.state.nombreInstitucion}}</b><br>TUNJA - BOYACÁ<br>LISTAS DE ESTUDIANTES CON DATOS<br></p>
                               </div>
                               <table class="tabla-estudiantes">
                                 <thead>
                                   <tr>
                                     <th>Sede: <b>{{ curso.sede }}</b></th>
-                                    <th>Curso: <b>{{ curso.curso }}</b></th>
+                                    <th>Curso: <b>{{ curso.nomenclatura }}</b></th>
                                     <th>Jornada: <b>{{ curso.jornada }}</b></th>
                                     <th>Año: <b>{{ $store.state.aLectivo }}</b></th>
+                                  </tr>
+                                </thead>
+                              </table>
+                              <table class="tabla-estudiantes" style="margin-top: -20px">
+                                <thead>
+                                  <tr>
+                                    <th colspan="2">Asignatura: <b>{{ curso.asignatura.toUpperCase() }}</b></th>
+                                    <th colspan="2">Docente: <b>{{ nombreDocente }}</b></th>
                                   </tr>
                                 </thead>
                               </table>
@@ -197,6 +200,8 @@
       return {
         campos: [],
         camposSeleccionados: [],
+        idDocente: null,
+        nombreDocente: null,
         dataConsultada: [],
         btnCargando: false,
         datosSeccion: {},
@@ -206,13 +211,11 @@
         comboPorcentajeArea: [],
         idGenero: null,
         comboGeneros: [],
-        idSede: null,
-        comboSedes: [],
-        nombreSede: null,
         cursosConsultados: false,
         listaCursos: [],
         encabColumnasCursos: [
-          { label: 'Grado-Curso', field: 'curso' },
+          { label: 'Grado-Curso', field: 'nomenclatura' },
+          { label: 'Asignatura', field: 'asignatura' },
           { label: 'Jornada', field: 'jornada' },
           //{ label: '', field: 'id', sortable: false }
         ],
@@ -298,8 +301,6 @@
         return mapa[campo] || campo.toUpperCase()
       },
       imprimir() {
-        let fecha = 'Fecha: ' + new Date().toLocaleString()
-        let tituloInforme = 'LISTAS DE ESTUDIANTES POR CURSO'
         const contenido = this.$refs.contenido.innerHTML
         const estilos = `
           <style>
@@ -364,6 +365,7 @@
       procesarListasCursos() {
         this.cursosConsultados = true
         this.cursosSeleccionados = this.$refs.cursitos.selectedRows
+        this.cargarDataEstudiantes()
         this.$refs['modalSeleccionarCursos'].hide()
       },
       seleccionarCursos() {
@@ -391,24 +393,37 @@
             return fila
           })
           const hoja = XLSX.utils.json_to_sheet(datos)
-          XLSX.utils.book_append_sheet(libro, hoja, curso.curso.slice(0, 31))
+          XLSX.utils.book_append_sheet(libro, hoja, (curso.nomenclatura + ' - ' + curso.asignatura).slice(0, 31))
         })
         XLSX.writeFile(libro, 'Listado Estudiantes Curso.xlsx')
       },
-      listarCursosSede() {
-        this.nombreSede = document.getElementById('sedes')[document.getElementById('sedes').selectedIndex].text
-        this.listaCursos = []
-        this.$store.state.datosCursos.forEach(element => {
-          if (element.id_sede == this.idSede) {
-            this.listaCursos.push({ idCurso: element.id, curso: element.nomenclatura.toUpperCase(), jornada: element.jornada, sede: element.sede })
+      async cargarDataEstudiantes() {
+        let cursillos = []
+        this.cursosSeleccionados.forEach(element => {
+          cursillos.push(element.idCurso)
+        })
+        let arraySinDuplicados = cursillos.filter((valor, indice, self) => {
+          return self.indexOf(valor) === indice;
+        })
+        cursillos = arraySinDuplicados
+        await axios
+        .get(CONFIG.ROOT_PATH + 'docente/data/estudiantes/cursos/campos', { params: { idInstitucion: this.$store.state.idInstitucion, vigencia: this.$store.state.aLectivo, cursos: JSON.stringify(cursillos) }})
+        .then(response => {
+          if (response.data.error){
+            this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Consulta Estudiantes')
+          } else{
+            if(response.data.datos != 0) {
+              this.dataConsultada = response.data.datos
+              this.dataConsultada.forEach(element => {
+                element.edad = this.calcularEdad(element.fnace) + " Años"
+              })
+            } else {
+              this.dataConsultada = []
+            }
           }
         })
-        //console.log(JSON.stringify(this.listaCursos))
-      },
-      async ocuparComboSedes() {
-        this.comboSedes = []
-        this.$store.state.datosSedes.forEach(element => {
-          this.comboSedes.push({ 'value': element.id, 'text': element.sede.toUpperCase() })
+        .catch(err => {
+          this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Algo salio mal y no se pudo realizar: Consulta Estudiantes. Intente más tarde.' + err)
         })
       },
       ocuparCombos() {
@@ -426,14 +441,12 @@
     },
     beforeMount() {
       this.btnCargando = true
-      this.dataConsultada = this.$store.state.datosDataEstudiantes
-      this.dataConsultada.forEach(element => {
-        element.edad = this.calcularEdad(element.fnace) + " Años"
-      })
+      this.idDocente = this.$store.state.idDocente
+      this.nombreDocente = this.$store.state.Docente
+      this.listaCursos = this.$store.state.listaPlanillasDocente
       this.datosSeccion = this.$store.state.datosSecciones[this.$store.state.idSeccion - 1]
       this.fechaImpresion = 'Fecha: ' + new Date().toLocaleString()
       this.ocuparCombos()
-      this.ocuparComboSedes()
       this.campos= [
         { value: 'estudiante', text: 'Estudiante', disabled: true },
         { value: 'tipodoc', text: 'Tipo Documento' },

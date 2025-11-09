@@ -1,6 +1,16 @@
 <template>
   <div>
-    <b-row class="mt-2">
+    <b-row>
+      <b-col lg="12">
+        <div v-if="btnCargando">
+          <div class="text-center m-5 text-primary">
+            <b-spinner style="width: 3rem; height: 3rem;" label="Spinner"></b-spinner>
+            <br><strong>Cargando datos...</strong>
+          </div>
+        </div>
+      </b-col>
+    </b-row>
+    <b-row  v-if="!btnCargando">
       <b-col lg="12">
         <vue-good-table ref="notas4" :columns="encabColumnas" :rows="notasPlanilla" styleClass="vgt-table condensed bordered striped" :line-numbers="true">
           <template slot="table-row" slot-scope="props">
@@ -99,6 +109,7 @@
         ],
         descriptorInclusion: null,
         filaEstudiante: null,
+        btnCargando: false,
       }
     },
     methods: {
@@ -170,12 +181,14 @@
         }
       },
       async cargarNotasPeriodo() {
+        this.btnCargando = true
         this.notasPlanilla = []
         await axios
         .get(CONFIG.ROOT_PATH + 'docente/notas/planillapree/descriptorgeneral', {params: {idCurso: this.configuracionPlanilla.idCurso, idPeriodo: this.configuracionPlanilla.idPeriodo, idPlanilla: this.configuracionPlanilla.idPlanilla, vigencia: this.$store.state.aLectivo}})
         .then(response => {
           if (response.data.error){
             this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Notas periodo Preescolar')
+            this.btnCargando = false
           } else{
             if (response.data.datos != 0) {
               response.data.datos.forEach(element => {
@@ -189,11 +202,15 @@
               })
               this.notasPlanilla = response.data.datos
               //console.log(JSON.stringify(this.notasPlanilla))
+              this.btnCargando = false
+            } else {
+              this.btnCargando = false
             }
           }
         })
         .catch(err => {
           this.mensajeEmergente('danger',CONFIG.TITULO_MSG,'Algo salio mal y no se pudo realizar: Notas periodo Preescolar. Intente más tarde.' + err)
+          this.btnCargando = false
         })
       },
       cancelarFormulario() {

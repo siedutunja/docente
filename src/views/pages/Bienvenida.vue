@@ -98,7 +98,6 @@
             location.replace(CONFIG.ROOT_MODULO_LOGIN)
           } else {
             if(response.data.datos != 0) {
-              //console.log(JSON.stringify(response.data.datos))
               this.$store.commit('set', ['listaPlanillasDocente', response.data.datos])
             } else {
               this.$store.commit('set', ['listaPlanillasDocente', []])
@@ -236,7 +235,7 @@
       },
       async cargarDatosCursos() {
         await axios
-        .get(CONFIG.ROOT_PATH + 'academico/carguecursos', {params: {idInstitucion: this.$store.state.idInstitucion, vigencia: this.$store.state.aLectivo}})
+        .get(CONFIG.ROOT_PATH + 'docente/carguecursos', {params: {idInstitucion: this.$store.state.idInstitucion, vigencia: this.$store.state.aLectivo}})
         .then(response => {
           if (response.data.error){
             alert(response.data.mensaje + ' - Consulta datos Cursos Activos')
