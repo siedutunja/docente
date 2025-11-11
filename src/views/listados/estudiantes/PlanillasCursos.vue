@@ -325,7 +325,6 @@
     computed: {
     },
     beforeMount() {
-      this.btnCargando = true
       this.idDocente = this.$store.state.idDocente
       this.nombreDocente = this.$store.state.Docente
       this.listaCursos = this.$store.state.listaPlanillasDocente
@@ -359,9 +358,6 @@
       ]
       this.porcentajeArea = 60
       this.numeroColumnas = 1
-      setTimeout(()=>{
-        this.btnCargando = false
-      },100)
     }
   }
 </script>
