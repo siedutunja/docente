@@ -152,11 +152,24 @@
         const orden = asig.orden
         if (orden === 99) return ''
         let total = 0
-        for (let p = 1; p <= 4; p++) {
-          const nota = periodos[p] ?? 0
-          total += nota * pesos[p] / 100
+        if (this.$store.state.idInstitucion == 'eb58bf60-fc83-11ec-a1d1-1dc2835404e5' && orden == 55) { // Exploración Vocacional Inem 55
+          let cantidad = 0
+          for (let p = 1; p <= 4; p++) {
+            const nota = periodos[p] ?? 0
+            if (nota > 0) {
+              total += nota
+              cantidad++
+            }
+          }
+          if (total === 0) return ''
+          total = total / cantidad
+        } else {
+          for (let p = 1; p <= 4; p++) {
+            const nota = periodos[p] ?? 0
+            total += nota * pesos[p] / 100
+          }
         }
-        return total.toFixed(2)
+        return this.redondear(total).toFixed(1)
       },
       calcularPromedioArea(areaData) {
         const asigns = Object.values(areaData.asignaturas)
@@ -165,7 +178,7 @@
         asigns.forEach(asig => {
           total += parseFloat(this.calcularPromedioAsignatura(asig))
         })
-        return (total / asigns.length).toFixed(2)
+        return (total / asigns.length).toFixed(1)
       },
       calcularPromedioGeneral(est) {
         const areas = Object.values(est.areas)
@@ -174,7 +187,7 @@
         areas.forEach(area => {
           total += parseFloat(this.calcularPromedioArea(area))
         })
-        return (total / areas.length).toFixed(2)
+        return (total / areas.length).toFixed(1)
       },
       contarAusencias(tipo) {
         let total = 0
@@ -305,7 +318,12 @@
               this.btnCargando = false
             } else{
               if (response.data.datos != 0) {
-                this.listaAreasAsignaturas = response.data.datos
+                //this.listaAreasAsignaturas = response.data.datos
+                response.data.datos.forEach(element => {
+                  if (element.orden != 90) {
+                    this.listaAreasAsignaturas.push(element)
+                  }
+                })
               }
             }
           })
@@ -403,7 +421,7 @@
       },
       async ocuparComboPeriodos() {
         this.comboPeriodos = []
-        this.$store.state.datosTablas.periodos.forEach(element => {
+        this.$store.state.periodos.forEach(element => {
           this.comboPeriodos.push({ 'value': element.id, 'text': element.periodo.toUpperCase() })
         })
       },

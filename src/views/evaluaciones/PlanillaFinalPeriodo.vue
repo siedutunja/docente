@@ -107,7 +107,7 @@
         this.comboPeriodos = []
         let fechaVigencia = 0
         let restaVigencia = 0
-        this.$store.state.datosTablas.periodos.forEach(element => {
+        this.$store.state.periodos.forEach(element => {
           if (element.id == 1) {
             fechaVigencia = new Date(this.$store.state.notasP1_Fin)
             fechaVigencia = fechaVigencia.getTime()

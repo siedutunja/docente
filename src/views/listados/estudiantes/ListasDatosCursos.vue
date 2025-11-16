@@ -427,11 +427,7 @@
         })
       },
       ocuparCombos() {
-        this.comboGeneros = []
-        this.comboGeneros.push({ 'value': null, 'text': 'TODOS' })
-        this.$store.state.datosTablas.generos.forEach(element => {
-          this.comboGeneros.push({ 'value': element.id, 'text': element.genero.toUpperCase() })
-        })
+        this.comboGeneros = [{ 'value': null, 'text': 'TODOS' }, {'value': 'F', 'text': 'FEMENINO'}, {'value': 'M', 'text': 'MASCULINO'}]
       },
       mensajeEmergente(variante, titulo, contenido) {
         this.$bvToast.toast(contenido, { title: titulo, variant: variante, toaster: "b-toaster-top-center", solid: true, autoHideDelay: 4000, appendToast: false })

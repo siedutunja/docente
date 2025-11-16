@@ -20,6 +20,7 @@
                           <b-form-radio v-model="idInforme" :aria-describedby="ariaDescribedby" name="some-radios" value="3">Listas con Datos</b-form-radio>
                           <!--<b-form-radio v-model="idInforme" :aria-describedby="ariaDescribedby" name="some-radios" value="4">Listas con Datos por Grado</b-form-radio>-->
                           <b-form-radio v-model="idInforme" :aria-describedby="ariaDescribedby" name="some-radios" value="11">Listas con Notas</b-form-radio>
+                          <b-form-radio v-model="idInforme" :aria-describedby="ariaDescribedby" name="some-radios" value="12">Listas con Notas Final</b-form-radio>
                         </b-form-group>
                       </b-col>
                       <!--
@@ -72,6 +73,9 @@
                 <div v-if="idInforme==11">
                   <PlanillasCursosDocenteNotas/>
                 </div>
+                <div v-if="idInforme==12">
+                  <PlanillasCursosDocenteNotasFinal/>
+                </div>
                 <div v-if="idInforme==21">
                   <FormatoAsistenciaSemanal/>
                 </div>
@@ -102,6 +106,7 @@
   import ListasDatosGrados from '@/views/listados/estudiantes/ListasDatosGrados'
   import PlanillasCursosDocente from '@/views/listados/estudiantes/PlanillasCursosDocente'
   import PlanillasCursosDocenteNotas from '@/views/listados/estudiantes/PlanillasCursosDocenteNotas'
+  import PlanillasCursosDocenteNotasFinal from '@/views/listados/estudiantes/PlanillasCursosDocenteNotasFinal'
   import FormatoAsistenciaSemanal from '@/views/listados/estudiantes/FormatoAsistenciaSemanal'
   import FormatoActividadMensual from '@/views/listados/estudiantes/FormatoActividadMensual'
   import FormatoObservador from '@/views/listados/estudiantes/FormatoObservador'
@@ -116,6 +121,7 @@
       ListasDatosGrados,
       PlanillasCursosDocente,
       PlanillasCursosDocenteNotas,
+      PlanillasCursosDocenteNotasFinal,
       FormatoAsistenciaSemanal,
       FormatoActividadMensual,
       FormatoObservador,

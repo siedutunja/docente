@@ -18,13 +18,15 @@
               </b-col>
             </b-row>
             <b-row>
+              <!--
               <b-col lg="2">
                 <b-form-group label="Periodo:" label-for="periodo" class="etiqueta">
                   <b-form-select id="periodo" ref="periodo" v-model="periodoActual" :options="comboPeriodos" @change="cursosConsultados=null" :disabled="idDocente!=null ? false : true"></b-form-select>
                 </b-form-group>
               </b-col>
+              -->
               <b-col lg="4" class="mt-2">
-                <b-button class="small mx-1 mt-4" variant="success" @click="seleccionarCursos()" :disabled="periodoActual!=null ? false : true">Seleccionar Planillas</b-button>
+                <b-button class="small mx-1 mt-4" variant="success" @click="seleccionarCursos()">Seleccionar Planillas</b-button>
               </b-col>
             </b-row>
             <b-row v-if="cursosConsultados">
@@ -119,6 +121,7 @@
                                     <th>#</th>
                                     <th>Estudiante</th>
                                     <th v-for="p in periodoActual" :key="'P' + p">P{{ p }}</th>
+                                    <th>FINAL</th>
                                     <th v-for="colum in numeroColumnas" :key="colum" :style="'width: ' + porcentajeArea/numeroColumnas + '%'"></th>
                                   </tr>
                                 </thead>
@@ -128,6 +131,8 @@
                                     <td><span v-if="est.estadoActual == 2" style="color: #9C2007">[R] {{ est.estudiante }}</span><span v-else>{{ est.estudiante }}</span></td>
                                     <td v-for="p in periodoActual" :key="'nota-' + p">
                                       {{ obtenerNota(est, p, curso) }}
+                                    <td>
+                                        {{ obtenerfinal(est, curso) }}
                                     </td>
                                     <td v-for="colum in numeroColumnas" :key="colum"></td>
                                   </tr>
@@ -208,12 +213,23 @@
         cursosSeleccionados: [],
         fechaImpresion: null,
         retirados: false,
-        periodoActual: null,
+        periodoActual: 4,
         comboPeriodos: [],
         dataNotas: [],
       }
     },
     methods: {
+      obtenerfinal(est, curso) {
+        let final = 0
+        if (this.$store.state.idInstitucion == 'eb58bf60-fc83-11ec-a1d1-1dc2835404e5') { // Inem
+          final = this.redondear(Number(this.obtenerNota(est, 1, curso) * 0.3) + Number(this.obtenerNota(est, 2, curso) * 0.35) + Number(this.obtenerNota(est, 3, curso) * 0.35)).toFixed(1)
+        } else if (this.$store.state.idInstitucion == 'acaa36d0-fcb1-11ec-8267-536b07c743c4') { // Emiliani
+          final = this.redondear(Number(this.obtenerNota(est, 1, curso) * 0.2) + Number(this.obtenerNota(est, 2, curso) * 0.2) + Number(this.obtenerNota(est, 3, curso) * 0.3) + Number(this.obtenerNota(est, 4, curso) * 0.3)).toFixed(1)
+        } else {
+          final = this.redondear((Number(this.obtenerNota(est, 1, curso)) + Number(this.obtenerNota(est, 2, curso)) + Number(this.obtenerNota(est, 3, curso)) + Number(this.obtenerNota(est, 4, curso))) / 4).toFixed(1)
+        }
+        return final >= 0 ? final : ''
+      },
       obtenerNota(estudiante, periodo, cursoSeleccionado) {
         const nota = this.dataNotas.find(n =>
           n.idMatricula === estudiante.idMatricula &&
@@ -297,8 +313,8 @@
       procesarListasCursos() {
         this.cursosConsultados = true
         this.cursosSeleccionados = this.$refs.cursitos.selectedRows
-        this.$refs['modalSeleccionarCursos'].hide()
         this.cargarDataEstudiantes()
+        this.$refs['modalSeleccionarCursos'].hide()
         
       },
       async consultarNotasCursosSeleccionados() {
@@ -370,6 +386,10 @@
         .catch(err => {
           this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Algo salio mal y no se pudo realizar: Consulta Data Estudiantes. Intente más tarde.' + err)
         })
+      },
+      redondear(num) {
+        var m = Number((Math.abs(num) * 10).toPrecision(15))
+        return Math.round(m) / 10 * Math.sign(num);
       },
       async ocuparComboPeriodos() {
         this.comboPeriodos = []
