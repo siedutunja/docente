@@ -178,6 +178,8 @@
               this.$store.commit('set', ['recupP4_Fin', response.data.datos.usuario.recupP4_Fin])
               this.$store.commit('set', ['recupP5_Ini', response.data.datos.usuario.recupP5_Ini])
               this.$store.commit('set', ['recupP5_Fin', response.data.datos.usuario.recupP5_Fin])
+              this.$store.commit('set', ['superaFin_Ini', response.data.datos.usuario.superaFin_Ini])
+              this.$store.commit('set', ['superaFin_Fin', response.data.datos.usuario.superaFin_Fin])
               this.$store.commit('set', ['fechaActual', response.data.datos.usuario.fechaA])
               this.cargarPlanillasDocente()
               this.cargarDatosSecciones()

@@ -71,6 +71,7 @@ jwt.verify(token, CONFIG.SECRET_KEY, (err, data) => {
     menu[0]._children[indice].items.push({ name: 'Resumen Final por Periodo', to: '/evaluaciones/planillafinalperiodo'})
     menu[0]._children[indice].items.push({ name: 'Recuperaciones por Periodo', to: '/evaluaciones/planillarecuperacionperiodo'})
     menu[0]._children[indice].items.push({ name: 'Ausencias', to: '/evaluaciones/ausencias'})
+    menu[0]._children[indice].items.push({ name: 'Superaciones Finales (Habilita)', to: '/evaluaciones/planillasuperaciones'})
     menu[0]._children.push(
       {
         _name: 'CSidebarNavDropdown',

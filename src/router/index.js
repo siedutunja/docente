@@ -203,6 +203,13 @@ function configRoutes () {
               name: 'Recuperaciones por Periodo',
               component: () => import('@/views/evaluaciones/PlanillaRecuperacionPeriodo')
             },
+            // 2025-11-20
+            {
+              path: 'planillasuperaciones',
+              beforeEnter: autenticar,
+              name: 'Superaciones Finales',
+              component: () => import('@/views/evaluaciones/PlanillaSuperaciones')
+            },
             // 2025-08-25
             {
               path: 'ausencias',
