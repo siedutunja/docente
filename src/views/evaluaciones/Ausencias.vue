@@ -20,7 +20,7 @@
               </b-col>
               <b-col lg="2">
                 <b-form-group label="Fecha:" label-for="fecha" class="etiqueta">
-                  <b-form-input id="fecha" ref="fecha" type="date" v-model="fechaSeleccionada" :disabled="idPeriodo!=null && idPlanilla!=null ? false : true"></b-form-input>
+                  <b-form-input id="fecha" ref="fecha" type="date" v-model="fechaSeleccionada" @change="verPlanillaValida=false" :disabled="idPeriodo!=null && idPlanilla!=null ? false : true"></b-form-input>
                 </b-form-group>
               </b-col>
               <b-col lg="2">
@@ -67,6 +67,7 @@
                                 :name="`tipo-${rowIndex}`"
                                 :value="tipo"
                                 v-model="est.tipo"
+                                 @change="cambioActivo = true"
                               />
                               {{ tipo }}
                             </label>
@@ -174,6 +175,7 @@
           id_asignatura_curso: this.idPlanilla,
           periodo: this.idPeriodo,
           fecha: this.fechaSeleccionada,
+          vigencia: this.$store.state.aLectivo,
           ausJ: est.tipo == 'Justificada' ? est.cantidad : null,
           ausS: est.tipo == 'Sin Justificar' ? est.cantidad : null,
           evasiones: est.tipo == 'Evasiones' ? est.cantidad : null,

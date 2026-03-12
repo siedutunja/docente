@@ -170,7 +170,7 @@
         this.nombreCurso = this.idCurso != null ? document.getElementById('cursos')[document.getElementById('cursos').selectedIndex].text : ''
         this.listaAsignaturasDescriptores = []
         await axios
-        .get(CONFIG.ROOT_PATH + 'academico/descriptores', {params: {idCurso: this.idCurso}})
+        .get(CONFIG.ROOT_PATH + 'academico/descriptores', {params: {idCurso: this.idCurso, vigencia: this.$store.state.aLectivo}})
         .then(response => {
           if (response.data.error){
             this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Lista asignación docentes curso')

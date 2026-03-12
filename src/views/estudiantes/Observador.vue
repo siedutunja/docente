@@ -6,7 +6,7 @@
           <b-card-text>
             <b-row>
               <b-col lg="12">
-                <h2 class="text-center">OBSERVADOR DEL ESTUDIANTE</h2>
+                <h2 class="text-center">OBSERVADOR DEL ESTUDIANTE AÑO LECTIVO {{ $store.state.aLectivo }}</h2>
               </b-col>
             </b-row>
             <b-row>
@@ -204,7 +204,7 @@
                     <b-row>
                       <b-col lg="12">
                         <b-button class="small float-right" variant="dark" @click="nuevaObservacion">Nueva Observación</b-button>
-                        <h5 class="mb-0"><b-icon icon="stickies" aria-hidden="true"></b-icon> Registro General de Observaciones</h5>
+                        <h5 class="mb-0"><b-icon icon="stickies" aria-hidden="true"></b-icon> Registro General de Observaciones Año Lectivo {{ $store.state.aLectivo }}</h5>
                         <hr>
                       </b-col>
                     </b-row>
@@ -396,6 +396,7 @@
         registroObservador: {
           id: null,
           id_estudiante: null,
+          vigencia: null,
           situacion: null,
           id_tipo_observacion: null,
           id_subtipo: null,
@@ -538,6 +539,7 @@
         //console.log(JSON.stringify(item))
         this.registroObservador.id = item.id
         this.registroObservador.id_estudiante = item.id_estudiante
+        this.registroObservador.vigencia = item.vigencia
         this.registroObservador.situacion = item.situacion
         this.registroObservador.id_tipo_observacion = item.id_tipo_observacion
         this.registroObservador.id_subtipo = item.id_subtipo
@@ -582,6 +584,7 @@
       nuevaObservacion() {
         this.registroObservador.id = null
         this.registroObservador.id_estudiante = this.datosFichaE.id_estudiante
+        this.registroObservador.vigencia = this.$store.state.aLectivo
         this.registroObservador.situacion = null
         this.registroObservador.id_tipo_observacion = null
         this.registroObservador.id_subtipo = 9
@@ -637,7 +640,7 @@
         this.datosFichaE = {}
         this.listaAnotaciones = []
         await axios
-        .get(CONFIG.ROOT_PATH + 'observador/consultaobservador', { params: { idEstudiante: this.idEstudiante, idMatricula: this.idMatricula }})
+        .get(CONFIG.ROOT_PATH + 'observador/consultaobservador', { params: { idEstudiante: this.idEstudiante, idMatricula: this.idMatricula, vigencia: this.$store.state.aLectivo }})
         .then(response => {
           if (response.data.error){
             this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Consulta Observador')

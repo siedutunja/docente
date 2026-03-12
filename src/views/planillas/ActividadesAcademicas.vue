@@ -211,7 +211,8 @@
         this.datosActividad.actividades = null
         this.datosActividad.evidencias = null
         this.datosActividad.periodo = this.idPeriodo
-        this.datosActividad.editarActividad = false
+        this.datosActividad.periodo = this.idPeriodo
+        this.datosActividad.vigencia = this.$store.state.aLectivo
         this.$refs['modalCrearEditarActividad'].show()
       },
       seleccionarActividad(item) {
@@ -220,6 +221,7 @@
         this.datosActividad.actividades = item.actividades
         this.datosActividad.evidencias = item.evidencias
         this.datosActividad.periodo = item.periodo
+        this.datosActividad.vigencia = this.$store.state.aLectivo
         this.datosActividad.editarActividad = true
         this.$refs['modalCrearEditarActividad'].show()
       },
@@ -235,7 +237,7 @@
         this.nombrePeriodo = document.getElementById('periodo')[document.getElementById('periodo').selectedIndex].text
         this.listaActividades = []
         await axios
-        .get(CONFIG.ROOT_PATH + 'docente/actividadesacademicas', { params: { idPlanilla: this.idPlanilla, idPeriodo: this.idPeriodo }})
+        .get(CONFIG.ROOT_PATH + 'docente/actividadesacademicas', { params: { idPlanilla: this.idPlanilla, idPeriodo: this.idPeriodo, vigencia: this.$store.state.aLectivo }})
         .then(response => {
           if (response.data.error){
             this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Lista de Actividades')

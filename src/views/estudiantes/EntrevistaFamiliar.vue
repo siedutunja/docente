@@ -399,6 +399,80 @@
                       <td><b-form-input type="number" v-model.trim="datosEntrevista.lugar" autocomplete="off" maxlength="2"></b-form-input></td>
                     </tr>
                     <tr>
+                      <td>Escolaridad de los hermanos</td>
+                      <td>
+                        <b-form-group>
+                          <b-form-checkbox class="ml-4 m-2" v-for="campo in camposEscolaridadHermanos" v-model="camposEscolaridadHermanosSeleccionados" :key="campo.value" :value="campo.value">
+                            {{ campo.text }}
+                          </b-form-checkbox>
+                        </b-form-group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Tipo de vivienda</td>
+                      <td>
+                        <b-form-group>
+                          <b-form-checkbox class="ml-4 m-2" v-for="campo in camposVivienda" v-model="camposViviendaSeleccionados" :key="campo.value" :value="campo.value">
+                            {{ campo.text }}
+                          </b-form-checkbox>
+                        </b-form-group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Tipo de servicios que posee</td>
+                      <td>
+                        <b-form-group>
+                          <b-form-checkbox class="ml-4 m-2" v-for="campo in camposServicios" v-model="camposServiciosSeleccionados" :key="campo.value" :value="campo.value">
+                            {{ campo.text }}
+                          </b-form-checkbox>
+                        </b-form-group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Cuantas habitaciones tiene la vivienda</td>
+                      <td><b-form-input type="number" v-model.trim="datosEntrevista.habitaciones" autocomplete="off" maxlength="2"></b-form-input></td>
+                    </tr>
+                    <tr>
+                      <td>¿Comparte la habitación?</td>
+                      <td>
+                        <b-form-group>
+                          <b-form-select v-model="datosEntrevista.id_comparte" :options="comboComparte"></b-form-select>
+                        </b-form-group>
+                        <div v-if="datosEntrevista.id_comparte=='S'">
+                          <label class="text-muted"><i>¿Con quién?:</i></label>
+                          <b-form-input v-model.trim="datosEntrevista.comparte" autocomplete="off" maxlength="255"></b-form-input>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>¿Pasa algún tiempo solo?</td>
+                      <td>
+                        <b-form-group>
+                          <b-form-select v-model="datosEntrevista.id_solo" :options="comboSolo"></b-form-select>
+                        </b-form-group>
+                        <div v-if="datosEntrevista.id_solo=='S'">
+                          <label class="text-muted"><i>¿Cuando?:</i></label>
+                          <b-form-input v-model.trim="datosEntrevista.solo" autocomplete="off" maxlength="255"></b-form-input>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>¿Existe en el hogar alguna situación problemática que considere afecte al estudiante?</td>
+                      <td>
+                        <b-form-group>
+                          <b-form-select v-model="datosEntrevista.id_problematica" :options="comboProblematica"></b-form-select>
+                        </b-form-group>
+                        <div v-if="datosEntrevista.id_problematica=='S'">
+                          <label class="text-muted"><i>¿Cual?:</i></label>
+                          <b-form-input v-model.trim="datosEntrevista.problematica" autocomplete="off" maxlength="255"></b-form-input>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>¿Quién le colabora en el desarrollo de las tareas, trabajos, etc?</td>
+                      <td><b-form-input v-model.trim="datosEntrevista.tareas" autocomplete="off" maxlength="255"></b-form-input></td>
+                    </tr>
+                    <tr>
                       <th colspan="2" style="text-align: left"> PERSONAS CON QUIENES CONVIVE</th>
                     </tr>
                     <tr>
@@ -715,6 +789,30 @@
             <td>Lugar que ocupa</td><td>{{datosEntrevista.lugar}}</td>
           </tr>
           <tr>
+            <td>Escolaridad de los hermanos</td><td>{{datosEntrevista.escolaridadhermanos}}</td>
+          </tr>
+          <tr>
+            <td>Tipo de vivienda</td><td>{{datosEntrevista.vivienda}}</td>
+          </tr>
+          <tr>
+            <td>Tipo de servicios que posee</td><td>{{datosEntrevista.servicios}}</td>
+          </tr>
+          <tr>
+            <td>Cuantas habitaciones tiene la vivienda</td><td>{{datosEntrevista.habitaciones}}</td>
+          </tr>
+          <tr>
+            <td>¿Comparte la habitación?¿Con quien?</td><td>{{datosEntrevista.id_comparte=='S' ? 'SI - ' + datosEntrevista.comparte : 'NO'}}</td>
+          </tr>
+          <tr>
+            <td>¿Pasa algún tiempo solo?¿Cuando?</td><td>{{datosEntrevista.id_solo=='S' ? 'SI - ' + datosEntrevista.solo : 'NO'}}</td>
+          </tr>
+          <tr>
+            <td>¿Existe en el hogar alguna situación problemática que considere afecte al estudiante?¿Cual?</td><td>{{datosEntrevista.id_problematica=='S' ? 'SI - ' + datosEntrevista.problematica : 'NO'}}</td>
+          </tr>
+          <tr>
+            <td>¿Quién le colabora en el desarrollo de las tareas, trabajos, etc?</td><td>{{datosEntrevista.tareas}}</td>
+          </tr>
+          <tr>
             <th colspan="2" style="text-align: left"> PERSONAS CON QUIENES CONVIVE</th>
           </tr>
           <tr>
@@ -837,7 +935,7 @@
           tratamiento: null,
           id_terapias: 'N',
           terapias: null,
-          dificultades	: null,
+          dificultades: null,
           id_cuidados: 'N',
           cuidados: null,
           enfermedades: null,
@@ -847,6 +945,16 @@
           tiempo_libre: null,
           hermanos: null,
           lugar: null,
+          escolaridadhermanos: null,
+          vivienda: null,
+          habitaciones: null,
+          id_comparte: 'N',
+          comparte: null,
+          id_solo: 'N',
+          solo: null,
+          id_problematica: 'N',
+          problematica: null,
+          tareas: null,
           convive1: null,
           parentesco1: null,
           convive2: null,
@@ -871,6 +979,7 @@
           observaciones: null,
           creado: null,
           actualizado: null,
+          rh: null,
         },
         fechaImprimir: null,
         botonGuardando: false,
@@ -890,6 +999,9 @@
         camposDificultadSeleccionados: [],
         comboCuidados: [],
         comboCirugias: [],
+        comboComparte: [],
+        comboSolo: [],
+        comboProblematica: [],
         comboVacunacion: [],
         camposParent1: [],
         camposParent2: [],
@@ -906,6 +1018,12 @@
         camposDesemp: [],
         camposDesempSeleccionados: [],
         comboReconocimieto: [],
+        camposEscolaridadHermanos: [],
+        camposEscolaridadHermanosSeleccionados: [],
+        camposVivienda: [],
+        camposViviendaSeleccionados: [],
+        camposServicios: [],
+        camposServiciosSeleccionados: [],
       }
     },
     validations: {
@@ -1021,6 +1139,9 @@
         this.datosEntrevista.calidad_sueno = JSON.stringify(this.camposSuenoSeleccionados)
         this.datosEntrevista.aptitudes = JSON.stringify(this.camposAptitudSeleccionados)
         this.datosEntrevista.dificultades = JSON.stringify(this.camposDificultadSeleccionados)
+        this.datosEntrevista.escolaridadhermanos = JSON.stringify(this.camposEscolaridadHermanosSeleccionados)
+        this.datosEntrevista.vivienda = JSON.stringify(this.camposViviendaSeleccionados)
+        this.datosEntrevista.servicios = JSON.stringify(this.camposServiciosSeleccionados)
         this.datosEntrevista.parentesco1 = JSON.stringify(this.camposParent1Seleccionados)
         this.datosEntrevista.parentesco2 = JSON.stringify(this.camposParent2Seleccionados)
         this.datosEntrevista.relacion_familiar = JSON.stringify(this.camposRelFamSeleccionados)
@@ -1064,6 +1185,9 @@
                 this.camposSuenoSeleccionados = this.datosEntrevista.calidad_sueno !== null ? JSON.parse(this.datosEntrevista.calidad_sueno) : []
                 this.camposAptitudSeleccionados = this.datosEntrevista.aptitudes !== null ? JSON.parse(this.datosEntrevista.aptitudes) : []
                 this.camposDificultadSeleccionados = this.datosEntrevista.dificultades !== null ? JSON.parse(this.datosEntrevista.dificultades) : []
+                this.camposEscolaridadHermanosSeleccionados = this.datosEntrevista.escolaridadhermanos !== null ? JSON.parse(this.datosEntrevista.escolaridadhermanos) : []
+                this.camposViviendaSeleccionados = this.datosEntrevista.vivienda !== null ? JSON.parse(this.datosEntrevista.vivienda) : []
+                this.camposServiciosSeleccionados = this.datosEntrevista.servicios !== null ? JSON.parse(this.datosEntrevista.servicios) : []
                 this.camposParent1Seleccionados = this.datosEntrevista.parentesco1 !== null ? JSON.parse(this.datosEntrevista.parentesco1) : []
                 this.camposParent2Seleccionados = this.datosEntrevista.parentesco2 !== null ? JSON.parse(this.datosEntrevista.parentesco2) : []
                 this.camposRelFamSeleccionados = this.datosEntrevista.relacion_familiar !== null ? JSON.parse(this.datosEntrevista.relacion_familiar) : []
@@ -1126,6 +1250,18 @@
         this.comboCirugias = []
         this.$store.state.datosTablas.sino.forEach(element => {
           this.comboCirugias.push({ 'value': element.id, 'text': element.sino.toUpperCase() })
+        })
+        this.comboComparte = []
+        this.$store.state.datosTablas.sino.forEach(element => {
+          this.comboComparte.push({ 'value': element.id, 'text': element.sino.toUpperCase() })
+        })
+        this.comboSolo = []
+        this.$store.state.datosTablas.sino.forEach(element => {
+          this.comboSolo.push({ 'value': element.id, 'text': element.sino.toUpperCase() })
+        })
+        this.comboProblematica = []
+        this.$store.state.datosTablas.sino.forEach(element => {
+          this.comboProblematica.push({ 'value': element.id, 'text': element.sino.toUpperCase() })
         })
         this.comboVacunacion = []
         this.$store.state.datosTablas.sino.forEach(element => {
@@ -1192,6 +1328,24 @@
         { value: 'Psicológicas', text: 'Psicológicas' },
         { value: 'Cognitivas', text: 'Cognitivas' },
         { value: 'Otras', text: 'Otras' },
+      ]
+      this.camposEscolaridadHermanos = [
+        { value: 'Preescolar', text: 'Preescolar' },
+        { value: 'Primaria', text: 'Primaria' },
+        { value: 'Secundaria', text: 'Secundaria' },
+        { value: 'Universidad', text: 'Universidad' },
+      ]
+      this.camposVivienda = [
+        { value: 'Casa', text: 'Casa' },
+        { value: 'Apartamento', text: 'Apartamento' },
+      ]
+      this.camposServicios = [
+        { value: 'Agua', text: 'Agua' },
+        { value: 'Luz', text: 'Luz' },
+        { value: 'Gas', text: 'Gas' },
+        { value: 'Teléfono', text: 'Teléfono' },
+        { value: 'Televisión - Video Cable', text: 'Televisión - Video Cable' },
+        { value: 'Internet', text: 'Internet' },
       ]
       this.camposParent1 = [
         { value: 'Madre', text: 'Madre' },

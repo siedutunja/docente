@@ -41,10 +41,12 @@
       return {
         listaAsignacion: [],
         encabColumnas: [
+          { label: 'Sede', field: 'sede' },
           { label: 'Grado-Curso', field: 'nomenclatura' },
           { label: 'Asignatura', field: 'asignatura' },
           { label: 'IH', field: 'ih' },
           { label: 'Peso', field: 'porcentaje' },
+          { label: 'Vigencia', field: 'vigencia' },
         ],
         totalIH: 0
       }

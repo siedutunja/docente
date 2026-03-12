@@ -45,7 +45,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(est, rowIndex) in listaEstudiantes" :key="est.idMatricula">
+              <tr v-for="(est, rowIndex) in listaEstudiantes" :key="rowIndex">
                 <td style="background: #F2ECEB">{{ rowIndex + 1 }}</td>
                 <td style="text-align: left; background: #F2ECEB">{{ est.estudiante }}</td>
                 <td style="background: #F2ECEB" :class="est.diversa != '' ? 'alert alert-warning' : ''">{{ est.diversa }}</td>
@@ -248,6 +248,7 @@
             idMatricula: est.idMatricula,
             id_asignatura_curso: this.configuracionPlanilla.idPlanilla,
             periodo: this.configuracionPlanilla.idPeriodo,
+            vigencia: this.$store.state.aLectivo,
             ausJ: est.ausJ ?? null,
             ausS: est.ausS ?? null,
             definitiva: est.definitiva ?? null,
@@ -516,7 +517,7 @@
         this.btnCargando = true
         this.encabezados = {}
         await axios
-        .get(CONFIG.ROOT_PATH + 'docente/configuracion/planilla', {params: {idPlanilla: this.configuracionPlanilla.idPlanilla, idPeriodo: this.configuracionPlanilla.idPeriodo}})
+        .get(CONFIG.ROOT_PATH + 'docente/configuracion/planilla', {params: {idPlanilla: this.configuracionPlanilla.idPlanilla, idPeriodo: this.configuracionPlanilla.idPeriodo, vigencia: this.$store.state.aLectivo}})
         .then(response => {
           if (response.data.error){
             this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Encabezados Planilla')
@@ -675,6 +676,7 @@
             } else {
               this.dataConsultada = []
             }
+            //console.log(JSON.stringify(this.dataConsultada))
           }
         })
         .catch(err => {

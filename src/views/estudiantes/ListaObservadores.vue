@@ -19,15 +19,6 @@
                 </b-form-group>
               </b-col>
             </b-row>
-            <!--
-            <b-row>
-              <b-col lg="6">
-                <b-form-group label="Seleccione el Curso:" label-for="cursos" class="etiqueta">
-                  <b-form-select  id="cursos" ref="cursos" v-model="idCurso" :options="comboCursosDocente" @change="consultaListaCurso()"></b-form-select>
-                </b-form-group>
-              </b-col>
-            </b-row>
-            -->
             <b-row><b-col lg="12"><hr></b-col></b-row>
             <div v-if="idCurso!=null">
               <vue-good-table :columns="encabColumnas" :rows="listaEstudiantesCurso" styleClass="vgt-table condensed bordered striped" :line-numbers="true">

@@ -108,7 +108,7 @@
         this.planillasSeleccionadasCopiar = []
         this.descriptoresSeleccionadosCopiar = []
         this.$refs.descriptores.selectedRows.forEach(element => {
-          this.descriptoresSeleccionadosCopiar.push({ 'descriptor': element.descriptor,'idConcepto': element.id_concepto_valorativo, 'periodo': element.id_periodo, 'idGrupo': element.id_grupo_descriptor })
+          this.descriptoresSeleccionadosCopiar.push({ 'descriptor': element.descriptor,'idConcepto': element.id_concepto_valorativo, 'periodo': element.id_periodo, 'idGrupo': element.id_grupo_descriptor, 'vigencia': element.vigencia })
         })
         this.$refs.planillasCopy.selectedRows.forEach(element => {
           this.planillasSeleccionadasCopiar.push({ 'idPlanillaCopiar': element.idPlanillaCopiar, 'descriptores': this.descriptoresSeleccionadosCopiar })
@@ -138,7 +138,7 @@
       async guardarDescriptores() {
         this.descriptoresSeleccionadosGuardar = []
         this.$refs.descriptores.selectedRows.forEach(element => {
-          this.descriptoresSeleccionadosGuardar.push({ 'id': element.id, 'descriptor': element.descriptor })
+          this.descriptoresSeleccionadosGuardar.push({ 'id': element.id, 'descriptor': element.descriptor, 'vigencia': element.vigencia })
         })
         //alert(JSON.stringify(this.descriptoresSeleccionadosGuardar))
         await axios
@@ -156,7 +156,7 @@
       },
       async verificaDescriptoresPlanilla() {
         await axios
-        .put(CONFIG.ROOT_PATH + 'docente/verificardescriptores/generales', JSON.stringify({idPlanilla: this.idPlanilla}), { headers: {"Content-Type": "application/json; charset=utf-8" }})
+        .put(CONFIG.ROOT_PATH + 'docente/verificardescriptores/generales', JSON.stringify({idPlanilla: this.idPlanilla, vigencia: this.$store.state.aLectivo}), { headers: {"Content-Type": "application/json; charset=utf-8" }})
         .then(response => {
           if (response.data.error){
             this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Verificando Descriptores')
@@ -171,7 +171,7 @@
       async cargueDescriptoresPlanilla() {
         this.descriptoresPlanilla = []
         await axios
-        .get(CONFIG.ROOT_PATH + 'docente/descriptores/generales', {params: {idPlanilla: this.idPlanilla}})
+        .get(CONFIG.ROOT_PATH + 'docente/descriptores/generales', {params: {idPlanilla: this.idPlanilla, vigencia: this.$store.state.aLectivo}})
         .then(response => {
           if (response.data.error){
             this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Descriptores generales')

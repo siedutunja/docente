@@ -44,11 +44,119 @@
     },
     methods: {
       continuar() {
-        const periodos = [{'id': 1, 'periodo': 'PRIMERO'},{'id': 2, 'periodo': 'SEGUNDO'},{'id': 3, 'periodo': 'TERCERO'},{'id': 4, 'periodo': 'CUARTO.'},{'id': 5, 'periodo': 'FINAL'}]
-        this.$store.commit('set', ['periodos', periodos])
-        console.log(JSON.stringify(this.$store.state.periodos))
-        this.$router.push('/')
+        this.cargarDatosGloblales()
       },
+      async cargarDatosGloblales() {
+        this.btnHabilitado = false
+        /*************************** DATOS PLANILLAS DOCENTE **************************/
+        await axios
+        .get(CONFIG.ROOT_PATH + 'docente/planillasasignadas/docente', { params: { idInstitucion: this.$store.state.idInstitucion, vigencia: this.$store.state.aLectivo, idDocente: this.$store.state.idDocente }})
+        .then(response => {
+          if (response.data.error){
+            alert(response.data.mensaje + ' - Consulta Asignación Docente')
+            location.replace(CONFIG.ROOT_MODULO_LOGIN)
+          } else {
+            if(response.data.datos != 0) {
+              this.$store.commit('set', ['listaPlanillasDocente', response.data.datos])
+            } else {
+              this.$store.commit('set', ['listaPlanillasDocente', []])
+            }
+            //console.log(JSON.stringify(this.$store.state.listaPlanillasDocente))
+          }
+        })
+        .catch(err => {
+          alert('Algo salio mal y no se pudo realizar: Consulta Asignación Docente. Intente más tarde. ' + err)
+          location.replace(CONFIG.ROOT_WEBSITE)
+        })
+        /*************************** DATOS SECCIONES **************************/
+        await axios
+        .get(CONFIG.ROOT_PATH + 'academico/v1/carguesecciones', {params: {idInstitucion: this.$store.state.idInstitucion, vigencia: this.$store.state.aLectivo}})
+        .then(response => {
+          if (response.data.error){
+            alert(response.data.mensaje + ' - Consulta datos Secciones')
+            location.replace(CONFIG.ROOT_MODULO_LOGIN)
+          } else {
+            if(response.data.datos != 0) {
+              this.$store.commit('set', ['datosSecciones', response.data.datos])
+            } else {
+              this.$store.commit('set', ['datosSecciones', []])
+              this.$store.commit('set', ['nombreSeccion', 'SIN SECCIÓN ACTIVA'])
+            }
+            this.$store.state.datosSecciones.forEach(element => {
+              if (element.id_seccion == this.$store.state.idSeccion) {
+                this.$store.commit('set', ['nombreSeccion', element.seccion])
+              }
+            })
+          }
+        })
+        .catch(err => {
+          alert('Algo salio mal y no se pudo realizar: Consulta datos Secciones. Intente más tarde. ' + err)
+          location.replace(CONFIG.ROOT_WEBSITE)
+        })
+        /*************************** DATOS SEDES **************************/
+        await axios
+        .get(CONFIG.ROOT_PATH + 'academico/v1/carguesedes', {params: {idInstitucion: this.$store.state.idInstitucion, idSeccion: this.$store.state.idSeccion, vigencia: this.$store.state.aLectivo}})
+        .then(response => {
+          if (response.data.error){
+            alert(response.data.mensaje + ' - Consulta datos Sedes Activas')
+            location.replace(CONFIG.ROOT_MODULO_LOGIN)
+          } else {
+            if(response.data.datos != 0) {
+              this.$store.commit('set', ['datosSedes', response.data.datos])
+            } else {
+              this.$store.commit('set', ['datosSedes', []])
+            }
+            //console.log(JSON.stringify(this.$store.state.datosSedes))
+          }
+        })
+        .catch(err => {
+          alert('Algo salio mal y no se pudo realizar: Consulta datos Sedes Activas. Intente más tarde. ' + err)
+          location.replace(CONFIG.ROOT_WEBSITE)
+        })
+        /*************************** DATOS GRADOS **************************/
+        await axios
+        .get(CONFIG.ROOT_PATH + 'academico/v1/carguegrados', {params: {idInstitucion: this.$store.state.idInstitucion, vigencia: this.$store.state.aLectivo}})
+        .then(response => {
+          if (response.data.error){
+            alert(response.data.mensaje + ' - Consulta datos Grados Activos')
+            location.replace(CONFIG.ROOT_MODULO_LOGIN)
+          } else {
+            if(response.data.datos != 0) {
+              this.$store.commit('set', ['datosGrados', response.data.datos])
+            } else {
+              this.$store.commit('set', ['datosGrados', []])
+            }
+            //console.log(JSON.stringify(this.$store.state.datosGrados))
+          }
+        })
+        .catch(err => {
+          alert('Algo salio mal y no se pudo realizar: Consulta datos Grados Activos. Intente más tarde. ' + err)
+          location.replace(CONFIG.ROOT_WEBSITE)
+        })
+        /*************************** DATOS CURSOS **************************/
+        await axios
+        .get(CONFIG.ROOT_PATH + 'docente/carguecursos', {params: {idInstitucion: this.$store.state.idInstitucion, vigencia: this.$store.state.aLectivo}})
+        .then(response => {
+          if (response.data.error){
+            alert(response.data.mensaje + ' - Consulta datos Cursos Activos')
+            location.replace(CONFIG.ROOT_MODULO_LOGIN)
+          } else {
+            if(response.data.datos != 0) {
+              this.$store.commit('set', ['datosCursos', response.data.datos])
+            } else {
+              this.$store.commit('set', ['datosCursos', []])
+            }
+            //console.log(JSON.stringify(this.$store.state.datosCursos))
+          }
+        })
+        .catch(err => {
+          alert('Algo salio mal y no se pudo realizar: Consulta datos Cursos Activos. Intente más tarde. ' + err)
+          location.replace(CONFIG.ROOT_WEBSITE)
+        })
+        /*************************** DATOS TRAZABILIDAD INICIO SESIÓN **************************/
+        this.trazaProceso('Inicio de Sesión')
+        this.btnHabilitado = true
+      },      
       async trazaProceso(descProceso) {
         let traza = { idUsuario: this.tokenDecodificado.id, descProceso: descProceso, ip: null}
         await axios
@@ -63,57 +171,12 @@
           alert('Algo salio mal y no se pudo registrar la traza de la Sesión. Intente más tarde. ' + err)
           location.replace(CONFIG.ROOT_WEBSITE)
         })
-        this.btnHabilitado = true
-      },
-      async cargarDatosSecciones() {
-        await axios
-        .get(CONFIG.ROOT_PATH + 'academico/carguesecciones', {params: {idInstitucion: this.$store.state.idInstitucion}})
-        .then(response => {
-          if (response.data.error){
-            alert(response.data.mensaje + ' - Consulta datos Secciones')
-            location.replace(CONFIG.ROOT_MODULO_LOGIN)
-          } else {
-            if(response.data.datos != 0) {
-              this.$store.commit('set', ['datosSecciones', response.data.datos])
-              this.$store.state.datosSecciones.forEach(element => {
-                if (element.id_seccion == this.$store.state.idSeccion) {
-                  this.$store.commit('set', ['nombreSeccion', element.seccion])
-                }
-              })
-            } else {
-              this.$store.commit('set', ['datosSecciones', []])
-              this.$store.commit('set', ['nombreSeccion', 'SIN SECCIÓN ACTIVA'])
-            }
-            //console.log('Secciones cargadas...')
-          }
-        })
-        .catch(err => {
-          alert('Algo salio mal y no se pudo realizar: Consulta datos Secciones. Intente más tarde. ' + err)
-          location.replace(CONFIG.ROOT_WEBSITE)
-        })
-      },
-      async cargarPlanillasDocente() {
-        await axios
-        .get(CONFIG.ROOT_PATH + 'docente/planillasasignadas/docente', { params: { idInstitucion: this.$store.state.idInstitucion, vigencia: this.$store.state.aLectivo, idDocente: this.$store.state.idDocente }})
-        .then(response => {
-          if (response.data.error){
-            alert(response.data.mensaje + ' - Consulta Asignación Docente')
-            location.replace(CONFIG.ROOT_MODULO_LOGIN)
-          } else {
-            if(response.data.datos != 0) {
-              this.$store.commit('set', ['listaPlanillasDocente', response.data.datos])
-            } else {
-              this.$store.commit('set', ['listaPlanillasDocente', []])
-            }
-            //console.log('Planillas cargadas...')
-          }
-        })
-        .catch(err => {
-          alert('Algo salio mal y no se pudo realizar: Consulta Asignación Docente. Intente más tarde. ' + err)
-          location.replace(CONFIG.ROOT_WEBSITE)
-        })
+        const periodos = [{'id': 1, 'periodo': 'PRIMERO'},{'id': 2, 'periodo': 'SEGUNDO'},{'id': 3, 'periodo': 'TERCERO'},{'id': 4, 'periodo': 'CUARTO.'},{'id': 5, 'periodo': 'FINAL'}]
+        this.$store.commit('set', ['periodos', periodos])
+        this.$router.push('/')
       },
       async cargarDatosSesionUsuario() {
+        this.btnHabilitado = false
         await axios
         .get(CONFIG.ROOT_PATH + 'docente/iniciosesion', { params: { idPersona: this.tokenDecodificado.id_persona, idIE: this.tokenDecodificado.id_institucion }})
         .then(response => {
@@ -181,13 +244,6 @@
               this.$store.commit('set', ['superaFin_Ini', response.data.datos.usuario.superaFin_Ini])
               this.$store.commit('set', ['superaFin_Fin', response.data.datos.usuario.superaFin_Fin])
               this.$store.commit('set', ['fechaActual', response.data.datos.usuario.fechaA])
-              this.cargarPlanillasDocente()
-              this.cargarDatosSecciones()
-              this.cargarDatosSedes()
-              this.cargarDatosGrados()
-              this.cargarDatosCursos()
-              this.cargarDatosTablas()
-              this.trazaProceso('Inicio de Sesión Docente')
             }
           }
         })
@@ -195,92 +251,10 @@
           alert('Algo salio mal y no se pudo realizar: Consulta datos del Usuario de la Sesión. Intente más tarde. ' + err)
           location.replace(CONFIG.ROOT_WEBSITE)
         })
-      },
-      async cargarDatosTablas() {
-        await axios
-        .get(CONFIG.ROOT_PATH + 'academico/carguetablas')
-        .then(response => {
-          if (response.data.error){
-            alert(response.data.mensaje + ' - Consulta datos tablas de la Sesión')
-            location.replace(CONFIG.ROOT_MODULO_LOGIN)
-          } else {
-            if(response.data.datos != 0) {
-              this.$store.commit('set', ['datosTablas', response.data.datos])
-            } else {
-              this.$store.commit('set', ['datosTablas', []])
-            }
-            //console.log('Tablas cargadas...')
-          }
-        })
-        .catch(err => {
-          alert('Algo salio mal y no se pudo realizar: Consulta datos tablas de la Sesión. Intente más tarde. ' + err)
-          location.replace(CONFIG.ROOT_WEBSITE)
-        })
-      },
-      async cargarDatosGrados() {
-        await axios
-        .get(CONFIG.ROOT_PATH + 'academico/carguegrados', {params: {idInstitucion: this.$store.state.idInstitucion, vigencia: this.$store.state.aLectivo}})
-        .then(response => {
-          if (response.data.error){
-            alert(response.data.mensaje + ' - Consulta datos Grados Activos')
-            location.replace(CONFIG.ROOT_MODULO_LOGIN)
-          } else {
-            if(response.data.datos != 0) {
-              this.$store.commit('set', ['datosGrados', response.data.datos])
-            } else {
-              this.$store.commit('set', ['datosGrados', []])
-            }
-            //console.log('Grados cargados...')
-          }
-        })
-        .catch(err => {
-          alert('Algo salio mal y no se pudo realizar: Consulta datos Grados Activos. Intente más tarde. ' + err)
-          location.replace(CONFIG.ROOT_WEBSITE)
-        })
-      },
-      async cargarDatosCursos() {
-        await axios
-        .get(CONFIG.ROOT_PATH + 'docente/carguecursos', {params: {idInstitucion: this.$store.state.idInstitucion, vigencia: this.$store.state.aLectivo}})
-        .then(response => {
-          if (response.data.error){
-            alert(response.data.mensaje + ' - Consulta datos Cursos Activos')
-            location.replace(CONFIG.ROOT_MODULO_LOGIN)
-          } else {
-            if(response.data.datos != 0) {
-              this.$store.commit('set', ['datosCursos', response.data.datos])
-            } else {
-              this.$store.commit('set', ['datosCursos', []])
-            }
-            //console.log('Cursos cargados...')
-          }
-        })
-        .catch(err => {
-          alert('Algo salio mal y no se pudo realizar: Consulta datos Cursos Activos. Intente más tarde. ' + err)
-          location.replace(CONFIG.ROOT_WEBSITE)
-        })
-      },
-      async cargarDatosSedes() {
-        await axios
-        .get(CONFIG.ROOT_PATH + 'academico/carguesedes', {params: {idInstitucion: this.$store.state.idInstitucion, idSeccion: 1}})
-        .then(response => {
-          if (response.data.error){
-            alert(response.data.mensaje + ' - Consulta datos Sedes Activas')
-            location.replace(CONFIG.ROOT_MODULO_LOGIN)
-          } else {
-            if(response.data.datos != 0) {
-              this.$store.commit('set', ['datosSedes', response.data.datos])
-            } else {
-              this.$store.commit('set', ['datosSedes', []])
-            }
-            //console.log('Sedes cargadas...')
-          }
-        })
-        .catch(err => {
-          alert('Algo salio mal y no se pudo realizar: Consulta datos Sedes Activas. Intente más tarde. ' + err)
-          location.replace(CONFIG.ROOT_WEBSITE)
-        })
+        this.btnHabilitado = true
       },
       async iniciarVista() {
+        this.btnHabilitado = false
         let token = sessionStorage.getItem('token')
         jwt.verify(token, CONFIG.SECRET_KEY, (err, data) => {
           if (err) {
@@ -298,23 +272,37 @@
             this.$store.commit('set', ['idInstitucion', this.tokenDecodificado.id_institucion])
             this.$store.commit('set', ['idSector', this.tokenDecodificado.id_sector])
             this.$store.commit('set', ['idSeccion', 1])
-            //PERMISOS DEL USUARIO
-            /*
-            this.$store.commit('set', ['perMatricular', this.tokenDecodificado.permisos.perMatricular])
-            this.$store.commit('set', ['perActEstudiante', this.tokenDecodificado.permisos.perActEstudiante])
-            this.$store.commit('set', ['perActDocente', this.tokenDecodificado.permisos.perActDocente])
-            this.$store.commit('set', ['perActDatosCurso', this.tokenDecodificado.permisos.perActDatosCurso])
-            this.$store.commit('set', ['perActDirCurso', this.tokenDecodificado.permisos.perActDirCurso])
-            this.$store.commit('set', ['perSecretaria', this.tokenDecodificado.permisos.perSecretaria])
-            this.$store.commit('set', ['perAsigCarga', this.tokenDecodificado.permisos.perAsigCarga])
-            */
-            
-            this.cargarDatosSesionUsuario()
           }
         })
+        /*************************** DATOS TABLAS **************************/
+        await axios
+        .get(CONFIG.ROOT_PATH + 'academico/v1/carguetablas')
+        .then(response => {
+          if (response.data.error){
+            alert(response.data.mensaje + ' - Consulta datos tablas de la Sesión')
+            location.replace(CONFIG.ROOT_MODULO_LOGIN)
+          } else {
+            if(response.data.datos != 0) {
+              this.$store.commit('set', ['datosTablas', response.data.datos])
+            } else {
+              this.$store.commit('set', ['datosTablas', []])
+            }
+            //console.log(JSON.stringify(this.$store.state.datosTablas))
+          }
+        })
+        .catch(err => {
+          alert('Algo salio mal y no se pudo realizar: Consulta datos tablas de la Sesión. Intente más tarde. ' + err)
+          location.replace(CONFIG.ROOT_WEBSITE)
+        })
+        /*************************** DATOS DE SESIÓN DEL USUARIO **************************/
+        this.cargarDatosSesionUsuario()
+        this.btnHabilitado = true
       }
     },
     beforeMount() {
+      //alert('Lo sentimos, en este momento estamos trabajando para mejorar nuestro sistema. Por favor intente ingresar mas tarde.')
+      //location.replace(CONFIG.ROOT_WEBSITE)
+
       this.iniciarVista()
     }
   }

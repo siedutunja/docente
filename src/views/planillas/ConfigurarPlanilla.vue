@@ -257,8 +257,6 @@
                   </b-card>
                 </b-col>
               </b-row>
-
-
               <b-row>
                 <b-col lg="12">
                   <b-button class="small mx-1 mt-2" variant="primary" @click="validarDatosFormulario">Guardar Configuración de la planilla</b-button>
@@ -456,6 +454,7 @@
           element.por10 = this.encabezados.por20
           element.numNotas = this.encabezados.numNotasC1
           element.valor = this.encabezados.val01
+          element.vigencia = this.encabezados.vigencia
         })
         this.criterio = 1
         this.$refs['modalCopiarEncabezados'].show()
@@ -485,6 +484,7 @@
           element.por10 = this.encabezados.por25
           element.numNotas = this.encabezados.numNotasC2
           element.valor = this.encabezados.val02
+          element.vigencia = this.encabezados.vigencia
         })
         this.criterio = 2
         this.$refs['modalCopiarEncabezados'].show()
@@ -514,6 +514,7 @@
           element.por10 = this.encabezados.por30
           element.numNotas = this.encabezados.numNotasC3
           element.valor = this.encabezados.val03
+          element.vigencia = this.encabezados.vigencia
         })
         this.criterio = 3
         this.$refs['modalCopiarEncabezados'].show()
@@ -573,13 +574,14 @@
         })
         this.encabezados = {}
         await axios
-        .get(CONFIG.ROOT_PATH + 'docente/configuracion/planilla', {params: {idPlanilla: this.idPlanilla, idPeriodo: this.idPeriodo}})
+        .get(CONFIG.ROOT_PATH + 'docente/configuracion/planilla', {params: {idPlanilla: this.idPlanilla, idPeriodo: this.idPeriodo, vigencia: this.$store.state.aLectivo}})
         .then(response => {
           if (response.data.error){
             this.mensajeEmergente('danger',CONFIG.TITULO_MSG,response.data.mensaje + ' - Encabezados Planilla')
           } else{
             if (response.data.datos != 0) {
               this.encabezados = response.data.datos
+              this.encabezados.vigencia = this.$store.state.aLectivo
               //console.log(JSON.stringify(this.encabezados))
             }
           }
@@ -608,6 +610,7 @@
             'por1': '','por2': '','por3': '','por4': '','por5': '','por6': '','por7': '','por8': '','por9': '','por10': '',
             'numNotas': '',
             'valor': '',
+            'vigencia': '',
             'periodo': null
           })
         })
